@@ -9,6 +9,7 @@ package xls_traductor;
  *
  * @author ricar
  */
+import GUI.Interfaz;
 public class XLS_Traductor {
 
     /**
@@ -16,6 +17,8 @@ public class XLS_Traductor {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        Interfaz interfaz = new Interfaz();
+        interfaz.show();
     }
     
 }
