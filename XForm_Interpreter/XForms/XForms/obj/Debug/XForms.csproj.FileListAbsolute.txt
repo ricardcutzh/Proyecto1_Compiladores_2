@@ -1,0 +1,10 @@
+C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\bin\Debug\XForms.exe.config
+C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\bin\Debug\XForms.exe
+C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\bin\Debug\XForms.pdb
+C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.csprojAssemblyReference.cache
+C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.Form1.resources
+C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.Properties.Resources.resources
+C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.csproj.GenerateResource.cache
+C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.csproj.CoreCompileInputs.cache
+C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.exe
+C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.pdb
