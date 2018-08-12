@@ -19,6 +19,9 @@ public class XLS_Traductor {
         // TODO code application logic here
         Interfaz interfaz = new Interfaz();
         interfaz.show();
+        
+        
     }
+    
     
 }
