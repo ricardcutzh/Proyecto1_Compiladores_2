@@ -9,6 +9,9 @@ package xls_traductor;
  *
  * @author ricar
  */
+import Analizadores.XLSParser;
+import java.io.File;
+import java.io.FileInputStream;
 import GUI.Interfaz;
 public class XLS_Traductor {
 
@@ -17,11 +20,23 @@ public class XLS_Traductor {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        Interfaz interfaz = new Interfaz();
-        interfaz.show();
-        
-        
+        //Interfaz interfaz = new Interfaz();
+        //interfaz.show();
+        prueba();
     }
     
+    public static void prueba()
+    {
+        File f = new File("C:\\Users\\ricar\\Documents\\Universidad\\Segundo_S_2018\\Compiladores 2\\Entradas\\prJavaCC.txt");
+        try {
+            FileInputStream fis = new FileInputStream(f);
+            XLSParser p = new XLSParser(fis);
+            ASTTree.ASTNode n = p.INICIO();
+            n.graficaAST(n);
+            System.out.println(n.graficaAST(n));
+        } catch (Exception e) {
+            System.err.println("ERROR AL INICIAR EL PARSER");
+        }
+    }
     
 }

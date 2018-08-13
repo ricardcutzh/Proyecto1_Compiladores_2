@@ -40,6 +40,7 @@ public class EncuestaWriter {
     }
 
     ArrayList<String> tabs;
+
     public String escribeEncuesta() {
         tabs = new ArrayList<>();
         String cad = "";
@@ -62,66 +63,72 @@ public class EncuestaWriter {
 
                 } else if (tipo.getValorFila(fila).equals("finalizar agrupacion") || tipo.getValorFila(fila).equals("finalizar ciclo")) {
                     
-                    cad += dameTabulaciones()+"fin: "+this.encuesta.getColumnaPorNombre("idpregunta").getValorFila(fila)+";\n";
+                    cad += dameTabulaciones() + "_fin: " + this.encuesta.getColumnaPorNombre("idpregunta").getValorFila(fila) + ";\n";
+                    desTabula();
                     cad += dameTabulaciones() + "}\n";
                     desTabula();
                 } else {
-                    tabula();
+                    //tabula();
                     //LLAMAR AL PROCEDIMIENTO DE LA PREGUNTA
-                    cad += dameTabulaciones() + "_pregunta{\n";
+                    //cad += dameTabulaciones() + "_pregunta{\n";
                     cad += obtener_pregunta(fila);
-                    cad += dameTabulaciones() + "}\n";
-                    desTabula();
+                    //cad += dameTabulaciones() + "}\n";
+                    //desTabula();
                 }
                 fila++;
             }
-            
+
         } else {
             cad += this.error;
         }
         return cad;
     }
-    
-    private String obtener_pregunta(int fila)
-    {
+
+    private String obtener_pregunta(int fila) {
         String cad = "";
         tabula();
-        
+
         //INFORMACION FIJA
-        cad += obtTipo(fila);
-        cad += obtIdPregunta(fila);
-        cad += obtEtiqueta(fila);
-        //FIN DE LA INFO
-        
-        cad +=obtColumna(fila, "sugerir", "", ""); //SUGERIR
-        String temp = obtColumna(fila, "requerido", "", "");
-        cad += temp; //REQUERIDO
-        if(!temp.equals(""))
-        {
-            cad += obtColumna(fila, "requeridomsn", "", "");
+        String ti = obtTipo(fila);
+        if (!ti.contains("tipo: NULL")) {
+            
+            cad += dameTabulaciones() + "_pregunta{\n";
+            tabula();
+            cad += obtTipo(fila);
+            cad += obtIdPregunta(fila);
+            cad += obtEtiqueta(fila);
+            //FIN DE LA INFO
+
+            cad += obtColumna(fila, "sugerir", "", ""); //SUGERIR
+            String temp = obtColumna(fila, "requerido", "", "");
+            cad += temp; //REQUERIDO
+            if (!temp.equals("")) {
+                cad += obtColumna(fila, "requeridomsn", "", "");
+            }
+            cad += obtColumna(fila, "pordefecto", "", "");
+            cad += obtColumna(fila, "lectura", "", "");
+            cad += obtColumna(fila, "calculo", "", "");
+            cad += obtColumna(fila, "multimedia", "", "");
+            temp = obtColumna(fila, "restringir", "", "");
+            cad += temp;
+            if (!temp.equals("")) {
+                cad += obtColumna(fila, "restringirmsn", "", "");
+            }
+            cad += obtColumna(fila, "codigo_pre", "<<", ">>");
+            cad += obtColumna(fila, "codigo_post", "<<", ">>");
+            cad += obtColumna(fila, "aplicable", "", "");
+            cad += obtColumna(fila, "repeticion", "", "");
+            cad += obtColumna(fila, "apariencia", "", "");
+            cad += obtColumna(fila, "parametro", "|", "|");
+            desTabula();
+            cad += dameTabulaciones() + "}\n";
+            
         }
-        cad += obtColumna(fila, "pordefecto", "", "");
-        cad += obtColumna(fila, "lectura", "", "");
-        cad += obtColumna(fila, "calculo", "", "");
-        cad += obtColumna(fila, "multimedia", "", "");
-        temp = obtColumna(fila, "restringir", "", "");
-        cad += temp;
-        if(!temp.equals(""))
-        {
-            cad += obtColumna(fila ,"restringirmsn" , "", "");
-        }
-        cad += obtColumna(fila, "codigo_pre", "<<", ">>");
-        cad += obtColumna(fila, "codigo_post", "<<", ">>");
-        cad += obtColumna(fila, "aplicable", "", "");
-        cad += obtColumna(fila, "repeticion", "", "");
-        cad += obtColumna(fila, "apariencia", "", "");
-        cad += obtColumna(fila, "parametro", "|", "|");
         desTabula();
         return cad;
     }
-    
-    private String obtener_ciclo(int fila)
-    {
+
+    private String obtener_ciclo(int fila) {
         String cad = "";
         tabula();
         String id = obtIdPregunta(fila);
@@ -131,9 +138,8 @@ public class EncuestaWriter {
         //desTabula();
         return cad;
     }
-    
-    private String obtener_agrupacion(int fila)
-    {
+
+    private String obtener_agrupacion(int fila) {
         String cad = "";
         tabula();
         String id = obtIdPregunta(fila);
@@ -142,7 +148,7 @@ public class EncuestaWriter {
         //desTabula();
         return cad;
     }
-    
+
     private String dameTabulaciones() {
         String cad = "";
         for (String t : this.tabs) {
@@ -160,51 +166,42 @@ public class EncuestaWriter {
             this.tabs.remove(0);
         }
     }
-    
-    private boolean compruebaCol(String NCol)
-    {
+
+    private boolean compruebaCol(String NCol) {
         NodoColumna aux = this.encuesta.getColumnaPorNombre(NCol);
-        if(aux!=null)
-        {
+        if (aux != null) {
             return true;
         }
         return false;
     }
-    
+
     //PROCEDIMIENTOS PARA PODER CONCATENAR LOS DATOS DE CADA UNA DE LAS 
     private String obtTipo(int fila)//TIPO
     {
         NodoColumna ti = this.encuesta.getColumnaPorNombre("tipo");
-        return dameTabulaciones()+"tipo: "+ti.getValorFila(fila)+";\n";
+        return dameTabulaciones() + "tipo: " + ti.getValorFila(fila) + ";\n";
     }
-    
-    private String obtIdPregunta(int fila)
-    {
+
+    private String obtIdPregunta(int fila) {
         NodoColumna id = this.encuesta.getColumnaPorNombre("idpregunta");
-        return dameTabulaciones()+"idpregunta: "+id.getValorFila(fila)+";\n";
+        return dameTabulaciones() + "idpregunta: " + id.getValorFila(fila) + ";\n";
     }
-    
-    private String obtEtiqueta(int fila)
-    {
+
+    private String obtEtiqueta(int fila) {
         NodoColumna et = this.encuesta.getColumnaPorNombre("etiqueta");
-        return dameTabulaciones() +"etiqueta: "+et.getValorFila(fila)+";\n";
+        return dameTabulaciones() + "etiqueta: %%" + et.getValorFila(fila) + "%%;\n";
     }
-    
-    private String obtColumna(int fila, String colum, String open, String close)
-    {
-        if(compruebaCol(colum))
-        {
+
+    private String obtColumna(int fila, String colum, String open, String close) {
+        if (compruebaCol(colum)) {
             NodoColumna aux = this.encuesta.getColumnaPorNombre(colum);
-            if(!aux.getValorFila(fila).equals("NULL"))
-            {
-                return dameTabulaciones() +colum+": "+open+aux.getValorFila(fila)+close+";\n";
+            if (!aux.getValorFila(fila).equals("NULL")) {
+                return dameTabulaciones() + colum + ": " + open + aux.getValorFila(fila) + close + ";\n";
             }
             return "";
-        }
-        else
-        {
+        } else {
             return "";
         }
     }
-            
+
 }

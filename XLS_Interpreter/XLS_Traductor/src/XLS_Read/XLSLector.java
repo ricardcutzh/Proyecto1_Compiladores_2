@@ -97,8 +97,12 @@ public class XLSLector {
                     //DE LO CONTRARIO LA METO
                     if (titulo == 0) {
                         tab.AgregarNodoColumna(celda.getStringCellValue().toLowerCase());
-                    } else {
+                    } else if(!celda.getStringCellValue().equals("")) {
                         tab.getColumnaEn(y).addValor(celda.getStringCellValue().toLowerCase());
+                    }
+                    else
+                    {
+                        tab.getColumnaEn(y).addValor("NULL");
                     }
                 }
             }
@@ -160,17 +164,17 @@ public class XLSLector {
         String cad = "";
         TablaExcel temp = buscarTabla("Configuraciones");
         if (temp != null) {
-            cad += "Config\n{\n";
+            cad += "_Config\n{\n";
             cad += escribeConfiguraciones(temp);
             cad += "\n}";
         }
         temp = buscarTabla("Opciones");
         if (temp != null) {
-            cad += "Opciones\n{\n " + escribeOpciones(temp) + " \n}\n";
+            cad += "_Opciones\n{\n " + escribeOpciones(temp) + " \n}\n";
         }
         temp = buscarTabla("Encuesta");
         if (temp != null) {
-            cad += "Encuesta\n{\n "+cadenaEncuesta(temp)+" \n}\n";
+            cad += "_Encuesta\n{\n "+cadenaEncuesta(temp)+" \n}\n";
         }
         return cad;
     }
@@ -219,7 +223,7 @@ public class XLSLector {
     private String escribeConfiguraciones(TablaExcel config) {
         //COLUMNA DE TITULO DE FORMULARIO
         String aux = "";
-        aux += "\ttitulo_formulario: ";
+        aux += "\ttitulo_formulario: <<";
         NodoColumna temp = config.getColumnaPorNombre("titulo_formulario");
         if (temp != null) {
             for (String s : temp.valoresColumna) {
@@ -231,7 +235,7 @@ public class XLSLector {
         } else {
             aux += "NULL";
         }
-        aux += this.DELIMITADOR + "\n";//SIMBOLO DE TERMINACION
+        aux += ">>"+this.DELIMITADOR + "\n";//SIMBOLO DE TERMINACION
 
         //COLUMNA DE ID_FORM
         aux += "\tidform: ";
@@ -264,21 +268,23 @@ public class XLSLector {
         aux += this.DELIMITADOR + "\n";
 
         //COLUMNA IMPORTACIONES
-        aux += "\timport: ";
+        aux += "\timport:<<";
         temp = config.getColumnaPorNombre("importar");
         if (temp != null) {
             int ban = temp.valoresColumna.size();
             for (int x = 0; x < ban; x++) {
                 if (!temp.valoresColumna.get(x).equals("NULL")) {
                     aux += temp.valoresColumna.get(x);
-                    if (!(x == ban - 1)) {
+                    aux += " ";
+                    /*if (!(x == ban - 1)) {
                         aux += ", ";
-                    }
+                    }*/
                 }
             }
         } else {
             aux += "NULL";
         }
+        aux +=">>";
         aux += this.DELIMITADOR + "\n";
 
         //COLUMNA DE CODIGO GLOBAL

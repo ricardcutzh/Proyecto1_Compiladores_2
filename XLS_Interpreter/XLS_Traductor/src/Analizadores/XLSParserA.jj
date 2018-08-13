@@ -1,0 +1,404 @@
+options {
+  LOOKAHEAD = 1;
+  CHOICE_AMBIGUITY_CHECK = 2;
+  OTHER_AMBIGUITY_CHECK = 1;
+  STATIC = false;
+  DEBUG_PARSER = false;
+  DEBUG_LOOKAHEAD = false;
+  DEBUG_TOKEN_MANAGER = false;
+  ERROR_REPORTING = true;
+  JAVA_UNICODE_ESCAPE = false;
+  UNICODE_INPUT = false;
+  IGNORE_CASE = true;
+  USER_TOKEN_MANAGER = false;
+  USER_CHAR_STREAM = false;
+  BUILD_PARSER = true;
+  BUILD_TOKEN_MANAGER = true;
+  SANITY_CHECK = true;
+  FORCE_LA_CHECK = false;
+}
+
+PARSER_BEGIN(XLSParser)
+package Analizadores;
+import java.io.StringReader;
+import ASTTree.ASTNode;
+
+public class XLSParser {
+    int id;
+    final int PUNTOCOMA = 3;
+    String imgError = "";
+    String extractText(String text)
+    {
+        text = text.replace("<<", "");
+        text = text.replace(">>", "");
+        return text;
+    }
+
+}
+
+PARSER_END(XLSParser)
+//ERROR
+JAVACODE
+void skip_error_recovery(int kind, String archivo, String columna)
+{
+    //ParseException e = generateParseException();  // generate the exception object.
+    System.out.println("Caracter No admitido en "+archivo+", Columna: "+columna+" : "+getToken(1).image);  // print the error message
+    Token t;
+    do {
+        t = getNextToken();
+    } while (t.kind != kind);
+}
+//PUNTUACION
+TOKEN:
+{
+     <oKey: "{">//{//System.out.println("Token: "+image);}
+    |<cKey: "}">//{//System.out.println("Token: "+image);}
+    |<ptComa: ";">//{System.out.println("Token: "+image);} // ES EL 3
+    |<nll: "NULL">//{System.out.println("Token: "+image);}
+    |<dPts: ":">//{System.out.println("Token: "+image);}
+}
+//PALABRAS RESERVADAS CONFIGURACIONES
+TOKEN:
+{
+     <titulo_form: "titulo_formulario">//{System.out.println("Token: "+image);}
+    |<idform: "idform">//{System.out.println("Token: "+image);}
+    |<estilo: "estilo">//{System.out.println("Token: "+image);}
+    |<importa: "import">//{System.out.println("Token: "+image);}
+    |<codigo_gl: "codigo_global">//{System.out.println("Token: "+image);}
+    |<codigo_pr: "codigo_principal">//{System.out.println("Token: "+image);}
+    |<conf: "_config">//{System.out.println("Token: "+image);}
+	|<pag: "pagina">
+	|<tod: "todo">
+	|<cuadricu: "cuadricula">
+}
+
+//LOS TOKENS QUE VA A IGNORAR
+SKIP:
+{
+    " " | "\n" | "\r" | "\r\n" | "\t" 
+}
+//EXPRESIONES REGULARES HASTA ABAJO
+TOKEN:
+{
+     <identificador: ["a"-"z","A"-"Z"](["a"-"z","A"-"Z","_","0"-"9"])*>
+    |<texto_pl: "<<" ( (~["<",">"]) | ("\\" ( ["n","t","b","r","f","\\","\""] ) ) )* ">>">
+    |<err: (~[])>
+}
+//SYNTAXIS DEL LENGUAJE
+
+// INICIO ::= CONFIG OPCIONES ENCUESTA
+ASTNode INICIO():
+{
+    //AQUI VAN A IR LOS HIJOS DE ESTE METODO
+    id = 0;
+    ASTNode padre = new ASTNode(id, 0, 0, "INICIO");
+    id++;
+    ASTNode confi;
+}
+{
+    //LLAMADA A LOS DEMAS
+    confi = CONFIG()
+    //AREA DE RETURN
+    {
+        //AQUI VA A IR EL RETORNO DEL PADRE
+        padre.addHijo(confi);
+        return padre;
+    }
+}
+
+//------------------------------------------------------------------------------
+ASTNode CONFIG():
+{
+    //AQUI VAN A IR LOS HIJOS DE ESTE METODO
+    ASTNode padre = new ASTNode(id, 0, 0, "CONFIG");
+    id++;
+    ASTNode titulof, idf, stl, imp, cglo, cpr;
+}
+{
+    <conf> //_config
+    <oKey> //{
+
+    titulof = TITULO()
+    { padre.addHijo(titulof); }
+
+    idf = IDFORM()
+    { padre.addHijo(idf); }
+    
+    stl = ESTILO()
+    { padre.addHijo(stl); }
+
+    imp = IMPOR()
+    { padre.addHijo(imp); }
+
+    cglo = CGLOBAL()
+    { padre.addHijo(cglo); }
+    
+    cpr = CPRIN()
+    { padre.addHijo(cpr); }
+    
+    <cKey>//}
+    {
+        return padre;
+    }
+}
+
+ASTNode TITULO():
+{
+    id++;
+    ASTNode padre = new ASTNode(id, 0, 0, "TITULO");
+    
+    ASTNode tit;
+}
+{
+    try
+    {
+        <titulo_form> <dPts> tit = TF("titulo_formulario") <ptComa>
+        {
+            padre.addHijo(tit);
+            return padre;
+        }
+    }
+    catch(ParseException e)
+    {
+        //LLAMADA AL TOKEN DE RECUPERACION
+        skip_error_recovery(PUNTOCOMA, "Configuraciones", "titulo_formulario");//hasta que encuentre el punto y coma
+        return padre;
+    }
+}
+
+ASTNode TF(String columna):
+{
+    Token t;
+}
+{
+    try
+    {
+        t = <texto_pl>
+        {
+            id++;
+            return new ASTNode(id,0,0,extractText(t.image));
+        }
+    }
+    catch(ParseException e)
+    {
+        skip_error_recovery(PUNTOCOMA, "Configuraciones", columna);//HASTA QUE ENCUENTRE EL PUNTO Y COMA
+        id++;
+        return new ASTNode(id, 0,0,"_ERR");
+    }
+        |
+    try
+    {
+        t = <nll>
+        {
+            id++;
+            return new ASTNode(id,0,0,t.image);
+        }
+    }
+    catch(ParseException e)
+    {
+        skip_error_recovery(PUNTOCOMA, "Configuraciones", columna);//HASTA QUE ENCUENTRE EL PUNTO Y COMA
+        id++;
+        return new ASTNode(id, 0,0,"_ERR");
+    }
+}
+
+ASTNode IDFORM():
+{
+    id++;
+    ASTNode padre = new ASTNode(id, 0, 0, "IDFORM");
+    
+    ASTNode idf;
+}
+{
+    try
+    {
+        <idform> <dPts> idf = IDF() <ptComa>
+        {
+            padre.addHijo(idf);
+            return padre;
+        }
+    }
+    catch(ParseException e)
+    {
+        //LLAMADA AL TOKEN DE RECUPERACION
+        skip_error_recovery(PUNTOCOMA, "Configuraciones", "idformulario_");//hasta que encuentre el punto y coma
+        return padre;
+    }
+}
+
+ASTNode IDF():
+{
+    Token t;
+}
+{
+    try
+    {
+        t = <identificador>
+        {
+            id++;
+            return new ASTNode(id,0,0,t.image);
+        }
+    }
+    catch(ParseException e)
+    {
+        skip_error_recovery(PUNTOCOMA, "Configuraciones", "idform");//HASTA QUE ENCUENTRE EL PUNTO Y COMA
+        id++;
+        return new ASTNode(id, 0,0,"_ERR");
+    }
+        |
+    try
+    {
+        t = <nll>
+        {
+            id++;
+            return new ASTNode(id,0,0,t.image);
+        }
+    }
+    catch(ParseException e)
+    {
+        skip_error_recovery(PUNTOCOMA, "Configuraciones", "idform");//HASTA QUE ENCUENTRE EL PUNTO Y COMA
+        id++;
+        return new ASTNode(id, 0,0,"_ERR");
+    }
+}
+
+ASTNode ESTILO():
+{
+	id++;
+	ASTNode padre = new ASTNode(id, 0,0, "ESTILO");
+	ASTNode est;
+}
+{
+	try
+	{
+		<estilo> <dPts> est = EST() <ptComa>
+		{
+			padre.addHijo(est);
+			return padre;
+		}
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(PUNTOCOMA, "Configuraciones", "estilo");
+		return padre;
+	}
+}
+
+ASTNode EST():
+{
+	Token t;
+}
+{
+	try
+	{
+		t = <tod>
+		{
+			id++;
+			return new ASTNode(id, 0,0, t.image);
+		}
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(PUNTOCOMA, "Configuraciones", "estilo");//HASTA QUE ENCUENTRE EL PUNTO Y COMA
+		id++;
+		return new ASTNode(id, 0,0,"_ERR");
+	}
+	|
+	try
+	{
+		t = <pag>
+		{
+			id++;
+			return new ASTNode(id, 0,0, t.image);
+		}
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(PUNTOCOMA, "Configuraciones", "estilo");//HASTA QUE ENCUENTRE EL PUNTO Y COMA
+		id++;
+		return new ASTNode(id, 0,0,"_ERR");
+	}
+	|
+	try
+	{
+		t = <cuadricu>
+		{
+			id++;
+			return new ASTNode(id, 0,0, t.image);
+		}
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(PUNTOCOMA, "Configuraciones", "estilo");//HASTA QUE ENCUENTRE EL PUNTO Y COMA
+		id++;
+		return new ASTNode(id, 0,0,"_ERR");
+	}
+}
+
+
+ASTNode IMPOR():
+{
+	id++;
+	ASTNode padre = new ASTNode(id, 0,0, "IMPORTA");
+	Token t;
+}
+{
+	try
+	{
+		<importa> <dPts> t = <texto_pl> <ptComa>
+		{
+			id++;
+			padre.addHijo(new ASTNode(id,0,0, extractText(t.image)));
+			return padre;
+		}
+ 	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(PUNTOCOMA, "Configuraciones", "importar");//hasta que encuentre el punto y coma
+        return padre;
+	}
+}
+
+ASTNode CGLOBAL():
+{
+	id++;
+	ASTNode padre = new ASTNode(id, 0,0, "GLOBAL");
+	ASTNode temp;
+}
+{
+	try
+	{
+		<codigo_gl> <dPts> temp = TF("codigo_global") <ptComa>
+		{
+			padre.addHijo(temp);
+			return padre;
+		}
+ 	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(PUNTOCOMA, "Configuraciones", "codigo_global");//hasta que encuentre el punto y coma
+        return padre;
+	}
+}
+
+ASTNode CPRIN():
+{
+	id++;
+	ASTNode padre = new ASTNode(id, 0,0, "PRINCIPAL");
+	ASTNode temp;
+}
+{
+	try
+	{
+		<codigo_pr> <dPts> temp = TF("codigo_principal") <ptComa>
+		{
+			padre.addHijo(temp);
+			return padre;
+		}
+ 	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(PUNTOCOMA, "Configuraciones", "codigo_principal");//hasta que encuentre el punto y coma
+        return padre;
+	}
+}
