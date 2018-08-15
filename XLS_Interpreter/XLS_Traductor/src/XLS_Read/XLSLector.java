@@ -48,7 +48,7 @@ public class XLSLector {
                                 leerOpciones(hoja);
                                 break;
                             }
-                            case "configuraciones": {
+                            case "configuracion": {
                                 leerConfiguraciones(hoja);
                                 break;
                             }
@@ -96,9 +96,20 @@ public class XLSLector {
                 } else {
                     //DE LO CONTRARIO LA METO
                     if (titulo == 0) {
-                        tab.AgregarNodoColumna(celda.getStringCellValue().toLowerCase());
+                        try {
+                            tab.AgregarNodoColumna(celda.getStringCellValue().toLowerCase().replace(" ", ""));
+                        } catch (Exception e) {
+                            tab.AgregarNodoColumna(String.valueOf(celda.getNumericCellValue()));
+                        }
                     } else if(!celda.getStringCellValue().equals("")) {
-                        tab.getColumnaEn(y).addValor(celda.getStringCellValue().toLowerCase());
+                        try
+                        {
+                            tab.getColumnaEn(y).addValor(celda.getStringCellValue().toLowerCase());
+                        }
+                        catch(Exception e)
+                        {
+                            tab.getColumnaEn(y).addValor(String.valueOf(celda.getNumericCellValue()));
+                        }
                     }
                     else
                     {
@@ -196,10 +207,14 @@ public class XLSLector {
                 int fila = 0;
                 for (String s : nombreL.valoresColumna) {
                     String nb = nomb.getValorFila(fila);
-                    String et = etiq.getValorFila(fila);
+                    String et = "<<"+etiq.getValorFila(fila)+">>";
                     String mu = "NULL";
                     if (mult != null) {
                         mu = mult.getValorFila(fila);
+                        if(!mu.contains("NULL"))
+                        {
+                            mu = "<<"+mu+">>";
+                        }
                     }
                     if (config.existeLista(s)) {
                         config.insertaEnExistente(s, nb, et, mu);

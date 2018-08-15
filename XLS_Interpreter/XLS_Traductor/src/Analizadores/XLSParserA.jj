@@ -20,19 +20,32 @@ options {
 
 PARSER_BEGIN(XLSParser)
 package Analizadores;
-import java.io.StringReader;
 import ASTTree.ASTNode;
+import ManejoError.TError;
+import java.util.ArrayList;
+import Abstract.*;
+import Tablas.*;
 
 public class XLSParser {
     int id;
     final int PUNTOCOMA = 3;
     String imgError = "";
+	
+	//LISTA DE ERRORES
+	ArrayList<TError> errores;
+	TablaSimbolos simbolos;
+	
     String extractText(String text)
     {
         text = text.replace("<<", "");
         text = text.replace(">>", "");
         return text;
     }
+	
+	public ArrayList<TError> getErrores()
+	{
+		return this.errores;
+	}
 
 }
 
@@ -42,7 +55,17 @@ JAVACODE
 void skip_error_recovery(int kind, String archivo, String columna)
 {
     //ParseException e = generateParseException();  // generate the exception object.
-    System.out.println("Caracter No admitido en "+archivo+", Columna: "+columna+" : "+getToken(1).image);  // print the error message
+	String ti = "Lexico";
+	String m = "Caracter desconocido: ";
+	Token to = getToken(1);
+	if(to.kind != 27)
+	{
+		ti = "Sintactico";
+		m = "No se esperaba: ";
+		to = getToken(0);
+	}
+    //System.out.println("Caracter No admitido en "+archivo+", Columna: "+columna+" : "+to.image);  // print the error message
+	errores.add(new TError(ti,m+to.image,columna,archivo));
     Token t;
     do {
         t = getNextToken();
@@ -56,6 +79,9 @@ TOKEN:
     |<ptComa: ";">//{System.out.println("Token: "+image);} // ES EL 3
     |<nll: "NULL">//{System.out.println("Token: "+image);}
     |<dPts: ":">//{System.out.println("Token: "+image);}
+	|<oBrack: "[">
+	|<cBrack: "]">
+	|<coma: ",">
 }
 //PALABRAS RESERVADAS CONFIGURACIONES
 TOKEN:
@@ -71,7 +97,51 @@ TOKEN:
 	|<tod: "todo">
 	|<cuadricu: "cuadricula">
 }
-
+//PALABRAS RESERVADAS PARA OPCIONES
+TOKEN:
+{
+	 <opcions: "_opciones">
+}
+//PALABRAS RESERVADAS PARA ENCUESTA
+TOKEN:
+{
+	 <pregu: "_pregunta">
+	|<encus: "_Encuesta">
+	|<tipo: "tipo">
+	|<idpregu: "idpregunta">
+	|<etiqueta: "etiqueta">
+	|<sugerir: "sugerir">
+	|<requerido: "requerido">
+	|<requeridomsn: "requeridomsn">
+	|<pordefecto: "pordefecto">
+	|<lectura: "lectura">
+	|<calculo: "calculo">
+	|<multimedia: "multimedia">
+	|<restringir: "restringir">
+	|<restringirmsn: "restringirmsn">
+	|<codigo_pre: "codigo_pre">
+	|<codigo_post: "codigo_post">
+	|<aplicable: "aplicable">
+	|<apariencia: "apariencia">
+	|<parametro: "parametro">
+	|<verdadero: "verdadero">
+	|<falso: "falso">
+	|<uno: "1">
+	|<cero: "0">
+	|<texto: "texto">
+	|<entero: "entero">
+	|<decimal: "decimal">
+	|<rango: "rango">
+	|<condicion: "condicion">
+	|<fecha: "fecha">
+	|<hora: "hora">
+	|<fechahora: "fechahora">
+	|<sel_un: "selecciona_uno">
+	|<sel_mul: "selecciona_multiples">
+	|<nota: "nota">
+	|<fichero: "fichero">
+	|<calcular: "calcular">
+}
 //LOS TOKENS QUE VA A IGNORAR
 SKIP:
 {
@@ -94,24 +164,42 @@ ASTNode INICIO():
     ASTNode padre = new ASTNode(id, 0, 0, "INICIO");
     id++;
     ASTNode confi;
+	ASTNode ops;
+	ASTNode enc;
+	errores = new ArrayList();
+	
 }
 {
     //LLAMADA A LOS DEMAS
     confi = CONFIG()
+	ops = OPCIONES()
+	enc = ENCUESTA()
     //AREA DE RETURN
     {
         //AQUI VA A IR EL RETORNO DEL PADRE
         padre.addHijo(confi);
+		padre.addHijo(ops);
+		padre.addHijo(enc);
         return padre;
     }
 }
-
-//------------------------------------------------------------------------------
+void EMPTY():
+{}
+{
+	//PRODUCCION VACIA
+	{
+		System.out.println("VACIO");
+	}
+}
+//-----------------------------------------------------------------------------------------------|
+//---------------------- COFIG Y SUS PRDOUCCIONES------------------------------------------------|
+//-----------------------------------------------------------------------------------------------|
 ASTNode CONFIG():
 {
     //AQUI VAN A IR LOS HIJOS DE ESTE METODO
+	id++;
     ASTNode padre = new ASTNode(id, 0, 0, "CONFIG");
-    id++;
+    
     ASTNode titulof, idf, stl, imp, cglo, cpr;
 }
 {
@@ -140,6 +228,13 @@ ASTNode CONFIG():
     {
         return padre;
     }
+	
+	|
+	
+	EMPTY()
+	{
+		return padre; 
+	}
 }
 
 ASTNode TITULO():
@@ -152,7 +247,7 @@ ASTNode TITULO():
 {
     try
     {
-        <titulo_form> <dPts> tit = TF("titulo_formulario") <ptComa>
+        <titulo_form> <dPts> tit = TF("Configuraciones","titulo_formulario") <ptComa>
         {
             padre.addHijo(tit);
             return padre;
@@ -166,7 +261,7 @@ ASTNode TITULO():
     }
 }
 
-ASTNode TF(String columna):
+ASTNode TF(String hoja, String columna):
 {
     Token t;
 }
@@ -368,7 +463,7 @@ ASTNode CGLOBAL():
 {
 	try
 	{
-		<codigo_gl> <dPts> temp = TF("codigo_global") <ptComa>
+		<codigo_gl> <dPts> temp = TF("Configuraciones","codigo_global") <ptComa>
 		{
 			padre.addHijo(temp);
 			return padre;
@@ -390,7 +485,7 @@ ASTNode CPRIN():
 {
 	try
 	{
-		<codigo_pr> <dPts> temp = TF("codigo_principal") <ptComa>
+		<codigo_pr> <dPts> temp = TF("Configuraciones","codigo_principal") <ptComa>
 		{
 			padre.addHijo(temp);
 			return padre;
@@ -402,3 +497,261 @@ ASTNode CPRIN():
         return padre;
 	}
 }
+//-----------------------------------------------------------------------------------------------|
+//---------------------- OPCIONES Y SUS PRDOUCCIONES---------------------------------------------|
+//-----------------------------------------------------------------------------------------------|
+ASTNode OPCIONES():
+{
+	id++;
+	ASTNode padre = new ASTNode(id,0,0,"OPCIONES");
+	ASTNode lopcs;
+}
+{
+	try
+	{
+		<opcions>//_opciones
+		<oKey>//{
+		lopcs = L_OPCS()
+		{
+			padre.addHijo(lopcs);
+		}
+		<cKey>//}
+		{
+			return padre;
+		}
+	}
+	catch(ParseException e)
+	{
+		return padre;
+	}
+	
+}
+
+ASTNode L_OPCS():
+{
+	id++;
+	ASTNode padre = new ASTNode(id,0,0,"L_OPCS");
+	ASTNode opcs;
+	ASTNode l_opcs;
+}
+{
+	opcs = OPCS()
+	{padre.addHijo(opcs);}
+	l_opcs = L_OPCS()
+	{
+		padre.addHijo(l_opcs);
+		return padre;
+	}
+	
+	|
+	EMPTY()
+	{
+		return padre;
+	}
+}
+
+ASTNode OPCS():
+{
+	id++;
+	ASTNode padre = new ASTNode(id,0,0,"OPCS");
+	Token t;
+	ASTNode l_entrada;
+}
+{
+	try
+	{
+		t = <identificador> <oKey> l_entrada = L_ENT() <cKey> <ptComa>
+		{
+			id++;
+			padre.addHijo(new ASTNode(id,0,0,t.image));
+			padre.addHijo(l_entrada);
+			return padre;
+		}
+		|
+		<nll>
+		{
+			//AQUI MENCIONAR EL ERROR DE LISTA
+			skip_error_recovery(PUNTOCOMA, "Opciones", "nombre_lista");
+			errores.add(new TError("Sintactico","Nombre de listado Invalido: NULL | Se esperaba un Id", "nombre_lista", "Opciones"));
+			return padre;
+		}
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(PUNTOCOMA, "Opciones", "nombre_lista");//hasta que encuentre el punto y coma
+		return padre;
+	}
+}
+
+ASTNode L_ENT():
+{
+	id++;
+	ASTNode padre = new ASTNode(id,0,0,"L_ENT");
+	ASTNode ent;
+	ASTNode l_ent;
+}
+{
+	ent = ENT()
+	l_ent = L_ENT()
+	{	
+		padre.addHijo(ent); 
+		padre.addHijo(l_ent);
+		return padre;
+	}
+	|
+	EMPTY()
+	{return padre;}
+}
+
+ASTNode ENT():
+{
+	id++;
+	ASTNode padre = new ASTNode(id,0,0,"ENT");
+	Token iden;
+	Token cad;
+	ASTNode mult;
+}
+{
+	try
+	{
+		<oBrack> iden = <identificador> <coma> cad = <texto_pl> <coma> mult = TF("Opciones","multimedia") <cBrack>
+		{
+			id++;
+			padre.addHijo(new ASTNode(id,0,0,iden.image));
+			id++;
+			padre.addHijo(new ASTNode(id,0,0,extractText(cad.image)));
+			padre.addHijo(mult);
+			return padre;
+		}
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(PUNTOCOMA, "Opciones", "nombre");//hasta que encuentre el punto y coma
+		return padre;
+	}
+}
+//-----------------------------------------------------------------------------------------------|
+//---------------------- ENCUESTA Y SUS PRDOUCCIONES---------------------------------------------|
+//-----------------------------------------------------------------------------------------------|
+ASTNode ENCUESTA():
+{
+	id++;
+	ASTNode padre = new ASTNode(id,0,0,"ENCUESTA");
+	simbolos = new TablaSimbolos();
+	Formulario f = new Formulario();
+}
+{
+	<encus> <oKey>
+	f = ENCUESTAP(f)
+	<cKey>
+	{
+		padre.setForm(f);
+		this.simbolos.printCountElements();
+		return padre;
+	}
+	
+}
+
+Formulario ENCUESTAP(Formulario f):
+{
+	Pregunta p;
+	Grupo g;
+	Ciclo c;
+}
+{
+	p = PREGUNTA() f = ENCUESTAP(f)
+	{
+		if(p!=null)
+		{
+			f.addPregunta(p);
+		}
+		return f;
+	}
+	|EMPTY()
+	{
+		return f;
+	}
+}
+
+Pregunta PREGUNTA():
+{
+	int ti;
+	Token iden;
+	Token cad;
+}
+{
+	try
+	{
+		<pregu> <oKey> <tipo> <dPts>  ti = TIPO() <ptComa> <idpregu> <dPts> iden = <identificador> <ptComa> <etiqueta> <dPts> cad = <texto_pl> <ptComa> <cKey>
+		{
+			
+			Pregunta p = new Pregunta(iden.image, extractText(cad.image), ti);
+			if(simbolos.insertaEnTabla(iden.image, new Simbolo(iden.image, "Pregunta", p)))
+			{
+				return p;
+			}
+			this.errores.add(new TError("Semantico", "Existe ya un Simbolo con este identificador: "+iden.image,"idpregunta", "Encuesta"));
+			return null;
+		}
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(PUNTOCOMA, "Encuesta", "idpregunta, etiqueta");
+		return null;
+	}
+}
+
+int TIPO():
+{
+	
+}
+{
+	try
+	{
+		 <texto>
+		 {return TipoPregunta.TEXTO;}
+		
+		|<entero>
+		{return TipoPregunta.ENTERO;}
+		
+		|<decimal>
+		{return TipoPregunta.DECIMAL;}
+		
+		|<rango>
+		{return TipoPregunta.RANGO;}
+		
+		|<condicion>
+		{return TipoPregunta.CONDICION;}
+		
+		|<fecha>
+		{return TipoPregunta.FECHA;}
+		
+		|<hora>
+		{return TipoPregunta.HORA;}
+		
+		|<fechahora>
+		{return TipoPregunta.FECHAHORA;}
+		
+		|<sel_un>
+		{return TipoPregunta.SELEC_UNO;}
+		
+		|<sel_mul>
+		{return TipoPregunta.SELEC_MULT;}
+		
+		|<nota>
+		{return TipoPregunta.NOTA;}
+		
+		|<fichero>
+		{return TipoPregunta.FICHERO;}
+		
+		|<calcular>
+		{return TipoPregunta.CALCULAR;}
+		
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(PUNTOCOMA,"Encuesta", "Tipo");
+		return 14;
+	}
+}
+

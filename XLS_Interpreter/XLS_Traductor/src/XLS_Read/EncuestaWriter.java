@@ -50,18 +50,18 @@ public class EncuestaWriter {
         if (validaQueExistanCols(tipo, idp, eit)) {
             int fila = 0;
             for (String s : tipo.valoresColumna) {
-                if (tipo.getValorFila(fila).equals("iniciar agrupacion")) {
+                if (tipo.getValorFila(fila).contains("iniciar agrupacion")) {
                     tabula();
                     cad += dameTabulaciones() + "_grupo{\n";
                     cad += obtener_agrupacion(fila);
                     //LLAMAR AL PROCEDIMIENTO DE AGRUPACIONES
-                } else if (tipo.getValorFila(fila).equals("iniciar ciclo")) {
+                } else if (tipo.getValorFila(fila).contains("iniciar ciclo")) {
                     tabula();
                     cad += dameTabulaciones() + "_ciclo{\n";
                     cad += obtener_ciclo(fila);
                     //LLAMAR AL PROCEDIMIENTO DEL CICLO
 
-                } else if (tipo.getValorFila(fila).equals("finalizar agrupacion") || tipo.getValorFila(fila).equals("finalizar ciclo")) {
+                } else if (tipo.getValorFila(fila).contains("finalizar agrupacion") || tipo.getValorFila(fila).contains("finalizar ciclo")) {
                     
                     cad += dameTabulaciones() + "_fin: " + this.encuesta.getColumnaPorNombre("idpregunta").getValorFila(fila) + ";\n";
                     desTabula();
@@ -90,7 +90,7 @@ public class EncuestaWriter {
 
         //INFORMACION FIJA
         String ti = obtTipo(fila);
-        if (!ti.contains("tipo: NULL")) {
+        if (!esFilaNull(fila)) {
             
             cad += dameTabulaciones() + "_pregunta{\n";
             tabula();
@@ -99,35 +99,49 @@ public class EncuestaWriter {
             cad += obtEtiqueta(fila);
             //FIN DE LA INFO
 
-            cad += obtColumna(fila, "sugerir", "", ""); //SUGERIR
+            cad += obtColumna(fila, "sugerir", "<<", ">>"); //SUGERIR
             String temp = obtColumna(fila, "requerido", "", "");
             cad += temp; //REQUERIDO
             if (!temp.equals("")) {
-                cad += obtColumna(fila, "requeridomsn", "", "");
+                cad += obtColumna(fila, "requeridomsn", "<<", ">>");
             }
-            cad += obtColumna(fila, "pordefecto", "", "");
+            cad += obtColumna(fila, "pordefecto", "<<", ">>");
             cad += obtColumna(fila, "lectura", "", "");
-            cad += obtColumna(fila, "calculo", "", "");
-            cad += obtColumna(fila, "multimedia", "", "");
-            temp = obtColumna(fila, "restringir", "", "");
+            cad += obtColumna(fila, "calculo", "<<", ">>");
+            cad += obtColumna(fila, "multimedia", "<<", ">>");
+            temp = obtColumna(fila, "restringir", "<<", ">>");
             cad += temp;
             if (!temp.equals("")) {
-                cad += obtColumna(fila, "restringirmsn", "", "");
+                cad += obtColumna(fila, "restringirmsn", "<<", ">>");
             }
             cad += obtColumna(fila, "codigo_pre", "<<", ">>");
             cad += obtColumna(fila, "codigo_post", "<<", ">>");
-            cad += obtColumna(fila, "aplicable", "", "");
-            cad += obtColumna(fila, "repeticion", "", "");
+            cad += obtColumna(fila, "aplicable", "<<", ">>");
+            cad += obtColumna(fila, "repeticion", "<<", ">>");
             cad += obtColumna(fila, "apariencia", "", "");
             cad += obtColumna(fila, "parametro", "|", "|");
             desTabula();
             cad += dameTabulaciones() + "}\n";
             
         }
+        
         desTabula();
         return cad;
     }
 
+    private boolean esFilaNull(int fila)
+    {
+        
+        for(NodoColumna n : this.encuesta.columnas)
+        {
+            if(!n.getValorFila(fila).equals("NULL"))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+    
     private String obtener_ciclo(int fila) {
         String cad = "";
         tabula();
@@ -189,7 +203,7 @@ public class EncuestaWriter {
 
     private String obtEtiqueta(int fila) {
         NodoColumna et = this.encuesta.getColumnaPorNombre("etiqueta");
-        return dameTabulaciones() + "etiqueta: %%" + et.getValorFila(fila) + "%%;\n";
+        return dameTabulaciones() + "etiqueta: <<" + et.getValorFila(fila) + ">>;\n";
     }
 
     private String obtColumna(int fila, String colum, String open, String close) {

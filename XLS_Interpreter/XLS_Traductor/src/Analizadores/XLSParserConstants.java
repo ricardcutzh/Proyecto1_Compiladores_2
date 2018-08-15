@@ -21,31 +21,111 @@ public interface XLSParserConstants {
   /** RegularExpression Id. */
   int dPts = 5;
   /** RegularExpression Id. */
-  int titulo_form = 6;
+  int oBrack = 6;
   /** RegularExpression Id. */
-  int idform = 7;
+  int cBrack = 7;
   /** RegularExpression Id. */
-  int estilo = 8;
+  int coma = 8;
   /** RegularExpression Id. */
-  int importa = 9;
+  int titulo_form = 9;
   /** RegularExpression Id. */
-  int codigo_gl = 10;
+  int idform = 10;
   /** RegularExpression Id. */
-  int codigo_pr = 11;
+  int estilo = 11;
   /** RegularExpression Id. */
-  int conf = 12;
+  int importa = 12;
   /** RegularExpression Id. */
-  int pag = 13;
+  int codigo_gl = 13;
   /** RegularExpression Id. */
-  int tod = 14;
+  int codigo_pr = 14;
   /** RegularExpression Id. */
-  int cuadricu = 15;
+  int conf = 15;
   /** RegularExpression Id. */
-  int identificador = 21;
+  int pag = 16;
   /** RegularExpression Id. */
-  int texto_pl = 22;
+  int tod = 17;
   /** RegularExpression Id. */
-  int err = 23;
+  int cuadricu = 18;
+  /** RegularExpression Id. */
+  int opcions = 19;
+  /** RegularExpression Id. */
+  int pregu = 20;
+  /** RegularExpression Id. */
+  int encus = 21;
+  /** RegularExpression Id. */
+  int tipo = 22;
+  /** RegularExpression Id. */
+  int idpregu = 23;
+  /** RegularExpression Id. */
+  int etiqueta = 24;
+  /** RegularExpression Id. */
+  int sugerir = 25;
+  /** RegularExpression Id. */
+  int requerido = 26;
+  /** RegularExpression Id. */
+  int requeridomsn = 27;
+  /** RegularExpression Id. */
+  int pordefecto = 28;
+  /** RegularExpression Id. */
+  int lectura = 29;
+  /** RegularExpression Id. */
+  int calculo = 30;
+  /** RegularExpression Id. */
+  int multimedia = 31;
+  /** RegularExpression Id. */
+  int restringir = 32;
+  /** RegularExpression Id. */
+  int restringirmsn = 33;
+  /** RegularExpression Id. */
+  int codigo_pre = 34;
+  /** RegularExpression Id. */
+  int codigo_post = 35;
+  /** RegularExpression Id. */
+  int aplicable = 36;
+  /** RegularExpression Id. */
+  int apariencia = 37;
+  /** RegularExpression Id. */
+  int parametro = 38;
+  /** RegularExpression Id. */
+  int verdadero = 39;
+  /** RegularExpression Id. */
+  int falso = 40;
+  /** RegularExpression Id. */
+  int uno = 41;
+  /** RegularExpression Id. */
+  int cero = 42;
+  /** RegularExpression Id. */
+  int texto = 43;
+  /** RegularExpression Id. */
+  int entero = 44;
+  /** RegularExpression Id. */
+  int decimal = 45;
+  /** RegularExpression Id. */
+  int rango = 46;
+  /** RegularExpression Id. */
+  int condicion = 47;
+  /** RegularExpression Id. */
+  int fecha = 48;
+  /** RegularExpression Id. */
+  int hora = 49;
+  /** RegularExpression Id. */
+  int fechahora = 50;
+  /** RegularExpression Id. */
+  int sel_un = 51;
+  /** RegularExpression Id. */
+  int sel_mul = 52;
+  /** RegularExpression Id. */
+  int nota = 53;
+  /** RegularExpression Id. */
+  int fichero = 54;
+  /** RegularExpression Id. */
+  int calcular = 55;
+  /** RegularExpression Id. */
+  int identificador = 61;
+  /** RegularExpression Id. */
+  int texto_pl = 62;
+  /** RegularExpression Id. */
+  int err = 63;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -58,6 +138,9 @@ public interface XLSParserConstants {
     "\";\"",
     "\"NULL\"",
     "\":\"",
+    "\"[\"",
+    "\"]\"",
+    "\",\"",
     "\"titulo_formulario\"",
     "\"idform\"",
     "\"estilo\"",
@@ -68,6 +151,43 @@ public interface XLSParserConstants {
     "\"pagina\"",
     "\"todo\"",
     "\"cuadricula\"",
+    "\"_opciones\"",
+    "\"_pregunta\"",
+    "\"_Encuesta\"",
+    "\"tipo\"",
+    "\"idpregunta\"",
+    "\"etiqueta\"",
+    "\"sugerir\"",
+    "\"requerido\"",
+    "\"requeridomsn\"",
+    "\"pordefecto\"",
+    "\"lectura\"",
+    "\"calculo\"",
+    "\"multimedia\"",
+    "\"restringir\"",
+    "\"restringirmsn\"",
+    "\"codigo_pre\"",
+    "\"codigo_post\"",
+    "\"aplicable\"",
+    "\"apariencia\"",
+    "\"parametro\"",
+    "\"verdadero\"",
+    "\"falso\"",
+    "\"1\"",
+    "\"0\"",
+    "\"texto\"",
+    "\"entero\"",
+    "\"decimal\"",
+    "\"rango\"",
+    "\"condicion\"",
+    "\"fecha\"",
+    "\"hora\"",
+    "\"fechahora\"",
+    "\"selecciona_uno\"",
+    "\"selecciona_multiples\"",
+    "\"nota\"",
+    "\"fichero\"",
+    "\"calcular\"",
     "\" \"",
     "\"\\n\"",
     "\"\\r\"",

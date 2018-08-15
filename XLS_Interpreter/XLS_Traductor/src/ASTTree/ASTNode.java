@@ -10,6 +10,7 @@ package ASTTree;
  * @author ricar
  */
 import java.util.ArrayList;
+import Abstract.Formulario;
 public class ASTNode{
     
      /*
@@ -21,6 +22,8 @@ public class ASTNode{
     int column;
     String etiqueta;
     ArrayList<ASTNode> hijos;
+    Formulario form;
+    
     
     public ASTNode(int idnodo, int line, int column, String etiqueta)
     {
@@ -96,5 +99,11 @@ public class ASTNode{
             }
         }
     }
+
+    public void setForm(Formulario form) {
+        this.form = form;
+    }
+    
+    
     
 }
