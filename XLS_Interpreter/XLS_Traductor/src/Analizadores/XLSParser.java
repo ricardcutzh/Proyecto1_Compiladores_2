@@ -22,28 +22,42 @@ public class XLSParser implements XLSParserConstants {
         return text;
     }
 
+        String extractExpre(String text)
+    {
+        text = text.replace("'", "");
+        return text;
+    }
+
         public ArrayList<TError> getErrores()
         {
                 return this.errores;
         }
 
   void skip_error_recovery(int kind, String archivo, String columna) throws ParseException {
-    //ParseException e = generateParseException();  // generate the exception object.
+    //ParseException e = generateParseException();  // generaste the exception object.
         String ti = "Lexico";
         String m = "Caracter desconocido: ";
         Token to = getToken(1);
-        if(to.kind != 27)
+        if(to.kind != XLSParserConstants.err)
         {
                 ti = "Sintactico";
                 m = "No se esperaba: ";
                 to = getToken(0);
+        }
+        if(to.kind == XLSParserConstants.cKey)
+        {
+                ti = "Sintactico";
+                m = "Se esperaba la finalizacion de un Grupo o Ciclo";
+                errores.add(new TError(ti,m,columna,archivo));
+                return;
         }
     //System.out.println("Caracter No admitido en "+archivo+", Columna: "+columna+" : "+to.image);  // print the error message
         errores.add(new TError(ti,m+to.image,columna,archivo));
     Token t;
     do {
         t = getNextToken();
-    } while (t.kind != kind);
+                if(t.kind == 0){break;}
+    } while (t.kind != kind || t.kind != 0);
   }
 
 //SYNTAXIS DEL LENGUAJE
@@ -58,15 +72,18 @@ public class XLSParser implements XLSParserConstants {
         ASTNode ops;
         ASTNode enc;
         errores = new ArrayList();
-    //LLAMADA A LOS DEMAS
-        confi = CONFIG();
-    ops = OPCIONES();
-    enc = ENCUESTA();
+    try {
+      confi = CONFIG();
+      ops = OPCIONES();
+      enc = ENCUESTA();
         //AQUI VA A IR EL RETORNO DEL PADRE
         padre.addHijo(confi);
                 padre.addHijo(ops);
                 padre.addHijo(enc);
         {if (true) return padre;}
+    } catch (ParseException e) {
+                {if (true) return new ASTNode(id, 0,0, "error1");}
+    }
     throw new Error("Missing return statement in function");
   }
 
@@ -230,7 +247,7 @@ public class XLSParser implements XLSParserConstants {
                         padre.addHijo(est);
                         {if (true) return padre;}
     } catch (ParseException e) {
-                skip_error_recovery(PUNTOCOMA, "Configuraciones", "estilo");
+                skip_error_recovery(PUNTOCOMA, "Configuraciones", "estilo: Solo Pagina, Cuadricula, Todo");
                 {if (true) return padre;}
     }
     throw new Error("Missing return statement in function");
@@ -245,7 +262,7 @@ public class XLSParser implements XLSParserConstants {
                         id++;
                         {if (true) return new ASTNode(id, 0,0, t.image);}
       } catch (ParseException e) {
-                skip_error_recovery(PUNTOCOMA, "Configuraciones", "estilo");//HASTA QUE ENCUENTRE EL PUNTO Y COMA
+                skip_error_recovery(PUNTOCOMA, "Configuraciones", "estilo: Solo Pagina, Cuadricula, Todo");//HASTA QUE ENCUENTRE EL PUNTO Y COMA
                 id++;
                 {if (true) return new ASTNode(id, 0,0,"_ERR");}
       }
@@ -256,7 +273,7 @@ public class XLSParser implements XLSParserConstants {
                         id++;
                         {if (true) return new ASTNode(id, 0,0, t.image);}
       } catch (ParseException e) {
-                skip_error_recovery(PUNTOCOMA, "Configuraciones", "estilo");//HASTA QUE ENCUENTRE EL PUNTO Y COMA
+                skip_error_recovery(PUNTOCOMA, "Configuraciones", "estilo: Solo Pagina, Cuadricula, Todo");//HASTA QUE ENCUENTRE EL PUNTO Y COMA
                 id++;
                 {if (true) return new ASTNode(id, 0,0,"_ERR");}
       }
@@ -267,7 +284,7 @@ public class XLSParser implements XLSParserConstants {
                         id++;
                         {if (true) return new ASTNode(id, 0,0, t.image);}
       } catch (ParseException e) {
-                skip_error_recovery(PUNTOCOMA, "Configuraciones", "estilo");//HASTA QUE ENCUENTRE EL PUNTO Y COMA
+                skip_error_recovery(PUNTOCOMA, "Configuraciones", "estilo: Solo Pagina, Cuadricula, Todo");//HASTA QUE ENCUENTRE EL PUNTO Y COMA
                 id++;
                 {if (true) return new ASTNode(id, 0,0,"_ERR");}
       }
@@ -488,11 +505,29 @@ public class XLSParser implements XLSParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case pregu:
       p = PREGUNTA();
-      f = ENCUESTAP(f);
                 if(p!=null)
                 {
                         f.addPregunta(p);
                 }
+      f = ENCUESTAP(f);
+                {if (true) return f;}
+      break;
+    case grupo:
+      g = GRUPO();
+                if(g!=null)
+                {
+                        f.addGrupo(g);
+                }
+      f = ENCUESTAP(f);
+                {if (true) return f;}
+      break;
+    case ciclo:
+      c = CICLO();
+                if(c!=null)
+                {
+                        f.addCiclo(c);
+                }
+      f = ENCUESTAP(f);
                 {if (true) return f;}
       break;
     default:
@@ -507,6 +542,8 @@ public class XLSParser implements XLSParserConstants {
         int ti;
         Token iden;
         Token cad;
+        Pregunta aux;
+        String aux1 = "";
     try {
       jj_consume_token(pregu);
       jj_consume_token(oKey);
@@ -517,13 +554,18 @@ public class XLSParser implements XLSParserConstants {
       jj_consume_token(idpregu);
       jj_consume_token(dPts);
       iden = jj_consume_token(identificador);
+                                                                                                            aux1 = iden.image;
       jj_consume_token(ptComa);
       jj_consume_token(etiqueta);
       jj_consume_token(dPts);
       cad = jj_consume_token(texto_pl);
       jj_consume_token(ptComa);
-      jj_consume_token(cKey);
+                        //CREO LA PREGUNTA
                         Pregunta p = new Pregunta(iden.image, extractText(cad.image), ti);
+      aux = OTROS(p);
+                        //OBTENGO LA PREGUNTA Y LA DEVUELVO
+                        p = aux;
+      jj_consume_token(cKey);
                         if(simbolos.insertaEnTabla(iden.image, new Simbolo(iden.image, "Pregunta", p)))
                         {
                                 {if (true) return p;}
@@ -531,7 +573,7 @@ public class XLSParser implements XLSParserConstants {
                         this.errores.add(new TError("Semantico", "Existe ya un Simbolo con este identificador: "+iden.image,"idpregunta", "Encuesta"));
                         {if (true) return null;}
     } catch (ParseException e) {
-                skip_error_recovery(PUNTOCOMA, "Encuesta", "idpregunta, etiqueta");
+                skip_error_recovery(PUNTOCOMA, "Encuesta", "idpregunta: "+aux1+", etiqueta");
                 {if (true) return null;}
     }
     throw new Error("Missing return statement in function");
@@ -574,10 +616,12 @@ public class XLSParser implements XLSParserConstants {
         break;
       case sel_un:
         jj_consume_token(sel_un);
+        jj_consume_token(identificador);
                  {if (true) return TipoPregunta.SELEC_UNO;}
         break;
       case sel_mul:
         jj_consume_token(sel_mul);
+        jj_consume_token(identificador);
                  {if (true) return TipoPregunta.SELEC_MULT;}
         break;
       case nota:
@@ -604,6 +648,523 @@ public class XLSParser implements XLSParserConstants {
     throw new Error("Missing return statement in function");
   }
 
+  final public Pregunta OTROS(Pregunta p) throws ParseException {
+        Pregunta pe;
+        boolean b;
+        Token t;
+        String apa;
+        String atributo ="";
+    try {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case sugerir:
+        jj_consume_token(sugerir);
+                           atributo = p.getIdpregunta()+", sugerir";
+        jj_consume_token(dPts);
+        t = jj_consume_token(texto_pl);
+        jj_consume_token(ptComa);
+                        /*ANADIR AQUI!*/
+                        if(!p.addAtributo(new Sugerencia(extractText(t.image)),"sugerir"))
+                        {
+                                this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: Sugerir","Sugerir","Encuesta"));
+                        }
+        pe = OTROS(p);
+                         {if (true) return pe;}
+        break;
+      case requerido:
+        jj_consume_token(requerido);
+                              atributo = p.getIdpregunta()+", requerido";
+        jj_consume_token(dPts);
+        b = BOOLEANO(atributo);
+        jj_consume_token(ptComa);
+                        /*ANADIR AQUI!*/
+                        if(!p.addAtributo( new Requerido(String.valueOf(b), b),"requerido"))
+                        {
+                                this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: Requerido","Requerido","Encuesta"));
+                        }
+        pe = OTROS(p);
+                        {if (true) return pe;}
+        break;
+      case requeridomsn:
+        jj_consume_token(requeridomsn);
+                                 atributo = p.getIdpregunta() + ", requeridomsn";
+        jj_consume_token(dPts);
+        t = jj_consume_token(texto_pl);
+        jj_consume_token(ptComa);
+                        /*ANADIR AQUI!*/
+                        if(!p.addAtributo(new RequeridoMsn(extractText(t.image)),"requeridomsn"))
+                        {
+                                this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: RequeridoMsn","RequeridoMsn","Encuesta"));
+                        }
+        pe = OTROS(p);
+                        {if (true) return pe;}
+        break;
+      case pordefecto:
+        jj_consume_token(pordefecto);
+                               atributo = p.getIdpregunta() + ", pordefecto";
+        jj_consume_token(dPts);
+        t = jj_consume_token(texto_ex);
+        jj_consume_token(ptComa);
+                        /*ANADIR AQUI!*/
+                        if(!p.addAtributo(new PorDefecto(extractExpre(t.image)),"pordefecto"))
+                        {
+                                this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: PorDefecto","PorDefecto","Encuesta"));
+                        }
+        pe = OTROS(p);
+                        {if (true) return pe;}
+        break;
+      case lectura:
+        jj_consume_token(lectura);
+                            atributo = p.getIdpregunta() + ", lectura";
+        jj_consume_token(dPts);
+        b = BOOLEANO(atributo);
+        jj_consume_token(ptComa);
+                        /*ANADIR AQUI!*/
+                        if(!p.addAtributo(new Lectura(String.valueOf(b), b),"lectura"))
+                        {
+                                this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: Lectura","Lectura","Encuesta"));
+                        }
+        pe = OTROS(p);
+                        {if (true) return pe;}
+        break;
+      case calculo:
+        jj_consume_token(calculo);
+                            atributo = p.getIdpregunta() + ", calculo";
+        jj_consume_token(dPts);
+        t = jj_consume_token(texto_ex);
+        jj_consume_token(ptComa);
+                        /*ANADIR AQUI!*/
+                        if(!p.addAtributo(new Calculo(extractExpre(t.image)),"calculo"))
+                        {
+                                this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: Calculo","Calculo","Encuesta"));
+                        }
+        pe = OTROS(p);
+                        {if (true) return pe;}
+        break;
+      case multimedia:
+        jj_consume_token(multimedia);
+                               atributo = p.getIdpregunta() + ", multimedia";
+        jj_consume_token(dPts);
+        t = jj_consume_token(texto_pl);
+        jj_consume_token(ptComa);
+                        /*ANADIR AQUI!*/
+                        if(!p.addAtributo(new Multimedia(extractText(t.image)),"multimedia"))
+                        {
+                                this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: Multimedia","Multimedia","Encuesta"));
+                        }
+        pe = OTROS(p);
+                        {if (true) return pe;}
+        break;
+      case restringir:
+        jj_consume_token(restringir);
+                               atributo = p.getIdpregunta() + ", restringir";
+        jj_consume_token(dPts);
+        t = jj_consume_token(texto_ex);
+        jj_consume_token(ptComa);
+                        /*ANADIR AQUI!*/
+                        if(!p.addAtributo(new Restringir(extractExpre(t.image)),"restringir"))
+                        {
+                                this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: ","","Encuesta"));
+                        }
+        pe = OTROS(p);
+                        {if (true) return pe;}
+        break;
+      case restringirmsn:
+        jj_consume_token(restringirmsn);
+                                  atributo = p.getIdpregunta() + ", restringirmsn";
+        jj_consume_token(dPts);
+        t = jj_consume_token(texto_pl);
+        jj_consume_token(ptComa);
+                        /*ANADIR AQUI!*/
+                        if(!p.addAtributo(new RestringirMsn(extractText(t.image)),"restringirmsn"))
+                        {
+                                this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: ","","Encuesta"));
+                        }
+        pe = OTROS(p);
+                        {if (true) return pe;}
+        break;
+      case codigo_pre:
+        jj_consume_token(codigo_pre);
+                               atributo = p.getIdpregunta() + ", codigo_pre";
+        jj_consume_token(dPts);
+        t = jj_consume_token(texto_pl);
+        jj_consume_token(ptComa);
+                        /*ANADIR AQUI!*/
+                        if(!p.addAtributo(new CodigoPre(extractText(t.image)),"codigo_pre"))
+                        {
+                                this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: ","","Encuesta"));
+                        }
+        pe = OTROS(p);
+                        {if (true) return pe;}
+        break;
+      case codigo_post:
+        jj_consume_token(codigo_post);
+                                atributo = p.getIdpregunta() + ", codigo_post";
+        jj_consume_token(dPts);
+        t = jj_consume_token(texto_pl);
+        jj_consume_token(ptComa);
+                        /*ANADIR AQUI!*/
+                        if(!p.addAtributo( new CodigoPost(extractText(t.image)), "codigo_post"))
+                        {
+                                this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: ","","Encuesta"));
+                        }
+        pe = OTROS(p);
+                        {if (true) return pe;}
+        break;
+      case aplicable:
+        jj_consume_token(aplicable);
+                              atributo = p.getIdpregunta() + ", aplicable";
+        jj_consume_token(dPts);
+        t = jj_consume_token(texto_ex);
+        jj_consume_token(ptComa);
+                        /*ANADIR AQUI*/
+                        if(!p.addAtributo(new Aplicable(extractExpre(t.image)),"aplicable"))
+                        {
+                                this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: ","","Encuesta"));
+                        }
+        pe = OTROS(p);
+                        {if (true) return pe;}
+        break;
+      case repeticion:
+        jj_consume_token(repeticion);
+                               atributo = p.getIdpregunta() + ", repeticion";
+        jj_consume_token(dPts);
+        t = jj_consume_token(texto_ex);
+        jj_consume_token(ptComa);
+                        /*ANADIR AQUI!*/
+                        if(!p.addAtributo(new Repeticion(extractExpre(t.image)),"repeticion"))
+                        {
+                                this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: ","","Encuesta"));
+                        }
+        pe = OTROS(p);
+                        {if (true) return pe;}
+        break;
+      case apariencia:
+        jj_consume_token(apariencia);
+                               atributo = p.getIdpregunta() + ", apariencia";
+        jj_consume_token(dPts);
+        apa = APARIENCIA(atributo);
+        jj_consume_token(ptComa);
+                        /*ANADIR AQUI!*/
+                        if(!p.addAtributo(new Apariencia(apa),"apariencia"))
+                        {
+                                this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: ","","Encuesta"));
+                        }
+        pe = OTROS(p);
+                        {if (true) return pe;}
+        break;
+      case parametro:
+        jj_consume_token(parametro);
+                              atributo = p.getIdpregunta() + ", parametro";
+        jj_consume_token(dPts);
+        t = jj_consume_token(texto_pl);
+        jj_consume_token(ptComa);
+                        /*ANADIR AQUI!*/
+                        if(!p.addAtributo(new Parametro(extractExpre(t.image)),"parametro"))
+                        {
+                                this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: ","","Encuesta"));
+                        }
+        pe = OTROS(p);
+                        {if (true) return pe;}
+        break;
+      default:
+        jj_la1[9] = jj_gen;
+        EMPTY();
+                        {if (true) return p;}
+      }
+    } catch (ParseException e) {
+                skip_error_recovery(PUNTOCOMA, "Encuesta", atributo);
+                {if (true) return OTROS(p);}
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public boolean BOOLEANO(String col) throws ParseException {
+    try {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case verdadero:
+        jj_consume_token(verdadero);
+                              {if (true) return true;}
+        break;
+      case falso:
+        jj_consume_token(falso);
+                          {if (true) return false;}
+        break;
+      case uno:
+        jj_consume_token(uno);
+                        {if (true) return true;}
+        break;
+      case cero:
+        jj_consume_token(cero);
+                         {if (true) return false;}
+        break;
+      default:
+        jj_la1[10] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+    } catch (ParseException p) {
+                skip_error_recovery(PUNTOCOMA, "Encuesta", col);
+                {if (true) return false;}
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public String APARIENCIA(String col) throws ParseException {
+    try {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case pag:
+        jj_consume_token(pag);
+                       {if (true) return "Pagina";}
+        break;
+      case tod:
+        jj_consume_token(tod);
+                       {if (true) return "Todo";}
+        break;
+      case cuadricu:
+        jj_consume_token(cuadricu);
+                            {if (true) return "Cuadricula";}
+        break;
+      default:
+        jj_la1[11] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+    } catch (ParseException p) {
+                skip_error_recovery(PUNTOCOMA, "Encuesta", col);
+                {if (true) return "";}
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+//----------------------------------------GRUPOS-----------------------------------------------------------------------
+  final public Grupo GRUPO() throws ParseException {
+        Token iden;
+        Token iden2;
+        Token et;
+        Aplicable ap;
+        Grupo padre;
+        String aux="";
+    try {
+      jj_consume_token(grupo);
+      jj_consume_token(oKey);
+      jj_consume_token(idpregu);
+      jj_consume_token(dPts);
+      iden = jj_consume_token(identificador);
+                                                 aux = iden.image;
+      jj_consume_token(ptComa);
+      jj_consume_token(etiqueta);
+      jj_consume_token(dPts);
+      et = jj_consume_token(texto_pl);
+      jj_consume_token(ptComa);
+      ap = APLICABLE("Grupo: "+iden.image);
+                Grupo g = new Grupo(iden.image,extractText(et.image));
+                if(ap!=null)
+                {
+                        g.setAplicable(ap);
+                }
+      padre = CUERPOG(g);
+      jj_consume_token(fin);
+      jj_consume_token(dPts);
+      iden2 = jj_consume_token(identificador);
+      jj_consume_token(ptComa);
+                if(!iden.image.equals(iden2.image))
+                {
+                        this.errores.add(new TError("Semantico", "No se ha cerrado el grupo: "+iden.image,"finalizar Agrupacion", "Encuesta"));
+                        {if (true) return null;}
+                }
+      jj_consume_token(cKey);
+                //ANADO A LA TABLA DE SIMBOLOS
+                if(simbolos.insertaEnTabla(iden.image,new Simbolo(iden.image, "Grupo", padre)))
+                {
+                        {if (true) return padre;}
+                }
+                this.errores.add(new TError("Semantico", "Existe ya un Grupo con este identificador: "+iden.image,"idpregunta", "Encuesta"));
+                {if (true) return null;}
+    } catch (ParseException e) {
+                skip_error_recovery(PUNTOCOMA, "Encuesta", "Grupo: "+aux+" | idpregunta, Finalizar Ciclo");
+                {if (true) return null;}
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public Aplicable APLICABLE(String grupoCiclo) throws ParseException {
+        Token t;
+    try {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case aplicable:
+        jj_consume_token(aplicable);
+        jj_consume_token(dPts);
+        t = jj_consume_token(texto_ex);
+        jj_consume_token(ptComa);
+                        {if (true) return new Aplicable(extractExpre(t.image));}
+        break;
+      default:
+        jj_la1[12] = jj_gen;
+        EMPTY();
+                        {if (true) return null;}
+      }
+    } catch (ParseException e) {
+                skip_error_recovery(PUNTOCOMA, "Encuesta", grupoCiclo+": Aplicable");
+                {if (true) return null;}
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public Grupo CUERPOG(Grupo g) throws ParseException {
+        Pregunta p;
+        Grupo g1;
+        Ciclo c;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case pregu:
+      p = PREGUNTA();
+                if(p!=null)
+                {
+                        g.addPregunta(p);
+                }
+      g = CUERPOG(g);
+                {if (true) return g;}
+      break;
+    case grupo:
+      g1 = GRUPO();
+                if(g1!=null)
+                {
+                        g.addGrupo(g1);
+                }
+      g = CUERPOG(g);
+                {if (true) return g;}
+      break;
+    case ciclo:
+      c = CICLO();
+                if(c!=null)
+                {
+                        g.addCiclo(c);
+                }
+      g = CUERPOG(g);
+                {if (true) return g;}
+      break;
+    default:
+      jj_la1[13] = jj_gen;
+      EMPTY();
+                {if (true) return g;}
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+//------------------------------------------------------------CICLOS!--------------------------------------------------------------
+  final public Ciclo CICLO() throws ParseException {
+        String aux = "";
+        Token ide;
+        Token ide2;
+        Ciclo padre;
+        Aplicable ap;
+        Repeticion rep;
+    try {
+      jj_consume_token(ciclo);
+      jj_consume_token(oKey);
+      jj_consume_token(idpregu);
+      jj_consume_token(dPts);
+      ide = jj_consume_token(identificador);
+                                                        aux = ide.image;
+      jj_consume_token(ptComa);
+      ap = APLICABLE("Ciclo: "+ide.image);
+                        Ciclo c = new Ciclo(ide.image, "No Aplica");
+                        if(ap!=null)
+                        {
+                                c.setApli(ap);
+                        }
+      rep = REPETICION("Ciclo: "+ide.image);
+                        if(rep!=null)
+                        {
+                                c.setRep(rep);
+                        }
+      padre = CUERPOC(c);
+      jj_consume_token(fin);
+      jj_consume_token(dPts);
+      ide2 = jj_consume_token(identificador);
+      jj_consume_token(ptComa);
+                        if(!ide.image.equals(ide2.image))
+                        {
+                                this.errores.add(new TError("Semantico", "No se ha cerrado el Ciclo: "+ide.image,"finalizar Ciclo", "Encuesta"));
+                                {if (true) return null;}
+                        }
+      jj_consume_token(cKey);
+                        //INSERTO EN TABLA DE SIMBOLOS Y RETORNO
+                        if(simbolos.insertaEnTabla(ide.image,new Simbolo(ide.image, "Ciclo", padre)))
+                        {
+                                {if (true) return padre;}
+                        }
+                        this.errores.add(new TError("Semantico", "Existe ya un Ciclo con este identificador: "+ide.image,"idpregunta", "Encuesta"));
+                        {if (true) return null;}
+    } catch (ParseException e) {
+                skip_error_recovery(PUNTOCOMA, "Encuesta", "Ciclo: "+aux+" | fin de ciclo o identificador invalido");
+                {if (true) return null;}
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public Repeticion REPETICION(String grupoCiclo) throws ParseException {
+        Token t;
+    try {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case repeticion:
+        jj_consume_token(repeticion);
+        jj_consume_token(dPts);
+        t = jj_consume_token(texto_ex);
+        jj_consume_token(ptComa);
+                        {if (true) return new Repeticion(extractExpre(t.image));}
+        break;
+      default:
+        jj_la1[14] = jj_gen;
+        EMPTY();
+                        {if (true) return null;}
+      }
+    } catch (ParseException e) {
+                skip_error_recovery(PUNTOCOMA, "Encuesta", grupoCiclo+": Aplicable");
+                {if (true) return null;}
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public Ciclo CUERPOC(Ciclo c) throws ParseException {
+        Pregunta p;
+        Ciclo c1;
+        Grupo g1;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case pregu:
+      p = PREGUNTA();
+                if(p!=null)
+                {
+                        c.addPregunta(p);
+                }
+      c = CUERPOC(c);
+                {if (true) return c;}
+      break;
+    case grupo:
+      g1 = GRUPO();
+                if(g1!=null)
+                {
+                        c.addGrupo(g1);
+                }
+      c = CUERPOC(c);
+                {if (true) return c;}
+      break;
+    case ciclo:
+      c1 = CICLO();
+                if(c1!=null)
+                {
+                        c.addCiclo(c1);
+                }
+      c = CUERPOC(c);
+                {if (true) return c;}
+      break;
+    default:
+      jj_la1[15] = jj_gen;
+      EMPTY();
+                {if (true) return c;}
+    }
+    throw new Error("Missing return statement in function");
+  }
+
   /** Generated Token Manager. */
   public XLSParserTokenManager token_source;
   SimpleCharStream jj_input_stream;
@@ -613,18 +1174,23 @@ public class XLSParser implements XLSParserConstants {
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[9];
+  final private int[] jj_la1 = new int[16];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
+  static private int[] jj_la1_2;
   static {
       jj_la1_init_0();
       jj_la1_init_1();
+      jj_la1_init_2();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x8000,0x10,0x10,0x70000,0x10,0x10,0x40,0x100000,0x0,};
+      jj_la1_0 = new int[] {0x8000,0x10,0x10,0x70000,0x10,0x10,0x40,0x100000,0x0,0xfe000000,0x0,0x70000,0x0,0x100000,0x0,0x100000,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0x40000000,0x20000000,0x0,0x20000000,0x20000000,0x0,0x0,0xfff800,};
+      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xa000000,0x1fff000,0x17f,0xe80,0x0,0x10,0xa000000,0x100,0xa000000,};
+   }
+   private static void jj_la1_init_2() {
+      jj_la1_2 = new int[] {0x0,0x4,0x2,0x0,0x2,0x2,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
    }
 
   /** Constructor with InputStream. */
@@ -638,7 +1204,7 @@ public class XLSParser implements XLSParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -652,7 +1218,7 @@ public class XLSParser implements XLSParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -662,7 +1228,7 @@ public class XLSParser implements XLSParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -672,7 +1238,7 @@ public class XLSParser implements XLSParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -681,7 +1247,7 @@ public class XLSParser implements XLSParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -690,7 +1256,7 @@ public class XLSParser implements XLSParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -741,12 +1307,12 @@ public class XLSParser implements XLSParserConstants {
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[64];
+    boolean[] la1tokens = new boolean[69];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 9; i++) {
+    for (int i = 0; i < 16; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -755,10 +1321,13 @@ public class XLSParser implements XLSParserConstants {
           if ((jj_la1_1[i] & (1<<j)) != 0) {
             la1tokens[32+j] = true;
           }
+          if ((jj_la1_2[i] & (1<<j)) != 0) {
+            la1tokens[64+j] = true;
+          }
         }
       }
     }
-    for (int i = 0; i < 64; i++) {
+    for (int i = 0; i < 69; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

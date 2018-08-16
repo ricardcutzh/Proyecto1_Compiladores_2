@@ -9,10 +9,20 @@ package Abstract;
  *
  * @author ricar
  */
-public class RestringirMsn extends Atributo{
+public class RestringirMsn extends Atributo implements ArbolForm{
     
     public RestringirMsn(String cadena) {
         super(cadena);
+    }
+
+    @Override
+    public Object traducirLocal() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object traducirGlobal() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

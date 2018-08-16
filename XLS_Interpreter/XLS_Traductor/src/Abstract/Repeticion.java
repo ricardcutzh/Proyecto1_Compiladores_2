@@ -9,10 +9,20 @@ package Abstract;
  *
  * @author ricar
  */
-public class Repeticion extends Atributo{
+public class Repeticion extends Atributo implements ArbolForm{
     
     public Repeticion(String cadena) {
         super(cadena);
+    }
+
+    @Override
+    public Object traducirLocal() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object traducirGlobal() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

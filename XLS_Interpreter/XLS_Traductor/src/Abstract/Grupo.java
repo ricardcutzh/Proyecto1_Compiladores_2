@@ -9,17 +9,25 @@ package Abstract;
  *
  * @author ricar
  */
+import java.util.ArrayList;
 public class Grupo implements ArbolForm{
     
     String idGrupo;
     String etiqueta;
     Aplicable aplicable;
+    ArrayList<Pregunta> preguntas;
+    ArrayList<Ciclo> ciclos;
+    ArrayList<Grupo> grupos;
+    
     
     public Grupo(String idGrupo, String etiqueta)
     {
         this.idGrupo = idGrupo;
         this.etiqueta = etiqueta;
         this.aplicable = null;
+        this.preguntas = new ArrayList<>();
+        this.ciclos = new ArrayList<>();
+        this.grupos = new ArrayList<>();
     }
 
     public void setAplicable(Aplicable aplicable) {
@@ -32,6 +40,21 @@ public class Grupo implements ArbolForm{
 
     public Aplicable getAplicable() {
         return aplicable;
+    }
+    
+    public void addPregunta(Pregunta p)
+    {
+        this.preguntas.add(p);
+    }
+    
+    public void addGrupo(Grupo p)
+    {
+        this.grupos.add(p);
+    }
+    
+    public void addCiclo(Ciclo c)
+    {
+        this.ciclos.add(c);
     }
 
     @Override

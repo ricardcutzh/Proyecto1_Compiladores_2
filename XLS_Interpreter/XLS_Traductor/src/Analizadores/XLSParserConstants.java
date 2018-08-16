@@ -89,43 +89,53 @@ public interface XLSParserConstants {
   /** RegularExpression Id. */
   int verdadero = 39;
   /** RegularExpression Id. */
-  int falso = 40;
+  int repeticion = 40;
   /** RegularExpression Id. */
-  int uno = 41;
+  int falso = 41;
   /** RegularExpression Id. */
-  int cero = 42;
+  int uno = 42;
   /** RegularExpression Id. */
-  int texto = 43;
+  int cero = 43;
   /** RegularExpression Id. */
-  int entero = 44;
+  int texto = 44;
   /** RegularExpression Id. */
-  int decimal = 45;
+  int entero = 45;
   /** RegularExpression Id. */
-  int rango = 46;
+  int decimal = 46;
   /** RegularExpression Id. */
-  int condicion = 47;
+  int rango = 47;
   /** RegularExpression Id. */
-  int fecha = 48;
+  int condicion = 48;
   /** RegularExpression Id. */
-  int hora = 49;
+  int fecha = 49;
   /** RegularExpression Id. */
-  int fechahora = 50;
+  int hora = 50;
   /** RegularExpression Id. */
-  int sel_un = 51;
+  int fechahora = 51;
   /** RegularExpression Id. */
-  int sel_mul = 52;
+  int sel_un = 52;
   /** RegularExpression Id. */
-  int nota = 53;
+  int sel_mul = 53;
   /** RegularExpression Id. */
-  int fichero = 54;
+  int nota = 54;
   /** RegularExpression Id. */
-  int calcular = 55;
+  int fichero = 55;
   /** RegularExpression Id. */
-  int identificador = 61;
+  int calcular = 56;
   /** RegularExpression Id. */
-  int texto_pl = 62;
+  int grupo = 57;
   /** RegularExpression Id. */
-  int err = 63;
+  int fin = 58;
+  /** RegularExpression Id. */
+  int ciclo = 59;
+  /** RegularExpression Id. */
+  int identificador = 65;
+  /** RegularExpression Id. */
+  int texto_pl = 66;
+  /** RegularExpression Id. */
+  int texto_ex = 67;
+  /** RegularExpression Id. */
+  int err = 68;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -172,6 +182,7 @@ public interface XLSParserConstants {
     "\"apariencia\"",
     "\"parametro\"",
     "\"verdadero\"",
+    "\"repeticion\"",
     "\"falso\"",
     "\"1\"",
     "\"0\"",
@@ -188,6 +199,9 @@ public interface XLSParserConstants {
     "\"nota\"",
     "\"fichero\"",
     "\"calcular\"",
+    "\"_grupo\"",
+    "\"_fin\"",
+    "\"_ciclo\"",
     "\" \"",
     "\"\\n\"",
     "\"\\r\"",
@@ -195,6 +209,7 @@ public interface XLSParserConstants {
     "\"\\t\"",
     "<identificador>",
     "<texto_pl>",
+    "<texto_ex>",
     "<err>",
   };
 

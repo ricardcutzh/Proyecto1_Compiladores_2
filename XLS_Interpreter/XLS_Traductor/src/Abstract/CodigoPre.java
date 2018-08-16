@@ -9,10 +9,20 @@ package Abstract;
  *
  * @author ricar
  */
-public class CodigoPre extends Atributo{
+public class CodigoPre extends Atributo implements ArbolForm{
     
     public CodigoPre(String cadena) {
         super(cadena);
+    }
+
+    @Override
+    public Object traducirLocal() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object traducirGlobal() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

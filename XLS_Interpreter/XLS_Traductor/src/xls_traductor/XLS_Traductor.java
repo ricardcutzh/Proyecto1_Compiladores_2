@@ -31,6 +31,7 @@ public class XLS_Traductor {
     
     public static void prueba()
     {
+        ArrayList<TError> errores = new ArrayList<>();
         File f = new File("C:\\Users\\ricar\\Documents\\Universidad\\Segundo_S_2018\\Compiladores 2\\Entradas\\prJavaCC.txt");
         try {
             FileInputStream fis = new FileInputStream(f);
@@ -38,7 +39,7 @@ public class XLS_Traductor {
             ASTTree.ASTNode n = p.INICIO();
             n.graficaAST(n);
             System.out.println(n.graficaAST(n));
-            ArrayList<TError> errores = p.getErrores();
+            errores = p.getErrores();
             if(errores.size()>0)
             {
                 ReporteError rep = new ReporteError("C:\\Users\\ricar\\Documents\\Universidad\\Segundo_S_2018\\Compiladores 2\\Entradas\\Reporte.html", errores);

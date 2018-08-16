@@ -9,10 +9,20 @@ package Abstract;
  *
  * @author ricar
  */
-public class Calculo extends Atributo{
+public class Calculo extends Atributo implements ArbolForm{
     
     public Calculo(String cadena) {
         super(cadena);
+    }
+
+    @Override
+    public Object traducirLocal() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object traducirGlobal() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

@@ -42,6 +42,12 @@ public class XLSParser {
         return text;
     }
 	
+	String extractExpre(String text)
+    {
+        text = text.replace("'", "");
+        return text;
+    }
+	
 	public ArrayList<TError> getErrores()
 	{
 		return this.errores;
@@ -54,22 +60,30 @@ PARSER_END(XLSParser)
 JAVACODE
 void skip_error_recovery(int kind, String archivo, String columna)
 {
-    //ParseException e = generateParseException();  // generate the exception object.
+    //ParseException e = generateParseException();  // generaste the exception object.
 	String ti = "Lexico";
 	String m = "Caracter desconocido: ";
 	Token to = getToken(1);
-	if(to.kind != 27)
+	if(to.kind != XLSParserConstants.err)
 	{
 		ti = "Sintactico";
 		m = "No se esperaba: ";
 		to = getToken(0);
+	}
+	if(to.kind == XLSParserConstants.cKey)
+	{
+		ti = "Sintactico";
+		m = "Se esperaba la finalizacion de un Grupo o Ciclo";
+		errores.add(new TError(ti,m,columna,archivo));
+		return;
 	}
     //System.out.println("Caracter No admitido en "+archivo+", Columna: "+columna+" : "+to.image);  // print the error message
 	errores.add(new TError(ti,m+to.image,columna,archivo));
     Token t;
     do {
         t = getNextToken();
-    } while (t.kind != kind);
+		if(t.kind == 0){break;}
+    } while (t.kind != kind || t.kind != 0);
 }
 //PUNTUACION
 TOKEN:
@@ -125,6 +139,7 @@ TOKEN:
 	|<apariencia: "apariencia">
 	|<parametro: "parametro">
 	|<verdadero: "verdadero">
+	|<repeticion: "repeticion">
 	|<falso: "falso">
 	|<uno: "1">
 	|<cero: "0">
@@ -141,6 +156,9 @@ TOKEN:
 	|<nota: "nota">
 	|<fichero: "fichero">
 	|<calcular: "calcular">
+	|<grupo: "_grupo">
+	|<fin: "_fin">
+	|<ciclo: "_ciclo">
 }
 //LOS TOKENS QUE VA A IGNORAR
 SKIP:
@@ -151,7 +169,9 @@ SKIP:
 TOKEN:
 {
      <identificador: ["a"-"z","A"-"Z"](["a"-"z","A"-"Z","_","0"-"9"])*>
-    |<texto_pl: "<<" ( (~["<",">"]) | ("\\" ( ["n","t","b","r","f","\\","\""] ) ) )* ">>">
+    //|<texto_pl: "<<" ( (~["<",">"]) | ("\\" ( ["n","t","b","r","f","\\","\""] ) ) )* ">>">
+	|<texto_pl: "<<" ( (~["<",">"]) | ("\\" ( ["n","t","b","r","f","\\","\""] ) ) )* ">>">
+	|<texto_ex: "\'" ( (~["\'","\\"]) | ("\\" ( ["n","t","b","r","f","\\","\'"] ) ) )* "\'">
     |<err: (~[])>
 }
 //SYNTAXIS DEL LENGUAJE
@@ -171,9 +191,11 @@ ASTNode INICIO():
 }
 {
     //LLAMADA A LOS DEMAS
+	try{
     confi = CONFIG()
 	ops = OPCIONES()
 	enc = ENCUESTA()
+	
     //AREA DE RETURN
     {
         //AQUI VA A IR EL RETORNO DEL PADRE
@@ -182,6 +204,11 @@ ASTNode INICIO():
 		padre.addHijo(enc);
         return padre;
     }
+	}
+	catch(ParseException e)
+	{
+		return new ASTNode(id, 0,0, "error1");
+	}
 }
 void EMPTY():
 {}
@@ -374,7 +401,7 @@ ASTNode ESTILO():
 	}
 	catch(ParseException e)
 	{
-		skip_error_recovery(PUNTOCOMA, "Configuraciones", "estilo");
+		skip_error_recovery(PUNTOCOMA, "Configuraciones", "estilo: Solo Pagina, Cuadricula, Todo");
 		return padre;
 	}
 }
@@ -394,7 +421,7 @@ ASTNode EST():
 	}
 	catch(ParseException e)
 	{
-		skip_error_recovery(PUNTOCOMA, "Configuraciones", "estilo");//HASTA QUE ENCUENTRE EL PUNTO Y COMA
+		skip_error_recovery(PUNTOCOMA, "Configuraciones", "estilo: Solo Pagina, Cuadricula, Todo");//HASTA QUE ENCUENTRE EL PUNTO Y COMA
 		id++;
 		return new ASTNode(id, 0,0,"_ERR");
 	}
@@ -409,7 +436,7 @@ ASTNode EST():
 	}
 	catch(ParseException e)
 	{
-		skip_error_recovery(PUNTOCOMA, "Configuraciones", "estilo");//HASTA QUE ENCUENTRE EL PUNTO Y COMA
+		skip_error_recovery(PUNTOCOMA, "Configuraciones", "estilo: Solo Pagina, Cuadricula, Todo");//HASTA QUE ENCUENTRE EL PUNTO Y COMA
 		id++;
 		return new ASTNode(id, 0,0,"_ERR");
 	}
@@ -424,7 +451,7 @@ ASTNode EST():
 	}
 	catch(ParseException e)
 	{
-		skip_error_recovery(PUNTOCOMA, "Configuraciones", "estilo");//HASTA QUE ENCUENTRE EL PUNTO Y COMA
+		skip_error_recovery(PUNTOCOMA, "Configuraciones", "estilo: Solo Pagina, Cuadricula, Todo");//HASTA QUE ENCUENTRE EL PUNTO Y COMA
 		id++;
 		return new ASTNode(id, 0,0,"_ERR");
 	}
@@ -659,14 +686,41 @@ Formulario ENCUESTAP(Formulario f):
 	Ciclo c;
 }
 {
-	p = PREGUNTA() f = ENCUESTAP(f)
+	p = PREGUNTA() 
 	{
 		if(p!=null)
 		{
 			f.addPregunta(p);
 		}
+	}
+	f = ENCUESTAP(f)
+	{
 		return f;
 	}
+	| g = GRUPO()
+	{
+		if(g!=null)
+		{
+			f.addGrupo(g);
+		}
+	}
+	f = ENCUESTAP(f)
+	{
+		return f;
+	}
+	
+	| c = CICLO()
+	{
+		if(c!=null)
+		{
+			f.addCiclo(c);
+		}
+	}
+	f = ENCUESTAP(f)
+	{
+		return f;
+	}
+	
 	|EMPTY()
 	{
 		return f;
@@ -678,14 +732,24 @@ Pregunta PREGUNTA():
 	int ti;
 	Token iden;
 	Token cad;
+	Pregunta aux;
+	String aux1 = "";
 }
 {
 	try
 	{
-		<pregu> <oKey> <tipo> <dPts>  ti = TIPO() <ptComa> <idpregu> <dPts> iden = <identificador> <ptComa> <etiqueta> <dPts> cad = <texto_pl> <ptComa> <cKey>
+		<pregu> <oKey> <tipo> <dPts>  ti = TIPO() <ptComa> <idpregu> <dPts> iden = <identificador>{ aux1 = iden.image;} <ptComa> <etiqueta> <dPts> cad = <texto_pl> <ptComa>
 		{
-			
+			//CREO LA PREGUNTA
 			Pregunta p = new Pregunta(iden.image, extractText(cad.image), ti);
+		}
+		aux = OTROS(p)
+		{
+			//OBTENGO LA PREGUNTA Y LA DEVUELVO
+			p = aux;
+		}
+		<cKey>
+		{
 			if(simbolos.insertaEnTabla(iden.image, new Simbolo(iden.image, "Pregunta", p)))
 			{
 				return p;
@@ -696,7 +760,7 @@ Pregunta PREGUNTA():
 	}
 	catch(ParseException e)
 	{
-		skip_error_recovery(PUNTOCOMA, "Encuesta", "idpregunta, etiqueta");
+		skip_error_recovery(PUNTOCOMA, "Encuesta", "idpregunta: "+aux1+", etiqueta");
 		return null;
 	}
 }
@@ -732,10 +796,10 @@ int TIPO():
 		|<fechahora>
 		{return TipoPregunta.FECHAHORA;}
 		
-		|<sel_un>
+		|<sel_un> <identificador> //AQUI FALTA SABER QUIEN ES QUIEN VA A SELECCIONAR DE OPCIONES
 		{return TipoPregunta.SELEC_UNO;}
 		
-		|<sel_mul>
+		|<sel_mul> <identificador> //AQUI FALTA DE SABER QUIEN VA A SELECCIONAR DE LAS OPCIONES
 		{return TipoPregunta.SELEC_MULT;}
 		
 		|<nota>
@@ -754,4 +818,532 @@ int TIPO():
 		return 14;
 	}
 }
+
+Pregunta OTROS(Pregunta p):
+{
+	Pregunta pe;
+	boolean b;
+	Token t;
+	String apa;
+	String atributo ="";
+}
+{
+	try
+	{
+		<sugerir> {atributo = p.getIdpregunta()+", sugerir";} <dPts> t = <texto_pl> <ptComa> 
+		{ 
+			/*ANADIR AQUI!*/   
+			if(!p.addAtributo(new Sugerencia(extractText(t.image)),"sugerir"))
+			{
+				this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: Sugerir","Sugerir","Encuesta"));
+			}
+		} 
+		pe = OTROS(p)
+		{
+			 return pe;
+		}
+		|<requerido> {atributo = p.getIdpregunta()+", requerido";} <dPts> b = BOOLEANO(atributo) <ptComa> 
+		{
+			/*ANADIR AQUI!*/ 
+			if(!p.addAtributo( new Requerido(String.valueOf(b), b),"requerido"))
+			{
+				this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: Requerido","Requerido","Encuesta"));
+			}
+		} 
+		pe = OTROS(p)
+		{
+			return pe;
+		}
+		|<requeridomsn> {atributo = p.getIdpregunta() + ", requeridomsn";} <dPts> t = <texto_pl> <ptComa> 
+		{
+			/*ANADIR AQUI!*/ 
+			if(!p.addAtributo(new RequeridoMsn(extractText(t.image)),"requeridomsn"))
+			{
+				this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: RequeridoMsn","RequeridoMsn","Encuesta"));
+			}
+		} 
+		pe = OTROS(p)
+		{
+			return pe;
+		}
+		|<pordefecto> {atributo = p.getIdpregunta() + ", pordefecto";} <dPts> t = <texto_ex> <ptComa> 
+		{ 
+			/*ANADIR AQUI!*/
+			if(!p.addAtributo(new PorDefecto(extractExpre(t.image)),"pordefecto"))
+			{
+				this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: PorDefecto","PorDefecto","Encuesta"));
+			}
+		} 
+		pe = OTROS(p)
+		{
+			return pe;
+		}
+		|<lectura> {atributo = p.getIdpregunta() + ", lectura";} <dPts>  b = BOOLEANO(atributo) <ptComa> 
+		{ 
+			/*ANADIR AQUI!*/ 
+			if(!p.addAtributo(new Lectura(String.valueOf(b), b),"lectura"))
+			{
+				this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: Lectura","Lectura","Encuesta"));
+			}
+		} 
+		pe = OTROS(p)
+		{
+			return pe;
+		}
+		|<calculo> {atributo = p.getIdpregunta() + ", calculo";} <dPts> t = <texto_ex> <ptComa> 
+		{ 
+			/*ANADIR AQUI!*/ 
+			if(!p.addAtributo(new Calculo(extractExpre(t.image)),"calculo"))
+			{
+				this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: Calculo","Calculo","Encuesta"));
+			}
+		} 
+		pe = OTROS(p)
+		{
+			return pe;
+		}
+		|<multimedia> {atributo = p.getIdpregunta() + ", multimedia";} <dPts> t = <texto_pl> <ptComa> 
+		{ 
+			/*ANADIR AQUI!*/
+			if(!p.addAtributo(new Multimedia(extractText(t.image)),"multimedia"))
+			{
+				this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: Multimedia","Multimedia","Encuesta"));
+			}
+		} 
+		pe = OTROS(p)
+		{
+			return pe;
+		}
+		|<restringir> {atributo = p.getIdpregunta() + ", restringir";} <dPts> t = <texto_ex> <ptComa> 
+		{ 
+			/*ANADIR AQUI!*/
+			if(!p.addAtributo(new Restringir(extractExpre(t.image)),"restringir"))
+			{
+				this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: ","","Encuesta"));
+			}
+		} 
+		pe = OTROS(p)
+		{
+			return pe;
+		}
+		|<restringirmsn> {atributo = p.getIdpregunta() + ", restringirmsn";} <dPts> t = <texto_pl> <ptComa> 
+		{ 
+			/*ANADIR AQUI!*/ 
+			if(!p.addAtributo(new RestringirMsn(extractText(t.image)),"restringirmsn"))
+			{
+				this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: ","","Encuesta"));
+			}
+		} 
+		pe = OTROS(p)
+		{
+			return pe;
+		}
+		|<codigo_pre> {atributo = p.getIdpregunta() + ", codigo_pre";} <dPts> t = <texto_pl> <ptComa> 
+		{ 
+			/*ANADIR AQUI!*/
+			if(!p.addAtributo(new CodigoPre(extractText(t.image)),"codigo_pre"))
+			{
+				this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: ","","Encuesta"));
+			}
+		} 
+		pe = OTROS(p)
+		{
+			return pe;
+		}
+		|<codigo_post> {atributo = p.getIdpregunta() + ", codigo_post";} <dPts> t = <texto_pl> <ptComa> 
+		{ 
+			/*ANADIR AQUI!*/ 
+			if(!p.addAtributo( new CodigoPost(extractText(t.image)), "codigo_post"))
+			{
+				this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: ","","Encuesta"));
+			}
+		} 
+		pe = OTROS(p)
+		{
+			return pe;
+		}
+		|<aplicable> {atributo = p.getIdpregunta() + ", aplicable";} <dPts> t = <texto_ex> <ptComa> 
+		{
+			/*ANADIR AQUI*/
+			if(!p.addAtributo(new Aplicable(extractExpre(t.image)),"aplicable"))
+			{
+				this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: ","","Encuesta"));
+			}
+		} 
+		pe = OTROS(p)
+		{
+			return pe;
+		}
+		|<repeticion> {atributo = p.getIdpregunta() + ", repeticion";} <dPts>  t = <texto_ex> <ptComa> 
+		{ 
+			/*ANADIR AQUI!*/
+			if(!p.addAtributo(new Repeticion(extractExpre(t.image)),"repeticion"))
+			{
+				this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: ","","Encuesta"));
+			}
+		} 
+		pe = OTROS(p)
+		{
+			return pe;
+		}
+		|<apariencia> {atributo = p.getIdpregunta() + ", apariencia";} <dPts> apa = APARIENCIA(atributo) <ptComa> 
+		{ 
+			/*ANADIR AQUI!*/
+			if(!p.addAtributo(new Apariencia(apa),"apariencia"))
+			{
+				this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: ","","Encuesta"));
+			}
+		} 
+		pe = OTROS(p)
+		{
+			return pe;
+		}
+		|<parametro> {atributo = p.getIdpregunta() + ", parametro";} <dPts> t = <texto_pl> <ptComa> 
+		{ 
+			/*ANADIR AQUI!*/
+			if(!p.addAtributo(new Parametro(extractExpre(t.image)),"parametro"))
+			{
+				this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: ","","Encuesta"));
+			}
+		} 
+		pe = OTROS(p)
+		{
+			return pe;
+		}
+		| EMPTY()
+		{
+			return p;
+		}
+	}	
+	catch(ParseException e)
+	{
+		skip_error_recovery(PUNTOCOMA, "Encuesta", atributo);
+		return OTROS(p);
+	}
+}
+
+boolean BOOLEANO(String col):
+{
+	
+}
+{
+	try
+	{
+		 <verdadero> {return true;}
+		|<falso> {return false;}
+		|<uno> {return true;}
+		|<cero> {return false;}
+	}
+	catch(ParseException p)
+	{
+		skip_error_recovery(PUNTOCOMA, "Encuesta", col);
+		return false;
+	}
+}
+
+String APARIENCIA(String col):
+{
+	
+}
+{
+	try
+	{
+		 <pag>{return "Pagina";}
+		|<tod>{return "Todo";}
+		|<cuadricu>{return "Cuadricula";}
+	}
+	catch(ParseException p)
+	{
+		skip_error_recovery(PUNTOCOMA, "Encuesta", col);
+		return "";
+	}
+}
+
+
+//----------------------------------------GRUPOS-----------------------------------------------------------------------
+Grupo GRUPO():
+{
+	Token iden;
+	Token iden2;
+	Token et;
+	Aplicable ap;
+	Grupo padre;
+	String aux="";
+}
+{
+	try{
+		
+	<grupo> <oKey>
+	
+	<idpregu> <dPts> iden = <identificador> {aux = iden.image;} <ptComa>
+	
+	<etiqueta> <dPts> et = <texto_pl> <ptComa>
+	
+	ap = APLICABLE("Grupo: "+iden.image)
+	
+	{
+		Grupo g = new Grupo(iden.image,extractText(et.image));
+		if(ap!=null)
+		{
+			g.setAplicable(ap);
+		}
+	}
+	
+	padre = CUERPOG(g)
+	
+	<fin> <dPts> iden2 = <identificador> <ptComa>
+	
+	{
+		if(!iden.image.equals(iden2.image))
+		{
+			this.errores.add(new TError("Semantico", "No se ha cerrado el grupo: "+iden.image,"finalizar Agrupacion", "Encuesta"));
+			return null;
+		}
+	}
+	
+	<cKey>
+	
+	{
+		//ANADO A LA TABLA DE SIMBOLOS
+		if(simbolos.insertaEnTabla(iden.image,new Simbolo(iden.image, "Grupo", padre)))
+		{
+			return padre;
+		}
+		this.errores.add(new TError("Semantico", "Existe ya un Grupo con este identificador: "+iden.image,"idpregunta", "Encuesta"));
+		return null;
+	}
+	
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(PUNTOCOMA, "Encuesta", "Grupo: "+aux+" | idpregunta, Finalizar Ciclo");
+		return null;
+	}
+}
+
+
+Aplicable APLICABLE(String grupoCiclo):
+{
+	Token t;
+}
+{
+	try
+	{
+		<aplicable> <dPts> t = <texto_ex> <ptComa> 
+		{
+			return new Aplicable(extractExpre(t.image));
+		}
+		|EMPTY()
+		{
+			return null;
+		}
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(PUNTOCOMA, "Encuesta", grupoCiclo+": Aplicable");
+		return null;
+	}
+}
+
+Grupo CUERPOG(Grupo g):
+{
+	Pregunta p;
+	Grupo g1;
+	Ciclo c;
+}
+{
+	p = PREGUNTA()
+	{
+		if(p!=null)
+		{
+			g.addPregunta(p);
+		}
+	}
+	g = CUERPOG(g)
+	{
+		return g;
+	}
+	|g1 = GRUPO()  
+	{
+		if(g1!=null)
+		{
+			g.addGrupo(g1);
+		}
+	} 
+	g = CUERPOG(g)
+	{
+		return g;
+	}
+	
+	| c = CICLO()
+	{
+		if(c!=null)
+		{
+			g.addCiclo(c);
+		}
+	}
+	g = CUERPOG(g)
+	{
+		return g;
+	}
+	
+	| EMPTY()
+	{
+		return g;
+	}
+}
+
+//------------------------------------------------------------CICLOS!--------------------------------------------------------------
+Ciclo CICLO():
+{
+	String aux = "";
+	Token ide;
+	Token ide2;
+	Ciclo padre;
+	Aplicable ap;
+	Repeticion rep;
+}
+{
+	try
+	{
+		<ciclo> <oKey>
+		
+		<idpregu> <dPts> ide = <identificador> {aux = ide.image;} <ptComa>
+		
+		ap = APLICABLE("Ciclo: "+ide.image)
+		{
+			Ciclo c = new Ciclo(ide.image, "No Aplica");
+			if(ap!=null)
+			{
+				c.setApli(ap);
+			}
+		}
+		
+		rep = REPETICION("Ciclo: "+ide.image)
+		{
+			if(rep!=null)
+			{
+				c.setRep(rep);
+			}
+		}
+		
+		padre = CUERPOC(c)
+		
+		<fin> <dPts> ide2 =  <identificador> <ptComa>
+		{
+			if(!ide.image.equals(ide2.image))
+			{
+				this.errores.add(new TError("Semantico", "No se ha cerrado el Ciclo: "+ide.image,"finalizar Ciclo", "Encuesta"));
+				return null;
+			}
+		}
+		<cKey>
+		{
+			//INSERTO EN TABLA DE SIMBOLOS Y RETORNO
+			if(simbolos.insertaEnTabla(ide.image,new Simbolo(ide.image, "Ciclo", padre)))
+			{
+				return padre;
+			}
+			this.errores.add(new TError("Semantico", "Existe ya un Ciclo con este identificador: "+ide.image,"idpregunta", "Encuesta"));
+			return null;
+		}
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(PUNTOCOMA, "Encuesta", "Ciclo: "+aux+" | fin de ciclo o identificador invalido");
+		return null;
+	}
+}
+
+Repeticion REPETICION(String grupoCiclo):
+{
+	Token t;
+}
+{
+	try
+	{
+		<repeticion> <dPts> t = <texto_ex> <ptComa> 
+		{
+			return new Repeticion(extractExpre(t.image));
+		}
+		|EMPTY()
+		{
+			return null;
+		}
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(PUNTOCOMA, "Encuesta", grupoCiclo+": Aplicable");
+		return null;
+	}
+}
+
+Ciclo CUERPOC(Ciclo c):
+{
+	Pregunta p;
+	Ciclo c1;
+	Grupo g1;
+}
+{
+	p = PREGUNTA()
+	{
+		if(p!=null)
+		{
+			c.addPregunta(p);
+		}
+	}
+	c = CUERPOC(c)
+	{
+		return c;
+	}
+	
+	|g1 = GRUPO()  
+	{
+		if(g1!=null)
+		{
+			c.addGrupo(g1);
+		}
+	} 
+	c = CUERPOC(c)
+	{
+		return c;
+	}
+	
+	|c1 = CICLO()
+	{
+		if(c1!=null)
+		{
+			c.addCiclo(c1);
+		}
+	}
+	c = CUERPOC(c)
+	{
+		return c;
+	}
+	
+	| EMPTY()
+	{
+		return c;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

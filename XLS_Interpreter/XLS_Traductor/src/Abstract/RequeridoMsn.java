@@ -9,10 +9,20 @@ package Abstract;
  *
  * @author ricar
  */
-public class RequeridoMsn extends Atributo{
+public class RequeridoMsn extends Atributo implements ArbolForm{
     
     public RequeridoMsn(String cadena) {
         super(cadena);
+    }
+
+    @Override
+    public Object traducirLocal() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object traducirGlobal() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

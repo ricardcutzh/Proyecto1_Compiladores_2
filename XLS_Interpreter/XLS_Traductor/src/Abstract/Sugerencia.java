@@ -9,10 +9,21 @@ package Abstract;
  *
  * @author ricar
  */
-public class Sugerencia extends Atributo {
+public class Sugerencia extends Atributo implements ArbolForm{
     
     public Sugerencia(String cadena) {
         super(cadena);
+        
+    }
+
+    @Override
+    public Object traducirLocal() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object traducirGlobal() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

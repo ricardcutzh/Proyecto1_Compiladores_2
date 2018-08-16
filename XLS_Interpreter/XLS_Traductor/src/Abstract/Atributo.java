@@ -17,4 +17,10 @@ public class Atributo {
     {
         this.cadena = cadena;
     }
+
+    public String getCadena() {
+        return cadena;
+    }
+    
+    
 }

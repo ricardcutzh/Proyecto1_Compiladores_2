@@ -9,10 +9,20 @@ package Abstract;
  *
  * @author ricar
  */
-public class PorDefecto extends Atributo{
+public class PorDefecto extends Atributo implements ArbolForm{
     
     public PorDefecto(String cadena) {
         super(cadena);
+    }
+
+    @Override
+    public Object traducirLocal() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object traducirGlobal() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

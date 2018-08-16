@@ -5,6 +5,8 @@
  */
 package Abstract;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author ricar
@@ -15,6 +17,9 @@ public class Ciclo implements ArbolForm{
     String etiqueta;
     Repeticion rep;
     Aplicable apli;
+    ArrayList<Pregunta> preguntas;
+    ArrayList<Ciclo> ciclos;
+    ArrayList<Grupo> grupos;
     
     public Ciclo(String idCiclo, String etiqueta)
     {
@@ -22,6 +27,9 @@ public class Ciclo implements ArbolForm{
         this.idCiclo = idCiclo;
         this.rep = null;
         this.apli = null;
+        this.preguntas = new ArrayList<>();
+        this.ciclos = new ArrayList<>();
+        this.grupos = new ArrayList<>();
     }
 
     public String getIdCiclo() {
@@ -38,6 +46,21 @@ public class Ciclo implements ArbolForm{
 
     public void setApli(Aplicable apli) {
         this.apli = apli;
+    }
+    
+    public void addPregunta(Pregunta p)
+    {
+        this.preguntas.add(p);
+    }
+    
+    public void addGrupo(Grupo p)
+    {
+        this.grupos.add(p);
+    }
+    
+    public void addCiclo(Ciclo c)
+    {
+        this.ciclos.add(c);
     }
 
     @Override

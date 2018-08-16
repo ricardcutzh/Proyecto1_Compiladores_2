@@ -105,21 +105,21 @@ public class EncuestaWriter {
             if (!temp.equals("")) {
                 cad += obtColumna(fila, "requeridomsn", "<<", ">>");
             }
-            cad += obtColumna(fila, "pordefecto", "<<", ">>");
+            cad += obtColumna(fila, "pordefecto", "\'", "\'");
             cad += obtColumna(fila, "lectura", "", "");
-            cad += obtColumna(fila, "calculo", "<<", ">>");
+            cad += obtColumna(fila, "calculo", "\'", "\'");
             cad += obtColumna(fila, "multimedia", "<<", ">>");
-            temp = obtColumna(fila, "restringir", "<<", ">>");
+            temp = obtColumna(fila, "restringir", "\'", "\'");
             cad += temp;
             if (!temp.equals("")) {
                 cad += obtColumna(fila, "restringirmsn", "<<", ">>");
             }
             cad += obtColumna(fila, "codigo_pre", "<<", ">>");
             cad += obtColumna(fila, "codigo_post", "<<", ">>");
-            cad += obtColumna(fila, "aplicable", "<<", ">>");
-            cad += obtColumna(fila, "repeticion", "<<", ">>");
+            cad += obtColumna(fila, "aplicable", "\'", "\'");
+            cad += obtColumna(fila, "repeticion", "\'", "\'");
             cad += obtColumna(fila, "apariencia", "", "");
-            cad += obtColumna(fila, "parametro", "|", "|");
+            cad += obtColumna(fila, "parametro", "<<", ">>");
             desTabula();
             cad += dameTabulaciones() + "}\n";
             
@@ -158,7 +158,8 @@ public class EncuestaWriter {
         tabula();
         String id = obtIdPregunta(fila);
         cad += id;
-        cad += obtColumna(fila, "aplicable", "", "");
+        cad += obtEtiqueta(fila);
+        cad += obtColumna(fila, "aplicable", "'", "'");
         //desTabula();
         return cad;
     }

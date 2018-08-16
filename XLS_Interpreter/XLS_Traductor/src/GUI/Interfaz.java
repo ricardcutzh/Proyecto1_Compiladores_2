@@ -300,7 +300,7 @@ public class Interfaz extends javax.swing.JFrame {
         {
             //System.out.println(fileChooser.getSelectedFile().getAbsolutePath());
             //XLSLector lec = new XLSLector(fileChooser.getSelectedFile().getAbsolutePath());
-            XLSLector lec = new XLSLector("C:\\Users\\ricar\\Documents\\Universidad\\Segundo_S_2018\\Compiladores 2\\Entradas\\entrada2.xlsx");
+            XLSLector lec = new XLSLector("C:\\Users\\ricar\\Documents\\Universidad\\Segundo_S_2018\\Compiladores 2\\Entradas\\Arbol.xlsx");
             if(lec.leerArchivoXLS())
             {
                 state.setText("XLS Cargado");
