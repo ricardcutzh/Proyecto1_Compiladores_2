@@ -24,7 +24,7 @@ public class XLSParser implements XLSParserConstants {
 
         String extractExpre(String text)
     {
-        text = text.replace("'", "");
+        text = text.replace("%%", "");
         return text;
     }
 
@@ -72,6 +72,7 @@ public class XLSParser implements XLSParserConstants {
         ASTNode ops;
         ASTNode enc;
         errores = new ArrayList();
+        Token t;
     try {
       confi = CONFIG();
       ops = OPCIONES();
@@ -1190,7 +1191,7 @@ public class XLSParser implements XLSParserConstants {
       jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xa000000,0x1fff000,0x17f,0xe80,0x0,0x10,0xa000000,0x100,0xa000000,};
    }
    private static void jj_la1_init_2() {
-      jj_la1_2 = new int[] {0x0,0x4,0x2,0x0,0x2,0x2,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
+      jj_la1_2 = new int[] {0x0,0x20,0x2,0x0,0x2,0x2,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
    }
 
   /** Constructor with InputStream. */
@@ -1307,7 +1308,7 @@ public class XLSParser implements XLSParserConstants {
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[69];
+    boolean[] la1tokens = new boolean[73];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -1327,7 +1328,7 @@ public class XLSParser implements XLSParserConstants {
         }
       }
     }
-    for (int i = 0; i < 69; i++) {
+    for (int i = 0; i < 73; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

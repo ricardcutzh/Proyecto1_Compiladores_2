@@ -24,9 +24,9 @@ public class XLS_Traductor {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        //Interfaz interfaz = new Interfaz();
-        //interfaz.show();
-        prueba();
+        Interfaz interfaz = new Interfaz();
+        interfaz.show();
+        //prueba();
     }
     
     public static void prueba()
@@ -37,7 +37,6 @@ public class XLS_Traductor {
             FileInputStream fis = new FileInputStream(f);
             XLSParser p = new XLSParser(fis);
             ASTTree.ASTNode n = p.INICIO();
-            n.graficaAST(n);
             System.out.println(n.graficaAST(n));
             errores = p.getErrores();
             if(errores.size()>0)

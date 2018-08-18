@@ -5,26 +5,46 @@
  */
 package GUI;
 
+import Analizadores.XLSParser;
+import ManejoError.ReporteError;
+import ManejoError.TError;
 import java.awt.Color;
-import java.awt.Dimension;
 import javax.swing.JOptionPane;
 import XLS_Read.XLSLector;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JViewport;
 
-/**
- *
+/*
  * @author ricar
- */
+ 
+
+*/
 public class Interfaz extends javax.swing.JFrame {
 
+    //
+    String cadenaEntrada = "";
+    ArrayList<TError> errores = new ArrayList<>();
+    String intpuPath = "";
+    Boolean bandera = true;
+    //
     /**
      * Creates new form Interfaz
      */
     public Interfaz() {
         initComponents();
-        
+
     }
 
     /**
@@ -50,6 +70,9 @@ public class Interfaz extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         state = new javax.swing.JLabel();
+        Pestanias = new javax.swing.JTabbedPane();
+        jLabel12 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("XLS Interprete");
@@ -72,18 +95,21 @@ public class Interfaz extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
-                .addContainerGap(594, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel1))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addComponent(jLabel2))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1)))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
@@ -108,6 +134,9 @@ public class Interfaz extends javax.swing.JFrame {
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/if_icon-78-document-error_315202.png"))); // NOI18N
         jLabel4.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
         jLabel4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel4MouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 jLabel4MouseEntered(evt);
             }
@@ -120,6 +149,9 @@ public class Interfaz extends javax.swing.JFrame {
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/if_icon-66-document-play_315190.png"))); // NOI18N
         jLabel5.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
         jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel5MouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 jLabel5MouseEntered(evt);
             }
@@ -132,6 +164,9 @@ public class Interfaz extends javax.swing.JFrame {
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/if_Save_Icon_1398916.png"))); // NOI18N
         jLabel6.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
         jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel6MouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 jLabel6MouseEntered(evt);
             }
@@ -190,7 +225,7 @@ public class Interfaz extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel10)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -222,6 +257,16 @@ public class Interfaz extends javax.swing.JFrame {
                 .addGap(35, 35, 35))
         );
 
+        jLabel12.setFont(new java.awt.Font("Verdana", 3, 24)); // NOI18N
+        jLabel12.setText("Traduccion:");
+
+        jButton1.setText("Cerrar Actual");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -230,7 +275,12 @@ public class Interfaz extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(Pestanias)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -238,14 +288,20 @@ public class Interfaz extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(441, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(Pestanias, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
+
     //CODIGO DE ANIMACION DE INTERFAZ! (MEJOR APARIENCIA)
     private void jLabel3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseEntered
         // TODO add your handling code here:
@@ -286,29 +342,137 @@ public class Interfaz extends javax.swing.JFrame {
         // TODO add your handling code here:
         jLabel5.setBackground(Color.WHITE);
     }//GEN-LAST:event_jLabel5MouseExited
-    
+
     //CUANDO SE HAGA CLICK
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
         // TODO add your handling code here:
+        bandera = false;
+        this.cadenaEntrada = "";
+        this.intpuPath = "";
         state.setForeground(Color.red);
         state.setText("Sin Cargar");
-        /*JFileChooser fileChooser = new JFileChooser();
-        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("*.xlsx","xlsx"));
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("*.xlsx", "xlsx"));
         fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("*.xls", "xls"));
-        if(fileChooser.showOpenDialog(this)!=JFileChooser.APPROVE_OPTION)*/
-        if(true)
-        {
-            //System.out.println(fileChooser.getSelectedFile().getAbsolutePath());
-            //XLSLector lec = new XLSLector(fileChooser.getSelectedFile().getAbsolutePath());
-            XLSLector lec = new XLSLector("C:\\Users\\ricar\\Documents\\Universidad\\Segundo_S_2018\\Compiladores 2\\Entradas\\Arbol.xlsx");
-            if(lec.leerArchivoXLS())
-            {
+        fileChooser.setCurrentDirectory(new File("C:\\"));
+        if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            System.out.println(fileChooser.getSelectedFile().getAbsolutePath());
+            XLSLector lec = new XLSLector(fileChooser.getSelectedFile().getAbsolutePath());
+            //XLSLector lec = new XLSLector("C:\\Users\\ricar\\Documents\\Universidad\\Segundo_S_2018\\Compiladores 2\\Entradas\\Arbol.xlsx");
+            if (lec.leerArchivoXLS()) {
                 state.setText("XLS Cargado");
                 state.setForeground(Color.GREEN);
-                System.out.println(lec.cadenaXLS());
+                this.cadenaEntrada = lec.cadenaXLS();
+                this.intpuPath = fileChooser.getSelectedFile().getParentFile().toString() + "\\";
+                try
+                {
+                    File repo = new File(this.intpuPath+"MiJson.txt");
+                    repo.createNewFile();
+                    FileWriter flw = new FileWriter(repo);
+                    BufferedWriter buffw = new BufferedWriter(flw);
+                    buffw.write(this.cadenaEntrada);
+                    buffw.close();
+                    JOptionPane.showMessageDialog(this, "Archivo Cargado Correctamente!","Entrada",JOptionPane.INFORMATION_MESSAGE);
+                    bandera = true;
+                }
+                catch(Exception e)
+                {
+                    bandera = false;
+                    JOptionPane.showMessageDialog(this,"Error al crear el Archivo de Entrada! "+e.getMessage(),"Error de Entrada",JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }//GEN-LAST:event_jLabel3MouseClicked
+
+    private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
+        // TODO add your handling code here:
+        //AQUI VA A IR PARA GUARDAR EL ARCHIVO XFORM QUE SE GENERE
+        
+    }//GEN-LAST:event_jLabel6MouseClicked
+  
+    private JTextArea getEditorAt()
+    {
+        JPanel aux = (JPanel)this.Pestanias.getComponent(this.Pestanias.getSelectedIndex());
+        JScrollPane p = (JScrollPane)aux.getComponent(1);
+        JViewport v = (JViewport)p.getComponent(0);
+        JTextArea s = (JTextArea)v.getComponent(0);
+        return s;
+    }    
+    private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
+        // TODO add your handling code here:
+        //AQUI SE VAN A EMPEZAR A GENERAR LOS REPORTES
+        if (this.errores.size() > 0) {
+            //GENERARA EL REPORTE DE ERRORESs
+            ReporteError rep = new ReporteError(this.intpuPath + "Reporte.html", errores);
+            if (rep.writeReport()) {
+                //ABRIR
+                Runtime rTime = Runtime.getRuntime();
+                String url = this.intpuPath+"Reporte.html";
+                String browser = "C:\\Program Files\\internet explorer\\iexplore.exe ";
+                Process pc;
+                try {
+                    pc = rTime.exec(browser + url);
+                    //pc.waitFor();
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(this, "Error al Crear el Reporte en: "+this.intpuPath);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Ocurrio un Error al generar el Reporte!", "Error!", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "No Existen Erroes que reportar!", "Atencion!", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jLabel4MouseClicked
+
+    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
+        // TODO add your handling code here:
+        //AQUI INICIARA LA TRADUCCION
+        if (this.cadenaEntrada.equals("")) {
+            JOptionPane.showMessageDialog(this, "No has cargado un Archivo XLS!", "Advertencia!", JOptionPane.WARNING_MESSAGE);
+        } else {
+            //AQUI INICIALIZO EL PARSER
+            if(bandera)
+            {
+                try 
+                {
+                   File f = new File(this.intpuPath+"MiJson.txt"); 
+                   FileInputStream fis = new FileInputStream(f);
+                   XLSParser p = new XLSParser(fis);
+                   ASTTree.ASTNode n = p.INICIO();
+                   System.out.println(n.graficaAST(n));
+                   this.errores = p.getErrores();
+                   if(this.errores.size() > 0)
+                   {
+                       JOptionPane.showMessageDialog(this, "Se encontraron: "+this.errores.size()+" errores en la Entrada!","Errores",JOptionPane.WARNING_MESSAGE);
+                       return;
+                   }
+                   //AQUI DEBERIA LLAMAR LA TRADUCCION
+                   JOptionPane.showMessageDialog(this, "Traduccion Finalizada!","Estado de Traduccion",JOptionPane.INFORMATION_MESSAGE);
+                   EditorTexto t = new EditorTexto();
+                   this.Pestanias.addTab("Traduccion", t);
+                } catch (Exception e) 
+                {
+                    JOptionPane.showMessageDialog(this, "Error Al Iniciar el Parser! "+e.getMessage(),"Error de Parser",JOptionPane.ERROR);
+                }
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this, "No se Puede iniciar la traduccion ya que la entrada no esta disponible!","Entrada Invalida!",JOptionPane.ERROR);
+            }
+        }
+    }//GEN-LAST:event_jLabel5MouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        if(this.Pestanias.getTabCount()>1)
+        {
+            this.Pestanias.remove(this.Pestanias.getSelectedIndex());
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this, "No Hay Pestanas en el Editor!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -341,15 +505,18 @@ public class Interfaz extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Interfaz().setVisible(true);
-                
+
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTabbedPane Pestanias;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

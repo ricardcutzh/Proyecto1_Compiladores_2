@@ -131,14 +131,26 @@ public interface XLSParserConstants {
   /** RegularExpression Id. */
   int identificador = 65;
   /** RegularExpression Id. */
-  int texto_pl = 66;
+  int err = 66;
   /** RegularExpression Id. */
-  int texto_ex = 67;
+  int inicio = 67;
   /** RegularExpression Id. */
-  int err = 68;
+  int cual2 = 68;
+  /** RegularExpression Id. */
+  int texto_pl = 69;
+  /** RegularExpression Id. */
+  int otroInic = 70;
+  /** RegularExpression Id. */
+  int cual = 71;
+  /** RegularExpression Id. */
+  int texto_ex = 72;
 
   /** Lexical state. */
   int DEFAULT = 0;
+  /** Lexical state. */
+  int S2 = 1;
+  /** Lexical state. */
+  int S3 = 2;
 
   /** Literal token values. */
   String[] tokenImage = {
@@ -208,9 +220,13 @@ public interface XLSParserConstants {
     "\"\\r\\n\"",
     "\"\\t\"",
     "<identificador>",
-    "<texto_pl>",
-    "<texto_ex>",
     "<err>",
+    "\"<<\"",
+    "<cual2>",
+    "\">>\"",
+    "\"%%\"",
+    "<cual>",
+    "\"%%\"",
   };
 
 }

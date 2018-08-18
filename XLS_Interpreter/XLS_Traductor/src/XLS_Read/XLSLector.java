@@ -18,7 +18,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.util.ArrayList;
 
 public class XLSLector {
-
+    private String CADINI_FIN = "%%";
     private String DELIMITADOR = ";";
     String ruta;
     ArrayList<TablaExcel> tablas;
