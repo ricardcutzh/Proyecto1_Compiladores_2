@@ -39,8 +39,9 @@ public class TraductorAST {
         Conf config = new Conf(raizArbol, tabs, nombreArchivo);
         String cad = "";
         cad = config.TraducirConfiguracion();//ESTE VIENE UNA TABULACION MAS
-        
-        
+        //AQUI DEBE DE LLAMAR A LA TRADUCCION DEL CUERPO
+        TraductorForm tform = new TraductorForm(raizArbol, tabs, nombreArchivo, ts);
+        cad += (String)tform.traducirForm();
         
         //FINAL
         desTabula();

@@ -468,7 +468,7 @@ public class Interfaz extends javax.swing.JFrame {
                    //
                 } catch (Exception e) 
                 {
-                    JOptionPane.showMessageDialog(this, "Error Al Iniciar el Parser! "+e.getMessage(),"Error de Parser",JOptionPane.ERROR);
+                    JOptionPane.showMessageDialog(this, "Error Al Iniciar el Parser! "+e.getMessage(),"Error de Parser",JOptionPane.ERROR_MESSAGE);
                 }
             }
             else

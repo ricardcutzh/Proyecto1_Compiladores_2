@@ -499,6 +499,7 @@ public class XLSParser implements XLSParserConstants {
     f = ENCUESTAP(f);
     jj_consume_token(cKey);
                 padre.setForm(f);
+                //System.err.println(f.getGrupos().size()+" | "+padre.getEtiqueta());
                 this.simbolos.printCountElements();
                 {if (true) return padre;}
     throw new Error("Missing return statement in function");

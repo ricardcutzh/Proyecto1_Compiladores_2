@@ -9,6 +9,8 @@ package Abstract;
  *
  * @author ricar
  */
+import ManejoError.TError;
+import Tablas.TablaSimbolos;
 import java.util.ArrayList;
 public class Grupo implements ArbolForm{
     
@@ -19,6 +21,7 @@ public class Grupo implements ArbolForm{
     ArrayList<Ciclo> ciclos;
     ArrayList<Grupo> grupos;
     
+    ArrayList<String> tabs;
     
     public Grupo(String idGrupo, String etiqueta)
     {
@@ -58,14 +61,31 @@ public class Grupo implements ArbolForm{
     }
 
     @Override
-    public Object traducirLocal() {
+    public Object traducirLocal(TablaSimbolos ts, ArrayList<String> tabs, ArrayList<TError> errores) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object traducirGlobal() {
+    public Object traducirGlobal(TablaSimbolos ts, ArrayList<String> tabs, ArrayList<TError> errores) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public void tabula() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void destabula() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String dameTabulaciones() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+  
     
     
     

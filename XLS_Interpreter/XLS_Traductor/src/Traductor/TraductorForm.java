@@ -7,24 +7,29 @@ package Traductor;
 
 import ASTTree.ASTNode;
 import Abstract.Formulario;
+import ManejoError.TError;
 import java.util.ArrayList;
 
 /**
  *
  * @author ricar
  */
+import Tablas.TablaSimbolos;
 public class TraductorForm {
     
     ArrayList<String> tabs;
     ASTNode raiz;
     String file;
     Formulario f;
-    
-    public TraductorForm(ASTNode raiz, ArrayList<String> tabs, String nombreArchivo)
+    TablaSimbolos ts;
+    ArrayList<TError> errores;
+    public TraductorForm(ASTNode raiz, ArrayList<String> tabs, String nombreArchivo, TablaSimbolos ts)
     {
         this.raiz = raiz;
         this.tabs = tabs;
         this.file = nombreArchivo;
+        this.ts = ts;
+        this.errores = new ArrayList<>();
     }
     
     private void obtForm()
@@ -35,7 +40,7 @@ public class TraductorForm {
             {
                 if(raiz.getHijo(x).getEtiqueta().equals("ENCUESTA"))
                 {
-                    f = this.raiz.getForm();
+                    f = this.raiz.getHijo(x).getForm();
                     break;
                 }
             }
@@ -44,7 +49,15 @@ public class TraductorForm {
     
     public String traducirForm()
     {
-        String cad = "";
+        String cad = dameTabulaciones()+"\n";
+        //OBTENER EL FORMULARIO
+        obtForm();
+        //MANDAR A LLAMAR LA CADENA DEL FORMULARIO
+        if(this.f!=null)
+        {
+            cad += (String)this.f.traducirGlobal(ts, tabs, errores);
+        }
+        
         return cad;
     }
     

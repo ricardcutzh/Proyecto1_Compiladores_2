@@ -5,24 +5,45 @@
  */
 package Abstract;
 
+import ManejoError.TError;
+import Tablas.TablaSimbolos;
+import java.util.ArrayList;
+
 /**
  *
  * @author ricar
  */
 public class Parametro extends Atributo implements ArbolForm{
-    
+    ArrayList<String> tabs;
     public Parametro(String cadena) {
         super(cadena);
     }
 
     @Override
-    public Object traducirLocal() {
+    public Object traducirLocal(TablaSimbolos ts, ArrayList<String> tabs, ArrayList<TError> errores) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object traducirGlobal() {
+    public Object traducirGlobal(TablaSimbolos ts, ArrayList<String> tabs, ArrayList<TError> errores) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public void tabula() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void destabula() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String dameTabulaciones() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    
     
 }

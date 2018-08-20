@@ -705,6 +705,7 @@ ASTNode ENCUESTA():
 	<cKey>
 	{
 		padre.setForm(f);
+		//System.err.println(f.getGrupos().size()+" | "+padre.getEtiqueta());
 		this.simbolos.printCountElements();
 		return padre;
 	}
