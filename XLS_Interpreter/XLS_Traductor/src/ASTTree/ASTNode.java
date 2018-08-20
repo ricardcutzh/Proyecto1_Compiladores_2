@@ -33,6 +33,10 @@ public class ASTNode{
         this.etiqueta = etiqueta;
         this.hijos = new ArrayList<>();
     }
+
+    public Formulario getForm() {
+        return form;
+    }
     
     public ASTNode(int idnodo, String etiqueta)
     {

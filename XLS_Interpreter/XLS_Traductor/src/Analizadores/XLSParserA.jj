@@ -52,7 +52,11 @@ public class XLSParser {
 	{
 		return this.errores;
 	}
-
+	
+	public TablaSimbolos getTS()
+	{
+		return this.simbolos;
+	}
 }
 
 PARSER_END(XLSParser)

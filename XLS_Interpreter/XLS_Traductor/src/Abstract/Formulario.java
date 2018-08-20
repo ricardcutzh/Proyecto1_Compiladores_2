@@ -49,6 +49,8 @@ public class Formulario implements ArbolForm{
         this.ciclos.add(c);
     }
     
+    
+    
     @Override
     public Object traducirLocal() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

@@ -33,6 +33,11 @@ public class XLSParser implements XLSParserConstants {
                 return this.errores;
         }
 
+        public TablaSimbolos getTS()
+        {
+                return this.simbolos;
+        }
+
   void skip_error_recovery(int kind, String archivo, String columna) throws ParseException {
     //ParseException e = generateParseException();  // generaste the exception object.
         String ti = "Lexico";

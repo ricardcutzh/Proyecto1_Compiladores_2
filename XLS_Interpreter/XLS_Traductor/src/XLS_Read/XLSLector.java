@@ -323,7 +323,7 @@ public class XLSLector {
 
         //COLUMNA DE CODIGO PRINCIPAL
         aux += "\tcodigo_principal: ";
-        temp = config.getColumnaPorNombre("codigo_menu");
+        temp = config.getColumnaPorNombre("codigo_principal");
         if (temp != null) {
             aux += "<< \n\t\t\t";
             for (String s : temp.valoresColumna) {

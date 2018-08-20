@@ -8,6 +8,7 @@ package GUI;
 import Analizadores.XLSParser;
 import ManejoError.ReporteError;
 import ManejoError.TError;
+import Traductor.TraductorAST;
 import java.awt.Color;
 import javax.swing.JOptionPane;
 import XLS_Read.XLSLector;
@@ -38,6 +39,7 @@ public class Interfaz extends javax.swing.JFrame {
     ArrayList<TError> errores = new ArrayList<>();
     String intpuPath = "";
     Boolean bandera = true;
+    String archiv = "";
     //
     /**
      * Creates new form Interfaz
@@ -358,6 +360,15 @@ public class Interfaz extends javax.swing.JFrame {
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             System.out.println(fileChooser.getSelectedFile().getAbsolutePath());
             XLSLector lec = new XLSLector(fileChooser.getSelectedFile().getAbsolutePath());
+            this.archiv = fileChooser.getSelectedFile().getName();
+            if(this.archiv.contains(".xlsx"))
+            {
+                this.archiv = this.archiv.replace(".xlsx", "");
+            }
+            else
+            {
+                this.archiv = this.archiv.replace(".xls", "");
+            }
             //XLSLector lec = new XLSLector("C:\\Users\\ricar\\Documents\\Universidad\\Segundo_S_2018\\Compiladores 2\\Entradas\\Arbol.xlsx");
             if (lec.leerArchivoXLS()) {
                 state.setText("XLS Cargado");
@@ -447,9 +458,14 @@ public class Interfaz extends javax.swing.JFrame {
                        return;
                    }
                    //AQUI DEBERIA LLAMAR LA TRADUCCION
+                   TraductorAST pr = new TraductorAST(n, p.getTS(), this.archiv);
+                   
+                   this.Pestanias.addTab(this.archiv, new EditorTexto());
+                   JTextArea aux = getEditorAt();
+                   aux.setText(pr.traduccion());
+                   
                    JOptionPane.showMessageDialog(this, "Traduccion Finalizada!","Estado de Traduccion",JOptionPane.INFORMATION_MESSAGE);
-                   EditorTexto t = new EditorTexto();
-                   this.Pestanias.addTab("Traduccion", t);
+                   //
                 } catch (Exception e) 
                 {
                     JOptionPane.showMessageDialog(this, "Error Al Iniciar el Parser! "+e.getMessage(),"Error de Parser",JOptionPane.ERROR);
