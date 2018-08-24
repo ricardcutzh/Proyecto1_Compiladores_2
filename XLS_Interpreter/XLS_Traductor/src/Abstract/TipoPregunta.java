@@ -25,4 +25,8 @@ public interface TipoPregunta {
     public static final int NOTA = 11;
     public static final int FICHERO = 12;
     public static final int CALCULAR = 13;
+    
+    /////////////////////////////////////////
+    public static final int TRADUC_1 = 0;
+    public static final int TRADUC_2 = 1;
 }

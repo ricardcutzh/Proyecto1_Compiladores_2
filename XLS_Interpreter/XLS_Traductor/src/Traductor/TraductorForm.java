@@ -23,6 +23,8 @@ public class TraductorForm {
     Formulario f;
     TablaSimbolos ts;
     ArrayList<TError> errores;
+    
+    TablaOpciones tOps;
     public TraductorForm(ASTNode raiz, ArrayList<String> tabs, String nombreArchivo, TablaSimbolos ts)
     {
         this.raiz = raiz;
@@ -46,6 +48,20 @@ public class TraductorForm {
             }
         }
     }
+
+    public ArrayList<TError> getErrores() {
+        return errores;
+    }
+    
+    public void settOps(TablaOpciones tOps) {
+        this.tOps = tOps;
+    }
+
+    public void setErrores(ArrayList<TError> errores) {
+        this.errores = errores;
+    }
+    
+    
     
     public String traducirForm()
     {
@@ -55,6 +71,7 @@ public class TraductorForm {
         //MANDAR A LLAMAR LA CADENA DEL FORMULARIO
         if(this.f!=null)
         {
+            this.f.settOpc(tOps);
             cad += (String)this.f.traducirGlobal(ts, tabs, errores);
         }
         

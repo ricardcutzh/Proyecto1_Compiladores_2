@@ -11,9 +11,14 @@ public class XLSParser implements XLSParserConstants {
     final int PUNTOCOMA = 3;
     String imgError = "";
 
+        Token temp;
+
+        String padre = "";
+
         //LISTA DE ERRORES
         ArrayList<TError> errores;
         TablaSimbolos simbolos;
+
 
     String extractText(String text)
     {
@@ -39,30 +44,58 @@ public class XLSParser implements XLSParserConstants {
         }
 
   void skip_error_recovery(int kind, String archivo, String columna) throws ParseException {
-    //ParseException e = generateParseException();  // generaste the exception object.
-        String ti = "Lexico";
-        String m = "Caracter desconocido: ";
-        Token to = getToken(1);
-        if(to.kind != XLSParserConstants.err)
-        {
-                ti = "Sintactico";
-                m = "No se esperaba: ";
-                to = getToken(0);
-        }
-        if(to.kind == XLSParserConstants.cKey)
-        {
-                ti = "Sintactico";
-                m = "Se esperaba la finalizacion de un Grupo o Ciclo";
-                errores.add(new TError(ti,m,columna,archivo));
-                return;
-        }
+    /*//ParseException e = generateParseException();  // generaste the exception object.
+	String ti = "Lexico";
+	String m = "Caracter desconocido: ";
+	Token to = getToken(1);
+	if(to.kind != XLSParserConstants.err)
+	{
+		ti = "Sintactico";
+		m = "No se esperaba: ";
+		to = getToken(0);
+	}
+	if(to.kind == XLSParserConstants.cKey)
+	{
+		ti = "Sintactico";
+		m = "Se esperaba la finalizacion de un Grupo o Ciclo";
+		errores.add(new TError(ti,m,columna,archivo));
+		return;
+	}
     //System.out.println("Caracter No admitido en "+archivo+", Columna: "+columna+" : "+to.image);  // print the error message
-        errores.add(new TError(ti,m+to.image,columna,archivo));
+	errores.add(new TError(ti,m+to.image,columna,archivo));
     Token t;
     do {
         t = getNextToken();
-                if(t.kind == 0){break;}
-    } while (t.kind != kind || t.kind != 0);
+		if(t.kind == 0){break;}
+    } while (t.kind != kind || t.kind != 0);*/
+        String ti = "";
+        String m = "";
+        Token to = getToken(0);
+        do{
+                if(to.kind == XLSParserConstants.err)
+                {
+                        ti = "Lexico";
+                        m = "Caracter Desconocido: ";
+                        errores.add(new TError(ti,m+to.image,columna,archivo));
+                }
+                else if(to.kind == XLSParserConstants.cKey)
+                {
+                        ti = "Sintactico";
+                        m = "Se esperaba la finalizacion de un ciclo!: ";
+                        errores.add(new TError(ti,m+to.image,columna,archivo));
+                }
+                else if(to.kind == 0)
+                {
+                        break;
+                }
+                else
+                {
+                        ti = "Sintactico";
+                        m = "No se esperaba: "+to.image;
+                        errores.add(new TError(ti,m+to.image,columna,archivo));
+                }
+                to = getNextToken();
+        }while(to.kind != kind);
   }
 
 //SYNTAXIS DEL LENGUAJE
@@ -509,6 +542,7 @@ public class XLSParser implements XLSParserConstants {
         Pregunta p;
         Grupo g;
         Ciclo c;
+        this.padre = "";
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case pregu:
       p = PREGUNTA();
@@ -569,11 +603,22 @@ public class XLSParser implements XLSParserConstants {
       jj_consume_token(ptComa);
                         //CREO LA PREGUNTA
                         Pregunta p = new Pregunta(iden.image, extractText(cad.image), ti);
+                        if(ti == TipoPregunta.SELEC_MULT || ti == TipoPregunta.SELEC_UNO)
+                        {
+                                p.setIdListaOpcion(temp.image);
+                        }
+                        if(ti == TipoPregunta.FICHERO)
+                        {
+
+                                p.setFicheroExt(temp.image);
+                        }
       aux = OTROS(p);
                         //OBTENGO LA PREGUNTA Y LA DEVUELVO
                         p = aux;
       jj_consume_token(cKey);
-                        if(simbolos.insertaEnTabla(iden.image, new Simbolo(iden.image, "Pregunta", p)))
+                        Simbolo sim = new Simbolo(iden.image, "Pregunta", p);
+                        sim.setPadre(this.padre);
+                        if(simbolos.insertaEnTabla(iden.image, sim ))
                         {
                                 {if (true) return p;}
                         }
@@ -587,6 +632,8 @@ public class XLSParser implements XLSParserConstants {
   }
 
   final public int TIPO() throws ParseException {
+        Token t;
+        String aux = "";
     try {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case texto:
@@ -623,13 +670,15 @@ public class XLSParser implements XLSParserConstants {
         break;
       case sel_un:
         jj_consume_token(sel_un);
-        jj_consume_token(identificador);
-                 {if (true) return TipoPregunta.SELEC_UNO;}
+        t = jj_consume_token(identificador);
+                        temp = t;
+                        {if (true) return TipoPregunta.SELEC_UNO;}
         break;
       case sel_mul:
         jj_consume_token(sel_mul);
-        jj_consume_token(identificador);
-                 {if (true) return TipoPregunta.SELEC_MULT;}
+        t = jj_consume_token(identificador);
+                        temp = t;
+                        {if (true) return TipoPregunta.SELEC_MULT;}
         break;
       case nota:
         jj_consume_token(nota);
@@ -637,7 +686,9 @@ public class XLSParser implements XLSParserConstants {
         break;
       case fichero:
         jj_consume_token(fichero);
-                 {if (true) return TipoPregunta.FICHERO;}
+        aux = FICH_AUX();
+                        temp.image = aux;
+                        {if (true) return TipoPregunta.FICHERO;}
         break;
       case calcular:
         jj_consume_token(calcular);
@@ -651,6 +702,28 @@ public class XLSParser implements XLSParserConstants {
     } catch (ParseException e) {
                 skip_error_recovery(PUNTOCOMA,"Encuesta", "Tipo");
                 {if (true) return 14;}
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public String FICH_AUX() throws ParseException {
+        Token t;
+    try {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case str:
+        t = jj_consume_token(str);
+                        String aux = t.image;
+                        aux  = aux.replace("\u005c"","");
+                        {if (true) return aux;}
+        break;
+      default:
+        jj_la1[9] = jj_gen;
+        EMPTY();
+                        {if (true) return "";}
+      }
+    } catch (ParseException e) {
+                skip_error_recovery(PUNTOCOMA,"Encuesta", "Tipo");
+                {if (true) return "";}
     }
     throw new Error("Missing return statement in function");
   }
@@ -707,14 +780,14 @@ public class XLSParser implements XLSParserConstants {
         break;
       case pordefecto:
         jj_consume_token(pordefecto);
-                               atributo = p.getIdpregunta() + ", pordefecto";
+                               atributo = p.getIdpregunta() + ", predeterminado";
         jj_consume_token(dPts);
         t = jj_consume_token(texto_ex);
         jj_consume_token(ptComa);
                         /*ANADIR AQUI!*/
-                        if(!p.addAtributo(new PorDefecto(extractExpre(t.image)),"pordefecto"))
+                        if(!p.addAtributo(new PorDefecto(extractExpre(t.image)),"predeterminado"))
                         {
-                                this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: PorDefecto","PorDefecto","Encuesta"));
+                                this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: Predeterminado","Predeterminado","Encuesta"));
                         }
         pe = OTROS(p);
                         {if (true) return pe;}
@@ -874,7 +947,7 @@ public class XLSParser implements XLSParserConstants {
                         {if (true) return pe;}
         break;
       default:
-        jj_la1[9] = jj_gen;
+        jj_la1[10] = jj_gen;
         EMPTY();
                         {if (true) return p;}
       }
@@ -904,8 +977,16 @@ public class XLSParser implements XLSParserConstants {
         jj_consume_token(cero);
                          {if (true) return false;}
         break;
+      case cerop:
+        jj_consume_token(cerop);
+                          {if (true) return false;}
+        break;
+      case unop:
+        jj_consume_token(unop);
+                         {if (true) return true;}
+        break;
       default:
-        jj_la1[10] = jj_gen;
+        jj_la1[11] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -919,20 +1000,60 @@ public class XLSParser implements XLSParserConstants {
   final public String APARIENCIA(String col) throws ParseException {
     try {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case pag:
-        jj_consume_token(pag);
-                       {if (true) return "Pagina";}
+      case texto:
+        jj_consume_token(texto);
+                          {if (true) return "texto";}
         break;
-      case tod:
-        jj_consume_token(tod);
-                       {if (true) return "Todo";}
+      case entero:
+        jj_consume_token(entero);
+                          {if (true) return "entero";}
         break;
-      case cuadricu:
-        jj_consume_token(cuadricu);
-                            {if (true) return "Cuadricula";}
+      case decimal:
+        jj_consume_token(decimal);
+                            {if (true) return "decimal";}
+        break;
+      case rango:
+        jj_consume_token(rango);
+                          {if (true) return "rango";}
+        break;
+      case condicion:
+        jj_consume_token(condicion);
+                              {if (true) return "condicion";}
+        break;
+      case fecha:
+        jj_consume_token(fecha);
+                          {if (true) return "fecha";}
+        break;
+      case hora:
+        jj_consume_token(hora);
+                         {if (true) return "hora";}
+        break;
+      case fechahora:
+        jj_consume_token(fechahora);
+                              {if (true) return "fechahora";}
+        break;
+      case sel_un:
+        jj_consume_token(sel_un);
+                           {if (true) return "selecciona_uno";}
+        break;
+      case sel_mul:
+        jj_consume_token(sel_mul);
+                            {if (true) return "selecciona_multiples";}
+        break;
+      case nota:
+        jj_consume_token(nota);
+                         {if (true) return "nota";}
+        break;
+      case fichero:
+        jj_consume_token(fichero);
+                            {if (true) return "fichero";}
+        break;
+      case calcular:
+        jj_consume_token(calcular);
+                             {if (true) return "calcular";}
         break;
       default:
-        jj_la1[11] = jj_gen;
+        jj_la1[12] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -964,6 +1085,7 @@ public class XLSParser implements XLSParserConstants {
       et = jj_consume_token(texto_pl);
       jj_consume_token(ptComa);
       ap = APLICABLE("Grupo: "+iden.image);
+                this.padre = iden.image;
                 Grupo g = new Grupo(iden.image,extractText(et.image));
                 if(ap!=null)
                 {
@@ -981,6 +1103,8 @@ public class XLSParser implements XLSParserConstants {
                 }
       jj_consume_token(cKey);
                 //ANADO A LA TABLA DE SIMBOLOS
+
+                //AQUI PODRIA INSERTAR EL PADRE PERO AUN NO LO HARE NO LO VEO NECESARIO
                 if(simbolos.insertaEnTabla(iden.image,new Simbolo(iden.image, "Grupo", padre)))
                 {
                         {if (true) return padre;}
@@ -1006,7 +1130,7 @@ public class XLSParser implements XLSParserConstants {
                         {if (true) return new Aplicable(extractExpre(t.image));}
         break;
       default:
-        jj_la1[12] = jj_gen;
+        jj_la1[13] = jj_gen;
         EMPTY();
                         {if (true) return null;}
       }
@@ -1050,7 +1174,7 @@ public class XLSParser implements XLSParserConstants {
                 {if (true) return g;}
       break;
     default:
-      jj_la1[13] = jj_gen;
+      jj_la1[14] = jj_gen;
       EMPTY();
                 {if (true) return g;}
     }
@@ -1121,7 +1245,7 @@ public class XLSParser implements XLSParserConstants {
                         {if (true) return new Repeticion(extractExpre(t.image));}
         break;
       default:
-        jj_la1[14] = jj_gen;
+        jj_la1[15] = jj_gen;
         EMPTY();
                         {if (true) return null;}
       }
@@ -1165,7 +1289,7 @@ public class XLSParser implements XLSParserConstants {
                 {if (true) return c;}
       break;
     default:
-      jj_la1[15] = jj_gen;
+      jj_la1[16] = jj_gen;
       EMPTY();
                 {if (true) return c;}
     }
@@ -1181,7 +1305,7 @@ public class XLSParser implements XLSParserConstants {
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[16];
+  final private int[] jj_la1 = new int[17];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static private int[] jj_la1_2;
@@ -1191,13 +1315,13 @@ public class XLSParser implements XLSParserConstants {
       jj_la1_init_2();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x8000,0x10,0x10,0x70000,0x10,0x10,0x40,0x100000,0x0,0xfe000000,0x0,0x70000,0x0,0x100000,0x0,0x100000,};
+      jj_la1_0 = new int[] {0x8000,0x10,0x10,0x70000,0x10,0x10,0x40,0x100000,0x0,0x0,0xfe000000,0x0,0x0,0x0,0x100000,0x0,0x100000,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xa000000,0x1fff000,0x17f,0xe80,0x0,0x10,0xa000000,0x100,0xa000000,};
+      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x28000000,0x7ffc000,0x0,0x17f,0x3e80,0x7ffc000,0x10,0x28000000,0x100,0x28000000,};
    }
    private static void jj_la1_init_2() {
-      jj_la1_2 = new int[] {0x0,0x20,0x2,0x0,0x2,0x2,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
+      jj_la1_2 = new int[] {0x0,0x200,0x10,0x0,0x10,0x10,0x0,0x0,0x0,0x20,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
    }
 
   /** Constructor with InputStream. */
@@ -1211,7 +1335,7 @@ public class XLSParser implements XLSParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 17; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -1225,7 +1349,7 @@ public class XLSParser implements XLSParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 17; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -1235,7 +1359,7 @@ public class XLSParser implements XLSParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 17; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -1245,7 +1369,7 @@ public class XLSParser implements XLSParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 17; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -1254,7 +1378,7 @@ public class XLSParser implements XLSParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 17; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -1263,7 +1387,7 @@ public class XLSParser implements XLSParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 17; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -1314,12 +1438,12 @@ public class XLSParser implements XLSParserConstants {
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[73];
+    boolean[] la1tokens = new boolean[77];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < 17; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -1334,7 +1458,7 @@ public class XLSParser implements XLSParserConstants {
         }
       }
     }
-    for (int i = 0; i < 73; i++) {
+    for (int i = 0; i < 77; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

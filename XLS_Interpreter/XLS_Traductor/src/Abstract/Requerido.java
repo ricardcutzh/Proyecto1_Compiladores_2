@@ -23,7 +23,12 @@ public class Requerido extends Atributo implements ArbolForm{
 
     @Override
     public Object traducirLocal(TablaSimbolos ts, ArrayList<String> tabs, ArrayList<TError> errores) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String val = "Falso";
+        if(this.valor)
+        {
+            val = "Verdadero";
+        }
+        return "Booelano Requerido = "+val+";\n";
     }
 
     @Override

@@ -17,11 +17,21 @@ public class Simbolo {
     ArbolForm elemento;
     String tipo;
     
+    String padre;
+    
     public Simbolo(String id, String tipo, ArbolForm elemento)
     {
         this.id = id;
         this.tipo = tipo;
         this.elemento = elemento;
+    }
+
+    public String getPadre() {
+        return padre;
+    }
+
+    public void setPadre(String padre) {
+        this.padre = padre;
     }
 
     public String getId() {

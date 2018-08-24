@@ -404,7 +404,7 @@ public class Interfaz extends javax.swing.JFrame {
     private JTextArea getEditorAt()
     {
         JPanel aux = (JPanel)this.Pestanias.getComponent(this.Pestanias.getSelectedIndex());
-        JScrollPane p = (JScrollPane)aux.getComponent(1);
+        JScrollPane p = (JScrollPane)aux.getComponent(0);
         JViewport v = (JViewport)p.getComponent(0);
         JTextArea s = (JTextArea)v.getComponent(0);
         return s;
@@ -460,10 +460,20 @@ public class Interfaz extends javax.swing.JFrame {
                    //AQUI DEBERIA LLAMAR LA TRADUCCION
                    TraductorAST pr = new TraductorAST(n, p.getTS(), this.archiv);
                    
+                   String cadena = pr.traduccion();
+                   if(pr.getErrores().size()>0)
+                   {
+                       for(TError err: pr.getErrores())
+                       {
+                           this.errores.add(err);
+                       }
+                       JOptionPane.showMessageDialog(this, "Se encontraron: "+this.errores.size()+" errores en la Entrada!","Errores",JOptionPane.WARNING_MESSAGE);
+                       return;
+                   }
+                   //MANDAR AL CONSTRUCTOR EL TEXTO QUE SE VA A COLOCAR!!!!
                    this.Pestanias.addTab(this.archiv, new EditorTexto());
                    JTextArea aux = getEditorAt();
-                   aux.setText(pr.traduccion());
-                   
+                   aux.setText(cadena);
                    JOptionPane.showMessageDialog(this, "Traduccion Finalizada!","Estado de Traduccion",JOptionPane.INFORMATION_MESSAGE);
                    //
                 } catch (Exception e) 

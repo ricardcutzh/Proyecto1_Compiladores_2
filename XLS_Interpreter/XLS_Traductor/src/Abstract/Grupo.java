@@ -23,6 +23,9 @@ public class Grupo implements ArbolForm{
     
     ArrayList<String> tabs;
     
+    //PADRE DEL GRUPO
+    String padre = "";
+    
     public Grupo(String idGrupo, String etiqueta)
     {
         this.idGrupo = idGrupo;
@@ -33,6 +36,10 @@ public class Grupo implements ArbolForm{
         this.grupos = new ArrayList<>();
     }
 
+    public void setPadre(String padre) {
+        this.padre = padre;
+    }
+    
     public void setAplicable(Aplicable aplicable) {
         this.aplicable = aplicable;
     }

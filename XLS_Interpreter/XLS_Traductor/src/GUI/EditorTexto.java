@@ -18,7 +18,6 @@ public class EditorTexto extends javax.swing.JPanel {
      */
     public EditorTexto() {
         initComponents();
-        Linea.setText("0\n");
     }
 
     /**
@@ -32,8 +31,6 @@ public class EditorTexto extends javax.swing.JPanel {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         Texto = new javax.swing.JTextArea();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        Linea = new javax.swing.JTextArea();
 
         Texto.setColumns(20);
         Texto.setFont(new java.awt.Font("Consolas", 0, 13)); // NOI18N
@@ -46,40 +43,27 @@ public class EditorTexto extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(Texto);
 
-        Linea.setEditable(false);
-        Linea.setBackground(new java.awt.Color(102, 102, 102));
-        Linea.setColumns(20);
-        Linea.setFont(new java.awt.Font("Consolas", 0, 13)); // NOI18N
-        Linea.setForeground(new java.awt.Color(255, 255, 255));
-        Linea.setLineWrap(true);
-        Linea.setRows(5);
-        jScrollPane2.setViewportView(Linea);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 827, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 891, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 558, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 558, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void TextoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TextoKeyPressed
         // TODO add your handling code here:
-        if(evt.getKeyChar() == '\n')
+        /*if(evt.getKeyChar() == '\n')
         {
             Linea.setText("");
             int c = Texto.getLineCount();
@@ -96,14 +80,12 @@ public class EditorTexto extends javax.swing.JPanel {
             {
                 Linea.append(x+"\n");
             }
-        }
+        }*/
     }//GEN-LAST:event_TextoKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea Linea;
     private javax.swing.JTextArea Texto;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables
 }

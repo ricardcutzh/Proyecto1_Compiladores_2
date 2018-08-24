@@ -95,13 +95,19 @@ public class XLSLector {
                     tab.getColumnaEn(y).addValor("NULL");
                 } else {
                     //DE LO CONTRARIO LA METO
+                    String tempval = "";
+                    try {
+                        tempval = celda.getStringCellValue();
+                    } catch (Exception e) {
+                        tempval = String.valueOf(celda.getNumericCellValue());
+                    }
                     if (titulo == 0) {
                         try {
                             tab.AgregarNodoColumna(celda.getStringCellValue().toLowerCase().replace(" ", ""));
                         } catch (Exception e) {
                             tab.AgregarNodoColumna(String.valueOf(celda.getNumericCellValue()));
                         }
-                    } else if(!celda.getStringCellValue().equals("")) {
+                    } else if(!tempval.equals("")){ //else if(!celda.getStringCellValue().equals("")) {
                         try
                         {
                             tab.getColumnaEn(y).addValor(celda.getStringCellValue().toLowerCase());

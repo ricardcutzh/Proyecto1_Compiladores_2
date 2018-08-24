@@ -31,9 +31,14 @@ public class XLSParser {
     final int PUNTOCOMA = 3;
     String imgError = "";
 	
+	Token temp;
+	
+	String padre = "";
+	
 	//LISTA DE ERRORES
 	ArrayList<TError> errores;
 	TablaSimbolos simbolos;
+
 	
     String extractText(String text)
     {
@@ -57,6 +62,8 @@ public class XLSParser {
 	{
 		return this.simbolos;
 	}
+	
+	
 }
 
 PARSER_END(XLSParser)
@@ -64,7 +71,7 @@ PARSER_END(XLSParser)
 JAVACODE
 void skip_error_recovery(int kind, String archivo, String columna)
 {
-    //ParseException e = generateParseException();  // generaste the exception object.
+    /*//ParseException e = generateParseException();  // generaste the exception object.
 	String ti = "Lexico";
 	String m = "Caracter desconocido: ";
 	Token to = getToken(1);
@@ -87,7 +94,35 @@ void skip_error_recovery(int kind, String archivo, String columna)
     do {
         t = getNextToken();
 		if(t.kind == 0){break;}
-    } while (t.kind != kind || t.kind != 0);
+    } while (t.kind != kind || t.kind != 0);*/
+	String ti = "";
+	String m = "";
+	Token to = getToken(0);
+	do{
+		if(to.kind == XLSParserConstants.err)
+		{
+			ti = "Lexico";
+			m = "Caracter Desconocido: ";
+			errores.add(new TError(ti,m+to.image,columna,archivo));
+		}
+		else if(to.kind == XLSParserConstants.cKey)
+		{
+			ti = "Sintactico";
+			m = "Se esperaba la finalizacion de un ciclo!: ";
+			errores.add(new TError(ti,m+to.image,columna,archivo));
+		}
+		else if(to.kind == 0)
+		{
+			break;
+		}
+		else
+		{
+			ti = "Sintactico";
+			m = "No se esperaba: "+to.image;
+			errores.add(new TError(ti,m+to.image,columna,archivo));
+		}
+		to = getNextToken();
+	}while(to.kind != kind);
 }
 //PUNTUACION
 TOKEN:
@@ -131,7 +166,7 @@ TOKEN:
 	|<sugerir: "sugerir">
 	|<requerido: "requerido">
 	|<requeridomsn: "requeridomsn">
-	|<pordefecto: "pordefecto">
+	|<pordefecto: "predeterminado">//CAMBIE A PREDETERMINADO
 	|<lectura: "lectura">
 	|<calculo: "calculo">
 	|<multimedia: "multimedia">
@@ -147,6 +182,8 @@ TOKEN:
 	|<falso: "falso">
 	|<uno: "1">
 	|<cero: "0">
+	|<unop: "0.0">
+	|<cerop: "1.0">
 	|<texto: "texto">
 	|<entero: "entero">
 	|<decimal: "decimal">
@@ -163,6 +200,7 @@ TOKEN:
 	|<grupo: "_grupo">
 	|<fin: "_fin">
 	|<ciclo: "_ciclo">
+	|<pos: "C"(["0"-"9"])+>
 }
 //LOS TOKENS QUE VA A IGNORAR
 SKIP:
@@ -177,6 +215,7 @@ TOKEN:
 	//|<texto_pl: "<<" ( (~["<",">"]) | ("\\" ( ["n","t","b","r","f","\\","\""] ) ) )* ">>">
 	//|<texto_pl: "<<" (~["<",">"]|["\n"])* ">>"> 
 	//|<texto_ex: "\'" ( (~["\'","\\"]) | ("\\" ( ["n","t","b","r","f","\\","\'"] ) ) )* "\'">
+	|<str: "\"" ( (~["\"","\\"]) | ("\\" ( ["n","t","b","r","f","\\","\""] ) ) )* "\"">
     |<err: (~[])>
 }
 //LE INDICO QUE SIGA CONCATENANDO!!!!
@@ -717,6 +756,7 @@ Formulario ENCUESTAP(Formulario f):
 	Pregunta p;
 	Grupo g;
 	Ciclo c;
+	this.padre = "";
 }
 {
 	p = PREGUNTA() 
@@ -775,6 +815,15 @@ Pregunta PREGUNTA():
 		{
 			//CREO LA PREGUNTA
 			Pregunta p = new Pregunta(iden.image, extractText(cad.image), ti);
+			if(ti == TipoPregunta.SELEC_MULT || ti == TipoPregunta.SELEC_UNO)
+			{
+				p.setIdListaOpcion(temp.image);
+			}
+			if(ti == TipoPregunta.FICHERO)
+			{
+				
+				p.setFicheroExt(temp.image);
+			}
 		}
 		aux = OTROS(p)
 		{
@@ -783,7 +832,9 @@ Pregunta PREGUNTA():
 		}
 		<cKey>
 		{
-			if(simbolos.insertaEnTabla(iden.image, new Simbolo(iden.image, "Pregunta", p)))
+			Simbolo sim = new Simbolo(iden.image, "Pregunta", p);
+			sim.setPadre(this.padre);
+			if(simbolos.insertaEnTabla(iden.image, sim ))
 			{
 				return p;
 			}
@@ -800,7 +851,8 @@ Pregunta PREGUNTA():
 
 int TIPO():
 {
-	
+	Token t;
+	String aux = "";
 }
 {
 	try
@@ -829,17 +881,26 @@ int TIPO():
 		|<fechahora>
 		{return TipoPregunta.FECHAHORA;}
 		
-		|<sel_un> <identificador> //AQUI FALTA SABER QUIEN ES QUIEN VA A SELECCIONAR DE OPCIONES
-		{return TipoPregunta.SELEC_UNO;}
+		|<sel_un> t = <identificador> //AQUI FALTA SABER QUIEN ES QUIEN VA A SELECCIONAR DE OPCIONES
+		{
+			temp = t;
+			return TipoPregunta.SELEC_UNO;
+		}
 		
-		|<sel_mul> <identificador> //AQUI FALTA DE SABER QUIEN VA A SELECCIONAR DE LAS OPCIONES
-		{return TipoPregunta.SELEC_MULT;}
+		|<sel_mul> t =  <identificador> //AQUI FALTA DE SABER QUIEN VA A SELECCIONAR DE LAS OPCIONES
+		{
+			temp = t;
+			return TipoPregunta.SELEC_MULT;
+		}
 		
 		|<nota>
 		{return TipoPregunta.NOTA;}
 		
-		|<fichero>
-		{return TipoPregunta.FICHERO;}
+		|<fichero> aux = FICH_AUX()
+		{
+			temp.image = aux;
+			return TipoPregunta.FICHERO;
+		}
 		
 		|<calcular>
 		{return TipoPregunta.CALCULAR;}
@@ -849,6 +910,31 @@ int TIPO():
 	{
 		skip_error_recovery(PUNTOCOMA,"Encuesta", "Tipo");
 		return 14;
+	}
+}
+
+String FICH_AUX():
+{
+	Token t;
+}
+{
+	try
+	{
+		 t = <str>
+		{
+			String aux = t.image;
+			aux  = aux.replace("\"","");
+			return aux;
+		}
+		|EMPTY()
+		{
+			return "";
+		}
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(PUNTOCOMA,"Encuesta", "Tipo");
+		return "";
 	}
 }
 
@@ -899,12 +985,12 @@ Pregunta OTROS(Pregunta p):
 		{
 			return pe;
 		}
-		|<pordefecto> {atributo = p.getIdpregunta() + ", pordefecto";} <dPts> t = <texto_ex> <ptComa> 
+		|<pordefecto> {atributo = p.getIdpregunta() + ", predeterminado";} <dPts> t = <texto_ex> <ptComa> 
 		{ 
 			/*ANADIR AQUI!*/
-			if(!p.addAtributo(new PorDefecto(extractExpre(t.image)),"pordefecto"))
+			if(!p.addAtributo(new PorDefecto(extractExpre(t.image)),"predeterminado"))
 			{
-				this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: PorDefecto","PorDefecto","Encuesta"));
+				this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: Predeterminado","Predeterminado","Encuesta"));
 			}
 		} 
 		pe = OTROS(p)
@@ -1066,6 +1152,8 @@ boolean BOOLEANO(String col):
 		|<falso> {return false;}
 		|<uno> {return true;}
 		|<cero> {return false;}
+		|<cerop> {return false;}
+		|<unop> {return true;}
 	}
 	catch(ParseException p)
 	{
@@ -1081,9 +1169,19 @@ String APARIENCIA(String col):
 {
 	try
 	{
-		 <pag>{return "Pagina";}
-		|<tod>{return "Todo";}
-		|<cuadricu>{return "Cuadricula";}
+		 <texto> {return "texto";}
+		|<entero>{return "entero";} 
+		|<decimal> {return "decimal";}
+		|<rango> {return "rango";}
+		|<condicion> {return "condicion";}
+		|<fecha> {return "fecha";}
+		|<hora> {return "hora";}
+		|<fechahora> {return "fechahora";}
+		|<sel_un> {return "selecciona_uno";}
+		|<sel_mul> {return "selecciona_multiples";}
+		|<nota> {return "nota";}
+		|<fichero> {return "fichero";}
+		|<calcular> {return "calcular";}
 	}
 	catch(ParseException p)
 	{
@@ -1115,6 +1213,7 @@ Grupo GRUPO():
 	ap = APLICABLE("Grupo: "+iden.image)
 	
 	{
+		this.padre = iden.image;
 		Grupo g = new Grupo(iden.image,extractText(et.image));
 		if(ap!=null)
 		{
@@ -1138,6 +1237,8 @@ Grupo GRUPO():
 	
 	{
 		//ANADO A LA TABLA DE SIMBOLOS
+		
+		//AQUI PODRIA INSERTAR EL PADRE PERO AUN NO LO HARE NO LO VEO NECESARIO
 		if(simbolos.insertaEnTabla(iden.image,new Simbolo(iden.image, "Grupo", padre)))
 		{
 			return padre;

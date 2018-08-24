@@ -25,6 +25,9 @@ public class Ciclo implements ArbolForm{
     
     ArrayList<String> tabs;
     
+    //PADRE
+    String padre = "";
+    
     public Ciclo(String idCiclo, String etiqueta)
     {
         this.etiqueta = etiqueta;
@@ -40,6 +43,10 @@ public class Ciclo implements ArbolForm{
         return idCiclo;
     }
 
+    public void setPadre(String padre) {
+        this.padre = padre;
+    }
+    
     public String getEtiqueta() {
         return etiqueta;
     }

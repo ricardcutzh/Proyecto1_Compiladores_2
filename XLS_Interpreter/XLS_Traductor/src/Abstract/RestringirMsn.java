@@ -5,8 +5,10 @@
  */
 package Abstract;
 
+import EtiquetaParser.EtiqParser;
 import ManejoError.TError;
 import Tablas.TablaSimbolos;
+import java.io.StringReader;
 import java.util.ArrayList;
 
 /**
@@ -15,13 +17,48 @@ import java.util.ArrayList;
  */
 public class RestringirMsn extends Atributo implements ArbolForm{
     ArrayList<String> tabs;
+    ArrayList<String> params;
+    String padre, actual;
     public RestringirMsn(String cadena) {
         super(cadena);
     }
+    
+    public ArrayList<String> getParams() {
+        return params;
+    }
 
+    public void setPadre(String padre) {
+        this.padre = padre;
+    }
+
+    public void setActual(String actual) {
+        this.actual = actual;
+    }
+    
     @Override
     public Object traducirLocal(TablaSimbolos ts, ArrayList<String> tabs, ArrayList<TError> errores) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.params = new ArrayList<>();
+        this.tabs = tabs;
+        tabula();
+        String cad = dameTabulaciones()+"Sino{\n";
+        StringReader stream = new StringReader(this.cadena);
+        try {
+            EtiqParser parse = new EtiqParser(stream);
+            parse.setArchivo("Encuesta", "RestringirMsn en Pregunta: "+this.actual);
+            parse.setUp(errores, ts, padre, actual);
+            String aux = parse.INICIO();
+            ////////////////////////////////////////////////
+            tabula();
+            cad += dameTabulaciones()+"Mensajes("+aux+");\n";
+            destabula();
+            ////////////////////////////////////////////////
+            this.params = parse.getParams();
+        } catch (Exception e) {
+            errores.add(new TError("Ejecucion", "Ocurrio un Error: "+e.getMessage(), "RestrigirMsn", "Encuesta"));
+        }
+        cad += dameTabulaciones()+"}\n";
+        destabula();
+        return cad;
     }
 
     @Override
@@ -31,17 +68,23 @@ public class RestringirMsn extends Atributo implements ArbolForm{
 
     @Override
     public void tabula() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.tabs.add("\t");
     }
 
     @Override
     public void destabula() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (this.tabs.size() > 0) {
+            this.tabs.remove(0);
+        }
     }
 
     @Override
     public String dameTabulaciones() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String cad = "";
+        for (String t : this.tabs) {
+            cad += t;
+        }
+        return cad;
     }
 
     

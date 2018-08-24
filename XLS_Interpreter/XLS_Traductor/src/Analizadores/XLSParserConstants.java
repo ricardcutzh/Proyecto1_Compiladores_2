@@ -97,53 +97,61 @@ public interface XLSParserConstants {
   /** RegularExpression Id. */
   int cero = 43;
   /** RegularExpression Id. */
-  int texto = 44;
+  int unop = 44;
   /** RegularExpression Id. */
-  int entero = 45;
+  int cerop = 45;
   /** RegularExpression Id. */
-  int decimal = 46;
+  int texto = 46;
   /** RegularExpression Id. */
-  int rango = 47;
+  int entero = 47;
   /** RegularExpression Id. */
-  int condicion = 48;
+  int decimal = 48;
   /** RegularExpression Id. */
-  int fecha = 49;
+  int rango = 49;
   /** RegularExpression Id. */
-  int hora = 50;
+  int condicion = 50;
   /** RegularExpression Id. */
-  int fechahora = 51;
+  int fecha = 51;
   /** RegularExpression Id. */
-  int sel_un = 52;
+  int hora = 52;
   /** RegularExpression Id. */
-  int sel_mul = 53;
+  int fechahora = 53;
   /** RegularExpression Id. */
-  int nota = 54;
+  int sel_un = 54;
   /** RegularExpression Id. */
-  int fichero = 55;
+  int sel_mul = 55;
   /** RegularExpression Id. */
-  int calcular = 56;
+  int nota = 56;
   /** RegularExpression Id. */
-  int grupo = 57;
+  int fichero = 57;
   /** RegularExpression Id. */
-  int fin = 58;
+  int calcular = 58;
   /** RegularExpression Id. */
-  int ciclo = 59;
+  int grupo = 59;
   /** RegularExpression Id. */
-  int identificador = 65;
+  int fin = 60;
   /** RegularExpression Id. */
-  int err = 66;
+  int ciclo = 61;
   /** RegularExpression Id. */
-  int inicio = 67;
+  int pos = 62;
   /** RegularExpression Id. */
-  int cual2 = 68;
+  int identificador = 68;
   /** RegularExpression Id. */
-  int texto_pl = 69;
+  int str = 69;
   /** RegularExpression Id. */
-  int otroInic = 70;
+  int err = 70;
   /** RegularExpression Id. */
-  int cual = 71;
+  int inicio = 71;
   /** RegularExpression Id. */
-  int texto_ex = 72;
+  int cual2 = 72;
+  /** RegularExpression Id. */
+  int texto_pl = 73;
+  /** RegularExpression Id. */
+  int otroInic = 74;
+  /** RegularExpression Id. */
+  int cual = 75;
+  /** RegularExpression Id. */
+  int texto_ex = 76;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -182,7 +190,7 @@ public interface XLSParserConstants {
     "\"sugerir\"",
     "\"requerido\"",
     "\"requeridomsn\"",
-    "\"pordefecto\"",
+    "\"predeterminado\"",
     "\"lectura\"",
     "\"calculo\"",
     "\"multimedia\"",
@@ -198,6 +206,8 @@ public interface XLSParserConstants {
     "\"falso\"",
     "\"1\"",
     "\"0\"",
+    "\"0.0\"",
+    "\"1.0\"",
     "\"texto\"",
     "\"entero\"",
     "\"decimal\"",
@@ -214,12 +224,14 @@ public interface XLSParserConstants {
     "\"_grupo\"",
     "\"_fin\"",
     "\"_ciclo\"",
+    "<pos>",
     "\" \"",
     "\"\\n\"",
     "\"\\r\"",
     "\"\\r\\n\"",
     "\"\\t\"",
     "<identificador>",
+    "<str>",
     "<err>",
     "\"<<\"",
     "<cual2>",

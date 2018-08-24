@@ -5,8 +5,10 @@
  */
 package Abstract;
 
+import EtiquetaParser.EtiqParser;
 import ManejoError.TError;
 import Tablas.TablaSimbolos;
+import java.io.StringReader;
 import java.util.ArrayList;
 
 /**
@@ -15,13 +17,40 @@ import java.util.ArrayList;
  */
 public class RequeridoMsn extends Atributo implements ArbolForm{
     ArrayList<String> tabs;
+    ArrayList<String> params;
+    String padre, actual;
     public RequeridoMsn(String cadena) {
         super(cadena);
+        this.params = new ArrayList<>();
     }
 
+    public ArrayList<String> getParams() {
+        return params;
+    }
+
+    public void setPadre(String padre) {
+        this.padre = padre;
+    }
+
+    public void setActual(String actual) {
+        this.actual = actual;
+    }
+    
+    
     @Override
     public Object traducirLocal(TablaSimbolos ts, ArrayList<String> tabs, ArrayList<TError> errores) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String cad = "Cadena RequeridoMsn = ";
+        StringReader stream = new StringReader(this.cadena);
+        try {
+            EtiqParser parse = new EtiqParser(stream);
+            parse.setArchivo("Encuesta", "RequeridoMsn en Pregunta: "+this.actual);
+            parse.setUp(errores, ts, padre, actual);
+            cad += parse.INICIO();
+            this.params = parse.getParams();
+        } catch (Exception e) {
+            cad = "$$EXISTIERON ERRORES EN LA RequeridoMSN: "+this.padre;
+        }
+        return cad+";\n";
     }
 
     @Override

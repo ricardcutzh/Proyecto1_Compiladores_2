@@ -5,8 +5,10 @@
  */
 package Abstract;
 
+import Exprs.ExpParser;
 import ManejoError.TError;
 import Tablas.TablaSimbolos;
+import java.io.StringReader;
 import java.util.ArrayList;
 
 /**
@@ -15,13 +17,37 @@ import java.util.ArrayList;
  */
 public class PorDefecto extends Atributo implements ArbolForm{
     ArrayList<String> tabs;
+    ArrayList<String> params;
     public PorDefecto(String cadena) {
         super(cadena);
     }
+    String actual, padre;
 
+    public void setActual(String actual) {
+        this.actual = actual;
+    }
+
+    public void setPadre(String padre) {
+        this.padre = padre;
+    }
+
+    public ArrayList<String> getParams() {
+        return params;
+    }
     @Override
     public Object traducirLocal(TablaSimbolos ts, ArrayList<String> tabs, ArrayList<TError> errores) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.tabs = tabs;
+        String cad = "";
+        StringReader stream = new StringReader(this.cadena);
+        try {
+            ExpParser exp = new ExpParser(stream);
+            exp.setUp(errores, ts, padre, actual, cadena, actual, TipoPregunta.TRADUC_1);
+            cad = "="+exp.S();
+            this.params = exp.getParams();
+        } catch (Exception e) {
+            errores.add(new TError("Ejecucion", "Ocurrio un error en el parser en Predeterminado: "+e.getMessage(), "Predeterminado", "Encuesta"));
+        }
+        return cad;
     }
 
     @Override
@@ -31,17 +57,23 @@ public class PorDefecto extends Atributo implements ArbolForm{
 
     @Override
     public void tabula() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.tabs.add("\t");
     }
 
     @Override
     public void destabula() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (this.tabs.size() > 0) {
+            this.tabs.remove(0);
+        }
     }
 
     @Override
     public String dameTabulaciones() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String cad = "";
+        for (String t : this.tabs) {
+            cad += t;
+        }
+        return cad;
     }
 
     

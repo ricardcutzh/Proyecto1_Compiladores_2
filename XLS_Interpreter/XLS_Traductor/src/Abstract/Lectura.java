@@ -24,7 +24,12 @@ public class Lectura extends Atributo implements ArbolForm{
 
     @Override
     public Object traducirLocal(TablaSimbolos ts, ArrayList<String> tabs, ArrayList<TError> errores) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String v = "publico ";
+        if(this.val)
+        {
+            v = "privado ";
+        }
+        return v;
     }
 
     @Override

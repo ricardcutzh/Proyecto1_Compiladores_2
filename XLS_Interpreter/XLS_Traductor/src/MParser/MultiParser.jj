@@ -1,0 +1,709 @@
+options {
+  LOOKAHEAD = 1;
+  CHOICE_AMBIGUITY_CHECK = 2;
+  OTHER_AMBIGUITY_CHECK = 1;
+  STATIC = false;
+  DEBUG_PARSER = false;
+  DEBUG_LOOKAHEAD = false;
+  DEBUG_TOKEN_MANAGER = false;
+  ERROR_REPORTING = true;
+  JAVA_UNICODE_ESCAPE = false;
+  UNICODE_INPUT = false;
+  IGNORE_CASE = true;
+  USER_TOKEN_MANAGER = false;
+  USER_CHAR_STREAM = false;
+  BUILD_PARSER = true;
+  BUILD_TOKEN_MANAGER = true;
+  SANITY_CHECK = true;
+  FORCE_LA_CHECK = false;
+}
+PARSER_BEGIN(MultimediaParser)
+package MParser;
+import ManejoError.TError;
+import java.util.ArrayList;
+import Tablas.*;
+import Abstract.*;
+public class MultimediaParser
+{
+	ArrayList<TError> errores;
+	TablaSimbolos ts;
+	String columna; //LA COLUMNA QUE ESTOY TRADUCIENDO
+	String archivo; //ESTE SIEMPRE SERA ENCUESTA
+	String idPreguntaActual;
+	String idPadre;
+	ArrayList<String> params;
+	
+	int type;
+	String tipoCalcular = "";
+	
+	//PARAMETROS DE LA MULTIMEDIA
+	public String tipoMedia = "";
+	public String ruta = "";
+	public String repro = "Falso";
+	
+	public void setUp(ArrayList<TError> errores, TablaSimbolos ts, String padre, String actual, String columna, String archivo, int tipo)
+	{
+		this.errores = errores;
+		this.ts = ts;
+		this.idPadre =padre;
+		this.idPreguntaActual = actual;
+		this.columna = columna;
+		this.archivo = archivo;
+		this.params = new ArrayList();
+		this.type = tipo;
+	}
+	
+	String devuelvemeID(String id)
+	{
+		String aux = id;
+		aux = aux.replace("#[","");
+		aux = aux.replace("]","");
+		return aux;
+	}
+	
+	public ArrayList<String> getParams()
+	{
+		return this.params;
+	}
+	public String getTipoCalcular()
+	{
+		return this.tipoCalcular;
+	}
+	
+	String obtTipoAltoNivel(int tipo)
+	{
+		switch(tipo)
+		{
+			case TipoPregunta.ENTERO:
+			{
+				return "Entero";
+			}
+			case TipoPregunta.TEXTO:
+			{
+				return "Cadena";
+			}
+			case TipoPregunta.DECIMAL:
+			{
+				return "Decimal";
+			}
+			case TipoPregunta.RANGO:
+			{
+				return "Entero";
+			}
+			case TipoPregunta.CONDICION:
+			{
+				return "Booelano";
+			}
+			case TipoPregunta.FECHA:
+			{
+				return "Fecha";
+			}
+			case TipoPregunta.HORA:
+			{
+				return "Hora";
+			}
+			case TipoPregunta.FECHAHORA:
+			{
+				return "FechaHora";
+			}
+			case TipoPregunta.SELEC_MULT:
+			{
+				return "Cadena";
+			}
+			case TipoPregunta.SELEC_UNO:
+			{
+				return "Cadena";
+			}
+			case TipoPregunta.NOTA:
+			{
+				return "Cadena";
+			}
+			case TipoPregunta.FICHERO:
+			{
+				return "Cadena";
+			}
+			case TipoPregunta.CALCULAR:
+			{
+				return "Decimal";
+			}
+		}
+		return "";
+	}
+}
+PARSER_END(MultimediaParser)
+JAVACODE
+void skip_error_recovery(int kind, String archivo, String columna)
+{
+	errores.add(new TError("Sintactico","Error en la columna: "+columna,columna,archivo));
+	Token t;
+	do {
+        t = getNextToken();
+		if(t.kind == 0){break;}
+    } while (t.kind != 0);
+}
+//LOS TOKENS QUE VA A IGNORAR
+SKIP:
+{
+    " " | "\n" | "\r" | "\r\n" | "\t" 
+}
+TOKEN:
+{
+	 <media_im: "media_imagen">
+	|<media_vid: "media_video">
+	|<media_aud: "media_audio">
+	|<reproduccion: "reproduccion">
+}
+TOKEN:
+{
+	 <mas: "+">
+	|<menos: "-">
+	|<por: "*">
+	|<div: "div">
+	|<mod: "mod">
+	|<pot: "^">
+	|<igual: "=">
+	|<diferente: "!=">
+	|<mayor: ">">
+	|<menor: "<">
+	|<mayorigual: ">=">
+	|<menorigual: "<=">
+	|<and: "&&">
+	|<not: "!">
+	|<or: "||">
+	|<punto: ".">
+	|<dpunto: "..">
+	|<arroba: "@">
+	|<oPar: "(">
+	|<cPar: ")">
+	|<hoy: "hoy()">
+	|<ahora: "ahora()">
+}
+TOKEN:
+{
+	 <identificador: "#["["a"-"z","A"-"A"](["a"-"z","A"-"A","_","0"-"9"])*"]">
+	|<entero: (["0"-"9"])+>
+	|<decimal: (["0"-"9"])+["."](["0"-"9"])+>
+	|<str1: "\"" ( (~["\"","\\"]) | ("\\" ( ["n","t","b","r","f","\\","\""] ) ) )* "\"">
+	|<str2: "\'" ( (~["\'","\\"]) | ("\\" ( ["n","t","b","r","f","\\","\'"] ) ) )* "\'">
+	|<verdadero: "verdadero">
+	|<falso: "falso">
+	|<fecha: ["0"-"9"]["0"-"9"]["/"]["0"-"9"]["0"-"9"]["/"]["0"-"9"]["0"-"9"]["0"-"9"]["0"-"9"]>
+	|<hora:  ["0"-"9"]["0"-"9"][":"]["0"-"9"]["0"-"9"][":"]["0"-"9"]["0"-"9"]>
+	|<fechahora: <fecha>[" "]<hora> > 
+}
+//GRAMARTICA
+
+void INIT():
+{
+	
+}
+{
+	try
+	{
+		 <media_aud> {this.tipoMedia = "Audio";}
+		 LISTA()
+		|<media_vid> {this.tipoMedia = "Video";}
+		 LISTA()
+		|<media_im> {this.tipoMedia = "Imagen";}
+		 LISTA()
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(0, this.archivo, this.columna);
+	}
+}
+
+void LISTA():
+{
+	String cadena = "";
+	Token t;
+}
+{
+	try
+	{
+		<reproduccion> <igual> cadena = S() {this.repro = cadena; } LISTA()
+		|t = <str1> {this.ruta = t.image;} LISTA()
+		|EMPTY()
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(0, this.archivo, this.columna);
+	}
+}
+
+
+void EMPTY():
+{
+	
+}
+{
+	{
+		//VACIO
+		System.out.println("VACIO");
+	}
+}
+
+String S():
+{
+	String cadena = "";
+}
+{
+	try
+	{
+		cadena = E(cadena)
+		{
+			return cadena;
+		}
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(0, this.archivo, this.columna);
+		return "";
+	}
+}
+
+/////////////////////////////////////E////////////////////////////////////////////////////////////////////////
+String E(String cadena):
+{
+	String aux = "";
+}
+{
+	try
+	{
+		cadena = T(cadena) cadena = EP1(cadena) 
+		{
+			return cadena;
+		}
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(0, this.archivo, this.columna);
+		return "";
+	}
+}
+
+String EP(String cadena):
+{
+	
+}
+{
+	try
+	{
+		 <and> {cadena += "&&";} cadena = T(cadena)
+		 {
+			 this.tipoCalcular = "Booelano";
+			return cadena;
+		 }
+		|<or> {cadena += "||";} cadena = T(cadena)
+		{
+			this.tipoCalcular = "Booelano";
+			return cadena;
+		}
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(0, this.archivo, this.columna);
+		return "";
+	}
+}
+
+String EP1(String cadena):
+{
+	
+}
+{
+	try
+	{
+		 cadena = EP(cadena)
+		 cadena = EP1(cadena)
+		 {
+			 return cadena;
+		 }
+		|EMPTY()
+		{
+			return cadena;
+		}
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(0, this.archivo, this.columna);
+		return "";
+	}
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////T/////////////////////////////////////////////////////////////////////////////////
+String T(String cadena):
+{
+	
+}
+{
+	try
+	{
+		cadena = F(cadena)
+		cadena = TP1(cadena)
+		{
+			return cadena;
+		}
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(0, this.archivo, this.columna);
+		return "";
+	}
+}
+
+String TP(String cadena):
+{
+	
+}
+{
+	try
+	{
+		<igual> {cadena += "==";} cadena = F(cadena)
+		{
+			this.tipoCalcular = "Booelano";
+			return cadena;
+		}
+		|<diferente> {cadena += "!=";} cadena = F(cadena)
+		{
+			this.tipoCalcular = "Booelano";
+			return cadena;
+		}
+		|<menor> {cadena += "<";} cadena = F(cadena)
+		{
+			this.tipoCalcular = "Booelano";
+			return cadena;
+		}
+		|<mayor> {cadena += ">";} cadena = F(cadena)
+		{
+			this.tipoCalcular = "Booelano";
+			return cadena;
+		}
+		|<mayorigual> {cadena += ">=";} cadena = F(cadena)
+		{
+			this.tipoCalcular = "Booelano";
+			return cadena;
+		}
+		|<menorigual> {cadena += "<=";} cadena = F(cadena)
+		{
+			this.tipoCalcular = "Booelano";
+			return cadena;
+		}
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(0, this.archivo, this.columna);
+		return "";
+	}
+}
+
+String TP1(String cadena):
+{
+	
+}
+{
+	try
+	{
+		cadena = TP(cadena)
+		cadena = TP1(cadena)
+		{
+			return cadena;
+		}
+		| EMPTY()
+		{
+			return cadena;
+		}
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(0, this.archivo, this.columna);
+		return "";
+	}
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////F/////////////////////////////////////////////////////////////////////////////////////
+String F(String cadena):
+{
+	
+}
+{
+	try
+	{
+		cadena = G(cadena)
+		cadena = FP1(cadena)
+		{
+			return cadena;
+		}
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(0, this.archivo, this.columna);
+		return "";
+	}
+}
+
+String FP(String cadena):
+{
+	
+}
+{
+	try
+	{
+		<mas> {cadena += "+";} cadena = G(cadena)
+		{
+			return cadena;
+		}
+		|<menos> {cadena += "-";} cadena = G(cadena)
+		{
+			return cadena;
+		}
+		|<por>  {cadena += "*";} cadena = G(cadena)
+		{
+			return cadena;
+		}
+		|<div> {cadena += "/";} cadena = G(cadena)
+		{
+			return cadena;
+		}
+		|<pot> {cadena += "^";} cadena = G(cadena)
+		{
+			return cadena;
+		}
+		|<mod> {cadena += "%";} cadena = G(cadena)
+		{
+			return cadena;
+		}
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(0, this.archivo, this.columna);
+		return "";
+	}
+}
+
+String FP1(String cadena):
+{
+	
+}
+{
+	try
+	{
+		cadena = FP(cadena)
+		cadena = FP1(cadena)
+		{
+			return cadena;
+		}
+		|EMPTY()
+		{
+			return cadena;
+		}
+		
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(0, this.archivo, this.columna);
+		return "";
+	}
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////G///////////////////////////////////////////////////////////////////////////////////
+String G(String cadena):
+{
+	Token t;
+}
+{
+	try
+	{
+		t = <identificador> 
+		{
+			//AUN DEBO DE PENSAR EN LAS ACCIONES COMO DEBE DE SER
+			String aux = devuelvemeID(t.image);
+			if(this.type == 0)
+			{
+				if(this.ts.existeElemento(aux.toLowerCase()))
+				{
+					//ACA SE HACE EL 
+					Simbolo sim = this.ts.getSimbolo(aux);
+					if(sim.getElemento() instanceof Pregunta)
+					{
+						Pregunta p = (Pregunta)sim.getElemento();//CASTEO A PREGUNTA
+						String tipo = obtTipoAltoNivel(p.getTipo()); //OBTENGO EL TIPO
+						this.params.add(tipo+" "+aux);//ANADO A LOS PARAMETROS QUE NECESITA LA PREGUNTA
+						if(this.tipoCalcular.equals(""))
+						{
+							this.tipoCalcular = tipo;
+						}
+						cadena += aux;
+					}
+				}
+				else
+				{
+					this.errores.add(new TError("Semantico", "Se hace referencia a una pregunta que no existe: "+aux,columna,archivo));
+					cadena += "";
+				}
+			}
+			else
+			{
+				if(this.ts.existeElemento(aux.toLowerCase()))
+				{
+					Simbolo  sim = this.ts.getSimbolo(aux);
+					if(sim.getElemento() instanceof Pregunta)
+					{
+						Pregunta p = (Pregunta)sim.getElemento();//CASTEO A PREGUNTA
+						
+						if(this.tipoCalcular.equals(""))
+						{
+							this.tipoCalcular = obtTipoAltoNivel(p.getTipo());
+						}
+						
+						String pad = sim.getPadre();
+						if(!pad.equals(""))
+						{
+							pad +="().";
+						}
+						cadena += pad+aux+"().Respuesta";
+					}
+				}
+				else
+				{
+					this.errores.add(new TError("Semantico", "Se hace referencia a una pregunta que no existe: "+aux,columna,archivo));
+					cadena += "";
+				}
+			}
+			return cadena;
+		}
+		|t = <entero>
+		{
+			//ACCIONES
+			if(this.tipoCalcular.equals(""))
+			{
+				this.tipoCalcular = "Entero";
+			}
+			cadena += t.image;
+			return cadena;
+		}
+		|t = <decimal>
+		{
+			//ACCIONES
+			if(this.tipoCalcular.equals("") || this.tipoCalcular.equals("Entero"))
+			{
+				this.tipoCalcular = "Decimal";
+			}
+			cadena += t.image;
+			return cadena;
+		}
+		|t = <str1>
+		{
+			//ACCIONES
+			cadena += t.image;
+			this.tipoCalcular = "Cadena";
+			return cadena;
+		}
+		|t = <str2>
+		{
+			//ACCIONES
+			cadena += t.image;
+			this.tipoCalcular = "Cadena";
+			return cadena;
+		}
+		|t = <verdadero>
+		{
+			//ACCIONES
+			cadena += t.image;
+			if(this.tipoCalcular.equals(""))
+			{
+				this.tipoCalcular = "Booelano";
+			}
+			return cadena;
+		}
+		|t = <falso>
+		{
+			//ACCIONES
+			cadena += t.image;
+			if(this.tipoCalcular.equals(""))
+			{
+				this.tipoCalcular = "Booelano";
+			}
+			return cadena;
+		}
+		|t = <fecha>
+		{
+			//ACCIONES
+			cadena += "\""+t.image+"\"";
+			if(this.tipoCalcular.equals(""))
+			{
+				this.tipoCalcular = "Fecha";
+			}
+			return cadena;
+		}
+		|t = <fechahora>
+		{
+			//ACCIONES
+			cadena += "\'"+t.image+"\'";
+			if(this.tipoCalcular.equals(""))
+			{
+				this.tipoCalcular = "FechaHora";
+			}
+			return cadena;
+		}
+		| t = <ahora>
+		{
+			cadena += t.image;
+			if(this.tipoCalcular.equals(""))
+			{
+				this.tipoCalcular = "Hora";
+			}
+			return cadena;
+		}
+		| t = <hoy>
+		{
+			cadena += t.image;
+			if(this.tipoCalcular.equals(""))
+			{
+				this.tipoCalcular = "Fecha";
+			}
+			return cadena;
+		}
+		| t = <hora>
+		{
+			cadena += "\'"+t.image+"\'";
+			if(this.tipoCalcular.equals(""))
+			{
+				this.tipoCalcular = "Hora";
+			}
+			return cadena;
+		}
+		| <oPar> {cadena += "(";} cadena = E(cadena) <cPar> {cadena +=")";}
+		{
+			
+			return cadena;
+		}
+		| <punto>
+		{
+			if(this.type == 0)
+			{
+				//SOLO AGREGO EL ID DE LA PREGUNTA ACTUAL EN CUESTION EN ESTE CASO ES EL PARAM_1
+				cadena += this.idPreguntaActual;
+			}
+			else
+			{
+				if(!this.idPadre.equals(""))
+				{
+					cadena += this.idPadre+"().";
+				}
+				cadena += this.idPreguntaActual+"().Respuesta";
+			}
+			return cadena;
+		}
+		| <not> {cadena += "!";} cadena = E(cadena)
+		{
+			this.tipoCalcular = "Booelano";
+			return cadena;
+		}
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(0, this.archivo, this.columna);
+		return"";
+	}
+}

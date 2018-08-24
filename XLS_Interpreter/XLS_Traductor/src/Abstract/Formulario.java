@@ -11,22 +11,29 @@ package Abstract;
  */
 import ManejoError.TError;
 import Tablas.TablaSimbolos;
+import Traductor.TablaOpciones;
 import java.util.ArrayList;
-public class Formulario implements ArbolForm{
+
+public class Formulario implements ArbolForm {
+
     ArrayList<Pregunta> preguntas;
     ArrayList<Grupo> grupos;
     ArrayList<Ciclo> ciclos;
     ArrayList<Object> elementos;
-    
+
     ArrayList<String> tabs;
-    
-    public Formulario()
-    {
+    TablaOpciones tOpc;
+
+    public Formulario() {
         this.preguntas = new ArrayList<>();
         this.grupos = new ArrayList<>();
         this.ciclos = new ArrayList<>();
         this.elementos = new ArrayList<>();
-        
+
+    }
+
+    public void settOpc(TablaOpciones tOpc) {
+        this.tOpc = tOpc;
     }
 
     public ArrayList<Pregunta> getPreguntas() {
@@ -40,21 +47,18 @@ public class Formulario implements ArbolForm{
     public ArrayList<Ciclo> getCiclos() {
         return ciclos;
     }
-    
-    public void addPregunta(Pregunta p)
-    {
+
+    public void addPregunta(Pregunta p) {
         this.preguntas.add(p);
         this.elementos.add(p);
     }
-    
-    public void addGrupo(Grupo p)
-    {
+
+    public void addGrupo(Grupo p) {
         this.grupos.add(p);
         this.elementos.add(p);
     }
-    
-    public void addCiclo(Ciclo c)
-    {
+
+    public void addCiclo(Ciclo c) {
         this.ciclos.add(c);
         this.elementos.add(c);
     }
@@ -66,26 +70,27 @@ public class Formulario implements ArbolForm{
 
     @Override
     public Object traducirGlobal(TablaSimbolos ts, ArrayList<String> tabs, ArrayList<TError> errores) {
-        this.tabs = tabs;
-        String cad = dameTabulaciones()+"$$INICIA LA TRADUCCION DEL FORMULARIO\n";
-        ///AQUI EN MEDIO IRIA LA TRADUCCION DE LAS PREGUNTAS DE FORMA GENERAL
-        for(Object ob : elementos)
-        {
-            if(ob instanceof Pregunta)
-            {
-                cad += dameTabulaciones()+"$$TRADUCIENDO PREGUNTA...\n";
+        try {
+            this.tabs = tabs;
+            String cad = dameTabulaciones() + "$$INICIA LA TRADUCCION DEL FORMULARIO\n\n";
+            ///AQUI EN MEDIO IRIA LA TRADUCCION DE LAS PREGUNTAS DE FORMA GENERAL
+            for (Object ob : elementos) {
+                if (ob instanceof Pregunta) {
+                    //cad += dameTabulaciones() + "$$TRADUCIENDO PREGUNTA...\n";
+                    ((Pregunta) ob).setTablaOpciones(tOpc);
+                    ((Pregunta) ob).setPadre("");
+                    cad += ((Pregunta) ob).traducirLocal(ts, tabs, errores);
+                } else if (ob instanceof Grupo) {
+                    cad += dameTabulaciones() + "$$TRADUCIENDO GRUPO...\n";
+                } else if (ob instanceof Ciclo) {
+                    cad += dameTabulaciones() + "$$TRADUCIENDO CICLO...\n";
+                }
             }
-            else if(ob instanceof Grupo)
-            {
-                cad += dameTabulaciones()+"$$TRADUCIENDO GRUPO...\n";
-            }
-            else if(ob instanceof Ciclo)
-            {
-                cad += dameTabulaciones()+"$$TRADUCIENDO CICLO...\n";
-            }
+            cad += "\n"+dameTabulaciones() + "$$FINALIZA LA TRADUCCION DEL FORMULARIO\n";
+            return cad;
+        } catch (Exception e) {
+            return "$$ERROR EN LA TRADUCCION DE EL FORMULARIO";
         }
-        cad += dameTabulaciones()+"$$FINALIZA LA TRADUCCION DEL FORMULARIO\n";
-        return cad;
     }
 
     @Override
@@ -109,13 +114,4 @@ public class Formulario implements ArbolForm{
         return cad;
     }
 
-    
-
-    
-    
-    
-    
- 
-    
-    
 }

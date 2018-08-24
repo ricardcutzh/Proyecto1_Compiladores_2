@@ -1,0 +1,246 @@
+options {
+  LOOKAHEAD = 1;
+  CHOICE_AMBIGUITY_CHECK = 2;
+  OTHER_AMBIGUITY_CHECK = 1;
+  STATIC = false;
+  DEBUG_PARSER = false;
+  DEBUG_LOOKAHEAD = false;
+  DEBUG_TOKEN_MANAGER = false;
+  ERROR_REPORTING = true;
+  JAVA_UNICODE_ESCAPE = false;
+  UNICODE_INPUT = false;
+  IGNORE_CASE = true;
+  USER_TOKEN_MANAGER = false;
+  USER_CHAR_STREAM = false;
+  BUILD_PARSER = true;
+  BUILD_TOKEN_MANAGER = true;
+  SANITY_CHECK = true;
+  FORCE_LA_CHECK = false;
+}
+PARSER_BEGIN(EtiqParser)
+package EtiquetaParser;
+import ManejoError.TError;
+import java.util.ArrayList;
+import Tablas.*;
+import Abstract.*;
+public class EtiqParser 
+{
+	ArrayList<TError> errores;
+	TablaSimbolos ts;
+	String columna; //LA COLUMNA QUE ESTOY TRADUCIENDO
+	String archivo; //ESTE SIEMPRE SERA ENCUESTA
+	String idPreguntaActual;
+	String idPadre;
+	
+	ArrayList<String> params;
+	
+	public ArrayList<String> getParams()
+	{
+		return this.params;
+	}
+	public void setUp(ArrayList<TError> errores, TablaSimbolos ts, String padre, String actual)
+	{
+		setErrores(errores);
+		setSimbolTable(ts);
+		setPadreYActual(padre, actual);
+	}
+	
+    void setErrores(ArrayList<TError> errores)
+	{
+		this.errores = errores;
+	}
+	
+	void setSimbolTable(TablaSimbolos ts)
+	{
+		this.ts = ts;
+	}
+	
+	public void setArchivo(String archivo, String col)
+	{
+		this.columna = col;
+		this.archivo = archivo;
+	}
+	
+	void setPadreYActual(String padre, String actual)
+	{
+		this.idPreguntaActual = actual;
+		this.idPadre = padre;
+	}
+	
+	String devuelvemeID(String id)
+	{
+		String aux = id;
+		aux = aux.replace("#[","");
+		aux = aux.replace("]","");
+		return aux;
+	}
+	
+	String obtTipoAltoNivel(int tipo)
+	{
+		switch(tipo)
+		{
+			case TipoPregunta.ENTERO:
+			{
+				return "Entero";
+			}
+			case TipoPregunta.TEXTO:
+			{
+				return "Cadena";
+			}
+			case TipoPregunta.DECIMAL:
+			{
+				return "Decimal";
+			}
+			case TipoPregunta.RANGO:
+			{
+				return "Entero";
+			}
+			case TipoPregunta.CONDICION:
+			{
+				return "Booelano";
+			}
+			case TipoPregunta.FECHA:
+			{
+				return "Fecha";
+			}
+			case TipoPregunta.HORA:
+			{
+				return "Hora";
+			}
+			case TipoPregunta.FECHAHORA:
+			{
+				return "FechaHora";
+			}
+			case TipoPregunta.SELEC_MULT:
+			{
+				return "Cadena";
+			}
+			case TipoPregunta.SELEC_UNO:
+			{
+				return "Cadena";
+			}
+			case TipoPregunta.NOTA:
+			{
+				return "Cadena";
+			}
+			case TipoPregunta.FICHERO:
+			{
+				return "Cadena";
+			}
+			case TipoPregunta.CALCULAR:
+			{
+				return "Decimal";
+			}
+		}
+		return "";
+	}
+}
+PARSER_END(EtiqParser)
+JAVACODE
+void skip_error_recovery(int kind, String archivo, String columna)
+{
+	errores.add(new TError("Sintactico","Error en la columna: "+columna,columna,archivo));
+	Token t;
+	do {
+        t = getNextToken();
+		if(t.kind == 0){break;}
+    } while (t.kind != kind || t.kind != 0);
+}
+//TOKENS
+TOKEN:
+{
+	<identificador: "#["["a"-"z","A"-"A"](["a"-"z","A"-"A","_","0"-"9"])*"]">
+	|<cualquiera: (~[])>
+}
+
+//SINTAXIS
+String INICIO():
+{
+	String cadena = "\"";
+	this.params = new ArrayList();
+}
+{
+	cadena = S(cadena)
+	{
+		return cadena;
+	}
+}
+
+String S(String cad):
+{
+	Token t;
+	String cadena = "";
+}
+{
+	
+	 t = <identificador>
+	{
+		//ACCIONES
+		String aux = devuelvemeID(t.image);//OBTENGO EL VALOR DEL TOKEN
+		if(this.ts.existeElemento(aux.toLowerCase()))
+		{
+			//SI EXISTE UN ELEMENTO CON ESE NOMBRE ENTONCES:
+			// PRIMERO VOY A TRAERLO Y VEO QUE SEA UNA INSTANCIA DE UNA PREGUNTA PARA LUEGO SABER SU TIPO Y TRADUCIRLO
+			Simbolo sim = this.ts.getSimbolo(aux);
+			if(sim.getElemento() instanceof Pregunta)
+			{
+				Pregunta p = (Pregunta)sim.getElemento();//CASTEO A PREGUNTA
+				String tipo = obtTipoAltoNivel(p.getTipo()); //OBTENGO EL TIPO
+				this.params.add(tipo+" "+aux);//ANADO A LOS PARAMETROS QUE NECESITA LA PREGUNTA
+			}
+			cad += "\"+"+aux+"+\"";
+		}
+		else
+		{
+			//SI NO EXISTE EL ELEMENTO CON ESTE ID: ERROR SEMANTICO!
+			this.errores.add(new TError("Semantico", "Se hace referencia a una pregunta que no existe: "+aux,columna,archivo));
+			cad += "";
+		}
+		
+	}
+	cadena = S(cad)
+	{
+		//RETORNO
+		return cadena;
+	}
+	| t = <cualquiera>
+	{
+		//ACCIONES
+		cad += t.image;
+	}
+	cadena = S(cad)
+	{
+		//RETORNO
+		return cadena;
+	}
+	| EMPTY()
+	{
+		return cad += "\"";
+	}
+}
+
+void EMPTY():
+{
+	
+}
+{
+	{
+		//VACIO
+		System.out.println("VACIO");
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

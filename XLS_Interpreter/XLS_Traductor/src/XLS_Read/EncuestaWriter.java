@@ -105,7 +105,7 @@ public class EncuestaWriter {
             if (!temp.equals("")) {
                 cad += obtColumna(fila, "requeridomsn", "<<", ">>");
             }
-            cad += obtColumna(fila, "pordefecto", "%%", "%%");
+            cad += obtColumna(fila, "predeterminado", "%%", "%%");///CAMBIE AQUI
             cad += obtColumna(fila, "lectura", "", "");
             cad += obtColumna(fila, "calculo", "%%", "%%");
             cad += obtColumna(fila, "multimedia", "<<", ">>");

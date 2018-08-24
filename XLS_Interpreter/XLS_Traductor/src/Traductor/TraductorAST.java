@@ -39,10 +39,14 @@ public class TraductorAST {
         Conf config = new Conf(raizArbol, tabs, nombreArchivo);
         String cad = "";
         cad = config.TraducirConfiguracion();//ESTE VIENE UNA TABULACION MAS
+        //LLAMADA A OBTENER LAS OPCIONES:
+        Opciones op = new Opciones(raizArbol, errores);
+        TablaOpciones tOp = op.obteOpciones();
         //AQUI DEBE DE LLAMAR A LA TRADUCCION DEL CUERPO
         TraductorForm tform = new TraductorForm(raizArbol, tabs, nombreArchivo, ts);
+        tform.settOps(tOp);
+        tform.setErrores(errores);
         cad += (String)tform.traducirForm();
-        
         //FINAL
         desTabula();
         cad += "\n}";
@@ -58,4 +62,10 @@ public class TraductorAST {
             this.tabs.remove(0);
         }
     }
+
+    public ArrayList<TError> getErrores() {
+        return errores;
+    }
+    
+    
 }

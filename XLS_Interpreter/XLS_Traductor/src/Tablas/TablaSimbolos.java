@@ -20,7 +20,7 @@ public class TablaSimbolos {
         this.simbolos = new HashMap<>();
     }
     
-    private boolean existeElemento(String id)
+    public boolean existeElemento(String id)
     {
         return this.simbolos.containsKey(id);
     }
