@@ -17,6 +17,7 @@ import MParser.MultimediaParser;
 public class Multimedia extends Atributo implements ArbolForm{
     ArrayList<String> tabs;
     ArrayList<String> params;
+    ArrayList<String> paramsPadre;
     public Multimedia(String cadena) {
         super(cadena);
     }
@@ -35,6 +36,11 @@ public class Multimedia extends Atributo implements ArbolForm{
         return params;
     }
     
+    public ArrayList<String> getParamsPadre()
+    {
+        return this.paramsPadre;
+    }
+    
     @Override
     public Object traducirLocal(TablaSimbolos ts, ArrayList<String> tabs, ArrayList<TError> errores) {
         this.tabs = tabs;
@@ -48,6 +54,7 @@ public class Multimedia extends Atributo implements ArbolForm{
             parse.setUp(errores, ts, padre, actual, cadena, actual, TipoPregunta.TRADUC_1);
             parse.INIT();
             this.params = parse.getParams();
+            this.paramsPadre = parse.getParamsPadre();
             cad += dameTabulaciones()+parse.tipoMedia+"("+parse.ruta+","+parse.repro+");\n";
             destabula();
             ////////////////////////////////////////////////////////////////////

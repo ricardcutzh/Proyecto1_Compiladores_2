@@ -93,10 +93,13 @@ public class Pregunta implements ArbolForm{
     }
     
     ArrayList<String> parametrosDePreguntas;
+    
+    ArrayList<String> parametrosPadre;
     @Override
     public Object traducirLocal(TablaSimbolos ts, ArrayList<String> tabs, ArrayList<TError> errores) {
         //ESTA TRADUCCION TIENE QUE VER CON TODOS LOS ATRIBUTOS QUE VAN DENTRO DE LA PREGUNTA
         this.parametrosDePreguntas = new ArrayList<>();
+        this.parametrosPadre = new ArrayList<>();
         this.tabs = tabs;
         String cad = "";
         try {
@@ -149,7 +152,13 @@ public class Pregunta implements ArbolForm{
 
     @Override
     public Object traducirGlobal(TablaSimbolos ts, ArrayList<String> tabs, ArrayList<TError> errores) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String cad = "";
+        if(!this.padre.equals(""))
+        {
+            this.padre += "().";
+        }
+        cad += this.padre+this.Idpregunta+"";//AQUI IRIAN LOS PARAMETROS QUE TENGO EN LA LISTA
+        return cad;
     }
 
     @Override
@@ -306,6 +315,7 @@ public class Pregunta implements ArbolForm{
             parse.setArchivo("Encuesta", "etiqueta");
             cad += parse.INICIO();
             insertaParametros(parse.getParams());
+            insertaParamasPadre(parse.getParamsPadre());
             //////////////////////
             //////////////////////
         } catch (Exception e) {
@@ -330,6 +340,47 @@ public class Pregunta implements ArbolForm{
             }
         }
         return cad;
+    }
+    
+    private String cadenaParamsPadre()
+    {
+        String cad = "";
+        for(int x= 0; x< this.parametrosPadre.size(); x++)
+        {
+            if(!(x == this.parametrosPadre.size()-1))
+            {
+                cad += this.parametrosPadre.get(x)+", ";
+            }
+            else
+            {
+                cad += this.parametrosPadre.get(x);
+            }
+        }
+        return cad;
+    }
+    
+    
+    private boolean ExistePadreID(String s)
+    {
+        for(String x: this.parametrosPadre)
+        {
+            if(x.toLowerCase().equals(s.toLowerCase()))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private void insertaParamasPadre(ArrayList<String> params)
+    {
+        for(String s : params)
+        {
+            if(!s.equals("") && !ExistePadreID(s))
+            {
+                this.parametrosPadre.add(s);
+            }
+        }
     }
     
     private void insertaParametros(ArrayList<String> params)
@@ -389,6 +440,7 @@ public class Pregunta implements ArbolForm{
                     s.setPadre(padre);
                     cad += this.dameTabulaciones()+s.traducirLocal(ts, tabs, errores);
                     insertaParametros(s.getParams());
+                    insertaParamasPadre(s.getParamsPadre());
                     this.valorAtributosLocales.add(cad);
                     break;
                 }
@@ -414,6 +466,7 @@ public class Pregunta implements ArbolForm{
                     r.setPadre(this.padre);
                     cad += this.dameTabulaciones()+r.traducirLocal(ts, tabs, errores);
                     insertaParametros(r.getParams());
+                    insertaParamasPadre(r.getParamsPadre());
                     this.valorAtributosLocales.add(cad);
                 }
                 break;
@@ -436,6 +489,7 @@ public class Pregunta implements ArbolForm{
                     r.setPadre(this.padre);
                     this.cuerpo = (String)r.traducirLocal(ts, tabs, errores);
                     insertaParametros(r.getParams());
+                    insertaParamasPadre(r.getParamsPadre());
                     if(this.atributos.containsKey("restringirmsn"))
                     {
                         RestringirMsn msn = (RestringirMsn)this.atributos.get("restringirmsn");
@@ -443,6 +497,7 @@ public class Pregunta implements ArbolForm{
                         msn.setPadre(padre);
                         this.cuerpo += (String)msn.traducirLocal(ts, tabs, errores);
                         insertaParametros(msn.getParams());
+                        insertaParamasPadre(msn.getParamsPadre());
                     }
                     //AQUI NECESITO PARAMETROS QUE SE GENERAN
                 }
@@ -457,6 +512,7 @@ public class Pregunta implements ArbolForm{
                     p.setPadre(padre);
                     this.predeterminado = (String)p.traducirLocal(ts, tabs, errores)+";\n";
                     insertaParametros(p.getParams());
+                    insertaParametros(p.getParamsPadre());
                 }
                 break;
             }
@@ -469,6 +525,7 @@ public class Pregunta implements ArbolForm{
                     c.setPadre(padre);
                     this.metodoCalcular = (String)c.traducirLocal(ts, tabs, errores);
                     insertaParametros(c.getParams());
+                    insertaParamasPadre(c.getParamspPadre());
                     this.tipoCalcular = c.getTipoCalcular();
                     this.huboColCalculo = true;
                 }
@@ -483,6 +540,7 @@ public class Pregunta implements ArbolForm{
                     m.setPadre(padre);
                     this.metodoMostrar = (String)m.traducirLocal(ts, tabs, errores);
                     insertaParametros(m.getParams());
+                    insertaParametros(m.getParamsPadre());
                 }
                 break;
             }

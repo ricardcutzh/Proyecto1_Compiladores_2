@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class PorDefecto extends Atributo implements ArbolForm{
     ArrayList<String> tabs;
     ArrayList<String> params;
+    ArrayList<String> paramsPadre;
     public PorDefecto(String cadena) {
         super(cadena);
     }
@@ -29,6 +30,11 @@ public class PorDefecto extends Atributo implements ArbolForm{
 
     public void setPadre(String padre) {
         this.padre = padre;
+    }
+    
+    public ArrayList<String> getParamsPadre()
+    {
+        return this.paramsPadre;
     }
 
     public ArrayList<String> getParams() {
@@ -44,6 +50,7 @@ public class PorDefecto extends Atributo implements ArbolForm{
             exp.setUp(errores, ts, padre, actual, cadena, actual, TipoPregunta.TRADUC_1);
             cad = "="+exp.S();
             this.params = exp.getParams();
+            this.paramsPadre = exp.getParamsPadre();
         } catch (Exception e) {
             errores.add(new TError("Ejecucion", "Ocurrio un error en el parser en Predeterminado: "+e.getMessage(), "Predeterminado", "Encuesta"));
         }

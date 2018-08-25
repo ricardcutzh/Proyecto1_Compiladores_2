@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class Calculo extends Atributo implements ArbolForm{
     ArrayList<String> tabs;
     ArrayList<String> params;
+    ArrayList<String> paramsPadre;
     public Calculo(String cadena) {
         super(cadena);
     }
@@ -34,6 +35,11 @@ public class Calculo extends Atributo implements ArbolForm{
 
     public ArrayList<String> getParams() {
         return params;
+    }
+    
+    public ArrayList<String> getParamspPadre()
+    {
+        return this.paramsPadre;
     }
     
     String tipoCalcular = "";
@@ -55,6 +61,7 @@ public class Calculo extends Atributo implements ArbolForm{
             String aux = exp.S();
             this.tipoCalcular = exp.getTipoCalcular()+" Respuesta";
             this.params = exp.getParams();
+            this.paramsPadre = exp.getParamsPadre();
             cad += dameTabulaciones()+"Respuesta = "+aux+";\n";
             destabula();
             ////////////////////////////////////////////////////////////////////

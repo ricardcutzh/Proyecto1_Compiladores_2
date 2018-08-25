@@ -13,6 +13,9 @@ public class MultimediaParser implements MultimediaParserConstants {
         String idPadre;
         ArrayList<String> params;
 
+        //ARRAYLIST DE LOS PARAMETROS QUE VIENEN EN LA PREGUNTA AL LLAMARLA DESDE EL FORM
+        ArrayList<String> paramsPadre;
+
         int type;
         String tipoCalcular = "";
 
@@ -30,6 +33,7 @@ public class MultimediaParser implements MultimediaParserConstants {
                 this.columna = columna;
                 this.archivo = archivo;
                 this.params = new ArrayList();
+                this.paramsPadre = new ArrayList();
                 this.type = tipo;
         }
 
@@ -39,6 +43,11 @@ public class MultimediaParser implements MultimediaParserConstants {
                 aux = aux.replace("#[","");
                 aux = aux.replace("]","");
                 return aux;
+        }
+
+        public ArrayList<String> getParamsPadre()
+        {
+                return this.paramsPadre;
         }
 
         public ArrayList<String> getParams()
@@ -457,6 +466,8 @@ public class MultimediaParser implements MultimediaParserConstants {
                                 {
                                         //ACA SE HACE EL 
                                         Simbolo sim = this.ts.getSimbolo(aux);
+                                        String papaSim = sim.getPadre();
+                                        if(!papaSim.equals("")) {papaSim += "().";}
                                         if(sim.getElemento() instanceof Pregunta)
                                         {
                                                 Pregunta p = (Pregunta)sim.getElemento();//CASTEO A PREGUNTA
@@ -466,6 +477,9 @@ public class MultimediaParser implements MultimediaParserConstants {
                                                 {
                                                         this.tipoCalcular = tipo;
                                                 }
+                                                //////ANADIENDO A PARAMETROS LOCALES
+                                                this.paramsPadre.add(papaSim +aux+"().Respuesta");
+                                                /////////////////////////////////////
                                                 cadena += aux;
                                         }
                                 }
@@ -670,7 +684,7 @@ public class MultimediaParser implements MultimediaParserConstants {
       jj_la1_0 = new int[] {0x1c0,0x200,0x1400000,0x1400000,0x3f0000,0x3f0000,0xfc00,0xfc00,0xd2800000,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0x8,0x0,0x0,0x0,0x0,0x0,0x0,0x3ff,};
+      jj_la1_1 = new int[] {0x0,0x40,0x0,0x0,0x0,0x0,0x0,0x0,0x1ff8,};
    }
 
   /** Constructor with InputStream. */
@@ -787,7 +801,7 @@ public class MultimediaParser implements MultimediaParserConstants {
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[42];
+    boolean[] la1tokens = new boolean[45];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -804,7 +818,7 @@ public class MultimediaParser implements MultimediaParserConstants {
         }
       }
     }
-    for (int i = 0; i < 42; i++) {
+    for (int i = 0; i < 45; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

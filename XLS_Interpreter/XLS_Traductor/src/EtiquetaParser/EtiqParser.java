@@ -14,6 +14,12 @@ public class EtiqParser implements EtiqParserConstants {
 
         ArrayList<String> params;
 
+        ArrayList<String> paramsPadre;
+
+        public ArrayList<String> getParamsPadre()
+        {
+                return this.paramsPadre;
+        }
         public ArrayList<String> getParams()
         {
                 return this.params;
@@ -128,6 +134,7 @@ public class EtiqParser implements EtiqParserConstants {
   final public String INICIO() throws ParseException {
         String cadena = "\u005c"";
         this.params = new ArrayList();
+        this.paramsPadre = new ArrayList();
     cadena = S(cadena);
                 {if (true) return cadena;}
     throw new Error("Missing return statement in function");
@@ -146,11 +153,14 @@ public class EtiqParser implements EtiqParserConstants {
                         //SI EXISTE UN ELEMENTO CON ESE NOMBRE ENTONCES:
                         // PRIMERO VOY A TRAERLO Y VEO QUE SEA UNA INSTANCIA DE UNA PREGUNTA PARA LUEGO SABER SU TIPO Y TRADUCIRLO
                         Simbolo sim = this.ts.getSimbolo(aux);
+                        String papaSim = sim.getPadre();
+                        if(!papaSim.equals("")) {papaSim += "().";}
                         if(sim.getElemento() instanceof Pregunta)
                         {
                                 Pregunta p = (Pregunta)sim.getElemento();//CASTEO A PREGUNTA
                                 String tipo = obtTipoAltoNivel(p.getTipo()); //OBTENGO EL TIPO
                                 this.params.add(tipo+" "+aux);//ANADO A LOS PARAMETROS QUE NECESITA LA PREGUNTA
+                                this.paramsPadre.add(papaSim + aux +"().Respuesta");
                         }
                         cad += "\u005c"+"+aux+"+\u005c"";
                 }

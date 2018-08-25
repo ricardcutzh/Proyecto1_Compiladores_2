@@ -18,6 +18,9 @@ public class Restringir extends Atributo implements ArbolForm{
     ArrayList<String> tabs;
     
     ArrayList<String> params;
+    
+    ArrayList<String> paramsPadre;
+    
     public Restringir(String cadena) {
         super(cadena);
         params = new ArrayList<>();
@@ -37,6 +40,11 @@ public class Restringir extends Atributo implements ArbolForm{
         return params;
     }
     
+    public ArrayList<String> getParamsPadre()
+    {
+        return this.paramsPadre;
+    }
+    
     @Override
     public Object traducirLocal(TablaSimbolos ts, ArrayList<String> tabs, ArrayList<TError> errores) {
         this.tabs = tabs;
@@ -50,6 +58,7 @@ public class Restringir extends Atributo implements ArbolForm{
             exp.setUp(errores, ts, padre, actual, cadena, actual, TipoPregunta.TRADUC_1);
             cad += exp.S();
             this.params = exp.getParams();
+            this.paramsPadre = exp.getParamsPadre();
             /////////////////////////////////////////////////////////////
             cad += "){\n";
             tabula();

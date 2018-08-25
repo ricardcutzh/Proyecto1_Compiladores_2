@@ -63,25 +63,31 @@ public interface MultimediaParserConstants {
   /** RegularExpression Id. */
   int ahora = 31;
   /** RegularExpression Id. */
-  int identificador = 32;
+  int cad_min = 32;
   /** RegularExpression Id. */
-  int entero = 33;
+  int cad_fila = 33;
   /** RegularExpression Id. */
-  int decimal = 34;
+  int cad_max = 34;
   /** RegularExpression Id. */
-  int str1 = 35;
+  int identificador = 35;
   /** RegularExpression Id. */
-  int str2 = 36;
+  int entero = 36;
   /** RegularExpression Id. */
-  int verdadero = 37;
+  int decimal = 37;
   /** RegularExpression Id. */
-  int falso = 38;
+  int str1 = 38;
   /** RegularExpression Id. */
-  int fecha = 39;
+  int str2 = 39;
   /** RegularExpression Id. */
-  int hora = 40;
+  int verdadero = 40;
   /** RegularExpression Id. */
-  int fechahora = 41;
+  int falso = 41;
+  /** RegularExpression Id. */
+  int fecha = 42;
+  /** RegularExpression Id. */
+  int hora = 43;
+  /** RegularExpression Id. */
+  int fechahora = 44;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -120,6 +126,9 @@ public interface MultimediaParserConstants {
     "\")\"",
     "\"hoy()\"",
     "\"ahora()\"",
+    "\"cad_min\"",
+    "\"cad_fila\"",
+    "\"cad_max\"",
     "<identificador>",
     "<entero>",
     "<decimal>",

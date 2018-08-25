@@ -14,6 +14,9 @@ public class ExpParser implements ExpParserConstants {
 
         ArrayList<String> params;
 
+        //ARRAYLIST DE LOS PARAMETROS QUE VIENEN EN LA PREGUNTA AL LLAMARLA DESDE EL FORM
+        ArrayList<String> paramsPadre;
+
         int type;
 
         String tipoCalcular = "";
@@ -27,6 +30,7 @@ public class ExpParser implements ExpParserConstants {
                 this.columna = columna;
                 this.archivo = archivo;
                 this.params = new ArrayList();
+                this.paramsPadre = new ArrayList();
                 this.type = tipo;
         }
 
@@ -36,6 +40,11 @@ public class ExpParser implements ExpParserConstants {
                 aux = aux.replace("#[","");
                 aux = aux.replace("]","");
                 return aux;
+        }
+
+        public ArrayList<String> getParamsPadre()
+        {
+                return this.paramsPadre;
         }
 
         public ArrayList<String> getParams()
@@ -401,6 +410,8 @@ public class ExpParser implements ExpParserConstants {
                                 {
                                         //ACA SE HACE EL 
                                         Simbolo sim = this.ts.getSimbolo(aux);
+                                        String papaSim = sim.getPadre();
+                                        if(!papaSim.equals("")) {papaSim += "().";}
                                         if(sim.getElemento() instanceof Pregunta)
                                         {
                                                 Pregunta p = (Pregunta)sim.getElemento();//CASTEO A PREGUNTA
@@ -410,6 +421,9 @@ public class ExpParser implements ExpParserConstants {
                                                 {
                                                         this.tipoCalcular = tipo;
                                                 }
+                                                //////ANADIENDO A PARAMETROS LOCALES
+                                                this.paramsPadre.add(papaSim + aux+"().Respuesta");
+                                                /////////////////////////////////////
                                                 cadena += aux;
                                         }
                                 }

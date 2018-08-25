@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class RestringirMsn extends Atributo implements ArbolForm{
     ArrayList<String> tabs;
     ArrayList<String> params;
+    ArrayList<String> paramsPadre;
     String padre, actual;
     public RestringirMsn(String cadena) {
         super(cadena);
@@ -33,6 +34,11 @@ public class RestringirMsn extends Atributo implements ArbolForm{
 
     public void setActual(String actual) {
         this.actual = actual;
+    }
+    
+    public ArrayList<String> getParamsPadre()
+    {
+        return this.paramsPadre;
     }
     
     @Override
@@ -53,6 +59,7 @@ public class RestringirMsn extends Atributo implements ArbolForm{
             destabula();
             ////////////////////////////////////////////////
             this.params = parse.getParams();
+            this.paramsPadre = parse.getParamsPadre();
         } catch (Exception e) {
             errores.add(new TError("Ejecucion", "Ocurrio un Error: "+e.getMessage(), "RestrigirMsn", "Encuesta"));
         }

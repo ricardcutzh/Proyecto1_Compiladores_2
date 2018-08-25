@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class RequeridoMsn extends Atributo implements ArbolForm{
     ArrayList<String> tabs;
     ArrayList<String> params;
+    ArrayList<String> paramsPadre;
     String padre, actual;
     public RequeridoMsn(String cadena) {
         super(cadena);
@@ -36,6 +37,10 @@ public class RequeridoMsn extends Atributo implements ArbolForm{
         this.actual = actual;
     }
     
+    public ArrayList<String> getParamsPadre()
+    {
+        return this.paramsPadre;
+    }
     
     @Override
     public Object traducirLocal(TablaSimbolos ts, ArrayList<String> tabs, ArrayList<TError> errores) {
@@ -47,6 +52,7 @@ public class RequeridoMsn extends Atributo implements ArbolForm{
             parse.setUp(errores, ts, padre, actual);
             cad += parse.INICIO();
             this.params = parse.getParams();
+            this.paramsPadre = parse.getParamsPadre();
         } catch (Exception e) {
             cad = "$$EXISTIERON ERRORES EN LA RequeridoMSN: "+this.padre;
         }

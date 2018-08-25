@@ -17,6 +17,7 @@ import java.io.StringReader;
 public class Sugerencia extends Atributo implements ArbolForm{
     ArrayList<String> tabs;
     ArrayList<String> params;
+    ArrayList<String> paramasPadre;
     String padre, actual;
     public Sugerencia(String cadena) {
         super(cadena);
@@ -35,6 +36,10 @@ public class Sugerencia extends Atributo implements ArbolForm{
         this.actual = actual;
     }
     
+    public ArrayList<String> getParamsPadre()
+    {
+        return this.paramasPadre;
+    }
     
     
     @Override
@@ -49,6 +54,7 @@ public class Sugerencia extends Atributo implements ArbolForm{
             parse.setUp(errores, ts, padre, actual);
             cad += parse.INICIO();
             this.params = parse.getParams();
+            this.paramasPadre = parse.getParamsPadre();
         } catch (Exception e) {
             cad = "$$EXISTIERON ERRORES EN LA Sugerir: "+this.padre;
         }

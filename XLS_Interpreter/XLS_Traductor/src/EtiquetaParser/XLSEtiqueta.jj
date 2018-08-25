@@ -34,6 +34,12 @@ public class EtiqParser
 	
 	ArrayList<String> params;
 	
+	ArrayList<String> paramsPadre;
+
+	public ArrayList<String> getParamsPadre()
+	{
+		return this.paramsPadre;
+	}
 	public ArrayList<String> getParams()
 	{
 		return this.params;
@@ -158,6 +164,7 @@ String INICIO():
 {
 	String cadena = "\"";
 	this.params = new ArrayList();
+	this.paramsPadre = new ArrayList();
 }
 {
 	cadena = S(cadena)
@@ -182,11 +189,14 @@ String S(String cad):
 			//SI EXISTE UN ELEMENTO CON ESE NOMBRE ENTONCES:
 			// PRIMERO VOY A TRAERLO Y VEO QUE SEA UNA INSTANCIA DE UNA PREGUNTA PARA LUEGO SABER SU TIPO Y TRADUCIRLO
 			Simbolo sim = this.ts.getSimbolo(aux);
+			String papaSim = sim.getPadre();
+			if(!papaSim.equals("")) {papaSim += "().";}
 			if(sim.getElemento() instanceof Pregunta)
 			{
 				Pregunta p = (Pregunta)sim.getElemento();//CASTEO A PREGUNTA
 				String tipo = obtTipoAltoNivel(p.getTipo()); //OBTENGO EL TIPO
 				this.params.add(tipo+" "+aux);//ANADO A LOS PARAMETROS QUE NECESITA LA PREGUNTA
+				this.paramsPadre.add(papaSim + aux +"().Respuesta");
 			}
 			cad += "\"+"+aux+"+\"";
 		}
