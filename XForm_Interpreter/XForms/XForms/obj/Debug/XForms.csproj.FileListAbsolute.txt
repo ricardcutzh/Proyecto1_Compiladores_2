@@ -8,3 +8,5 @@ C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Pr
 C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.csproj.CoreCompileInputs.cache
 C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.exe
 C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.pdb
+C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\bin\Debug\irony.dll
+C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.csproj.CopyComplete

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using XForms.GramaticaIrony;
 
 namespace XForms
 {
@@ -17,6 +18,8 @@ namespace XForms
         {
             InitializeComponent();
         }
+
+
 
         /*
          * REGION DE LOS BOTONES
@@ -127,7 +130,13 @@ namespace XForms
         //PERMITE LA GENERACION DEL FORMULARIO
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
-
+            if(Editor.TabCount > 0)
+            {
+                RichTextBox principal = (RichTextBox)Editor.TabPages[Editor.SelectedIndex].Controls[0].Controls[1];
+                String cadena = principal.Text;
+                Analizador an = new Analizador(cadena);
+                an.analizar();
+            }
         }
 
         //PERMITE VER LOS FORMULARIOS
