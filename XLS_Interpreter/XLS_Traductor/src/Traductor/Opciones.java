@@ -29,9 +29,9 @@ public class Opciones {
         {
             case "INICIO":
             {
-                if(raiz.contarHijos()==1)
+                if(raiz.contarHijos()==3)
                 {
-                    obtenerOpciones(raiz.getHijo(0));
+                    obtenerOpciones(raiz.getHijo(1));
                 }
                 break;
             }

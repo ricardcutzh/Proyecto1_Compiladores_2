@@ -14,7 +14,7 @@ namespace XForms.GramaticaIrony
         //GRAMATICA PARA XFORM
 
         #region Principal
-        public Gramatica():base(caseSensitive:false)
+        public Gramatica() : base(caseSensitive: false)
         {
             #region EXREG
             //REGIONES DE EXPRESIONES REGULARES
@@ -44,18 +44,26 @@ namespace XForms.GramaticaIrony
             var privado = ToTerm("privado");
             var publico = ToTerm("publico");
             var protegido = ToTerm("protegido");
-
+            var importar = ToTerm("importar");
             #endregion
 
             #region NoTerminales
             //REGION DE LOS NO TERMINALES
             NonTerminal INICIO = new NonTerminal("INICIO"),
             IMPORTACIONES = new NonTerminal("IMPORTACIONES"),
+            IMPORTA = new NonTerminal("IMPORTA"),
             CLASES = new NonTerminal("CLASES"),
             CLASE = new NonTerminal("CLASE"),
             VISIBILIDAD = new NonTerminal("VISIBILIDAD"),
             CUERPOCLASE = new NonTerminal("CUERPOCLASE"),
-            PRINCIPAL = new NonTerminal("PRINCIPAL");
+            PRINCIPAL = new NonTerminal("PRINCIPAL"),
+            FUNCIONES = new NonTerminal("FUNCIONES"),
+            TIPO = new NonTerminal("TIPO"),
+            PARAMETROS = new NonTerminal("PARAMETROS"),
+            PARAMETRO = new NonTerminal("PARAMETRO"),
+            CONSTRUCTOR = new NonTerminal("CONSTRUCTOR"),
+            EXP = new NonTerminal("EXP"),
+            E = new NonTerminal("E");
             #endregion
 
             #region Reglas
@@ -69,27 +77,22 @@ namespace XForms.GramaticaIrony
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------
-            IMPORTACIONES.Rule = IMPORTACIONES + "importar" + "(" + identificador + ".xform" + ")" + ";"
-                              | "importar" + "(" + identificador + ".xform" + ")" + ";";
+            IMPORTACIONES.Rule = MakeStarRule(IMPORTACIONES, IMPORTA); //YA QUE PUEDEN O NO VENIR IMPORTACIONES
 
-            IMPORTACIONES.ErrorRule = SyntaxError + ";";
-            //-------------------------------------------------------------------------------------------
+            IMPORTA.Rule = importar + "(" + identificador + ".xform" + ")" + ";"; // 2 HIJOS
 
-            //-------------------------------------------------------------------------------------------
-            CLASES.Rule = CLASES + CLASE
-                        | CLASE;
+            IMPORTA.ErrorRule = SyntaxError + ";";
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------
-            CLASE.Rule = "clase" + identificador + VISIBILIDAD + "padre" + identificador + "{" + "}"
-                        | "clase" + identificador + "padre" + identificador + "{" + "}"
-                        | "clase" + identificador + VISIBILIDAD + "{" + "}"
-                        | "clase" + identificador + "{" + "}"
-                        //--------------------------------------------------------------------------------
-                        | "clase" + identificador + VISIBILIDAD + "padre" + identificador + "{" + CUERPOCLASE + "}"
-                        | "clase" + identificador + "padre" + identificador + "{" + CUERPOCLASE + "}"
-                        | "clase" + identificador + VISIBILIDAD + "{" + CUERPOCLASE + "}"
-                        | "clase" + identificador + "{" + CUERPOCLASE + "}";
+            CLASES.Rule = MakePlusRule(CLASES, CLASE); //YA QUE AL MENOS UNA CLASSE VA A VENIR EN LA ENTRADA
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            CLASE.Rule = "clase" + identificador + VISIBILIDAD + "padre" + identificador + "{" + CUERPOCLASE + "}"// 6 HIJOS
+                        | "clase" + identificador + "padre" + identificador + "{" + CUERPOCLASE + "}" // 5 HIJOS
+                        | "clase" + identificador + VISIBILIDAD + "{" + CUERPOCLASE + "}" // 4 HIJOS
+                        | "clase" + identificador + "{" + CUERPOCLASE + "}"; //3 HIJOS
 
             CLASE.ErrorRule = SyntaxError + "}";
             //-------------------------------------------------------------------------------------------
@@ -101,15 +104,89 @@ namespace XForms.GramaticaIrony
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------
-            CUERPOCLASE.Rule = CUERPOCLASE + PRINCIPAL
-                            | PRINCIPAL;
+            TIPO.Rule = ToTerm("cadena")
+                       | ToTerm("booleano")
+                       | ToTerm("entero")
+                       | ToTerm("decimal")
+                       | ToTerm("hora")
+                       | ToTerm("fecha")
+                       | ToTerm("fechahora")
+                       | ToTerm("respuestas")
+                       | identificador //EN CASO QUE SEA UN TIPO DE OBJETO
+                       | ToTerm("vacio");
+            //-------------------------------------------------------------------------------------------
 
-            PRINCIPAL.Rule = "principal" + "(" + ")" + "{" + Empty + "}";
+            //-------------------------------------------------------------------------------------------
+            CUERPOCLASE.Rule = MakeStarRule(CUERPOCLASE, PRINCIPAL)
+                             | MakeStarRule(CUERPOCLASE, FUNCIONES)
+                             | MakeStarRule(CUERPOCLASE, CONSTRUCTOR);
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            FUNCIONES.Rule = VISIBILIDAD + TIPO + identificador + "(" + PARAMETROS + ")" + "{" + "}"
+                            | TIPO + identificador + "(" + PARAMETROS + ")" + "{" + "}";
+
+            FUNCIONES.ErrorRule = SyntaxError + "}";
+
+            PARAMETROS.Rule = MakeStarRule(PARAMETROS, ToTerm(","), PARAMETRO);
+
+            PARAMETRO.Rule = TIPO + identificador;
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            PRINCIPAL.Rule = ToTerm("principal") + "(" + ")" + "{" + "}";
             PRINCIPAL.ErrorRule = SyntaxError + "}";
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            CONSTRUCTOR.Rule = identificador + "(" + PARAMETROS + ")" + "{" + "}";
+
+            CONSTRUCTOR.ErrorRule = SyntaxError + "}";
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            EXP.Rule = E + ToTerm("&&") + E
+                     | E + ToTerm("||") + E
+                     | E + ToTerm("==") + E
+                     | E + ToTerm("!=") + E
+                     | E + ToTerm(">=") + E
+                     | E + ToTerm("<=") + E
+                     | E + ToTerm(">") + E
+                     | E + ToTerm("<") + E
+                     | E + ToTerm("+") + E
+                     | E + ToTerm("-") + E
+                     | E + ToTerm("*") + E
+                     | E + ToTerm("/") + E
+                     | E + ToTerm("%") + E
+                     | ToTerm("(") + E + ToTerm(")")
+                     | E + ToTerm("++") 
+                     | E + ToTerm("--") 
+                     | ToTerm("-") + E
+                     | ToTerm("!") + E
+                     | cadena
+                     | cadena2
+                     | entero
+                     | deci
+                     | verdadero
+                     | falso
+                     | identificador
+                     //PROPIEDADES DE OBJETOS
+                     //LLAMADAS A FUNCIONES
+                     //LLAMADAS A PROPIOS ATRIBUTOS
+                     ;
             //-------------------------------------------------------------------------------------------
             #endregion
 
             #region Preferencias
+            RegisterOperators(1, Associativity.Left, ToTerm("||"));
+            RegisterOperators(2, Associativity.Left, ToTerm("&&"));
+            RegisterOperators(3, Associativity.Left, ToTerm("!="), ToTerm("=="));
+            RegisterOperators(4, Associativity.Left, ToTerm(">"), ToTerm("<"), ToTerm(">="), ToTerm("<="));
+            RegisterOperators(5, Associativity.Left, ToTerm("+"), ToTerm("-"));
+            RegisterOperators(6, Associativity.Left, ToTerm("/"), ToTerm("*"), ToTerm("%"));
+            RegisterOperators(7, Associativity.Right, ToTerm("++"), ToTerm("--"), ToTerm("!"), ToTerm("-"));
+            RegisterOperators(8, Associativity.Left, ToTerm("("));
+
             this.MarkPunctuation("{", "}", "(", ")", ";",".xform","{","}");
             NonGrammarTerminals.Add(LineComment);
             NonGrammarTerminals.Add(MultiLineComment);

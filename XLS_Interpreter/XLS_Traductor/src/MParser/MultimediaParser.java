@@ -24,6 +24,18 @@ public class MultimediaParser implements MultimediaParserConstants {
         public String ruta = "";
         public String repro = "Falso";
 
+        //CADENA PARAMETROS
+        public String cadenaMax = "Nada",CadenaMin = "Nada",Fila = "Nada";
+        ///////////////////
+
+        //RANGO PARAMETROS
+        public String init = "0", finit = "0";
+        //////////////////
+
+        //CONDICION
+        public String v = "Si", f = "No";
+        //////////////////
+
         public void setUp(ArrayList<TError> errores, TablaSimbolos ts, String padre, String actual, String columna, String archivo, int tipo)
         {
                 this.errores = errores;
@@ -120,7 +132,7 @@ public class MultimediaParser implements MultimediaParserConstants {
         }
 
   void skip_error_recovery(int kind, String archivo, String columna) throws ParseException {
-        errores.add(new TError("Sintactico","Error en la columna: "+columna,columna,archivo));
+        errores.add(new TError("Sintactico","Error en la columna: "+columna,columna+", Posible declaracion de Identificador con espacios dentro, o caracter no reconocido: "+getToken(0).image,archivo+" | Pregunta: "+this.idPreguntaActual));
         Token t;
         do {
         t = getNextToken();
@@ -664,6 +676,98 @@ public class MultimediaParser implements MultimediaParserConstants {
     throw new Error("Missing return statement in function");
   }
 
+  final public void ParseaParametroCadena() throws ParseException {
+        String cadena = "";
+    try {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case cad_max:
+        jj_consume_token(cad_max);
+        jj_consume_token(igual);
+        cadena = S();
+                        this.cadenaMax = cadena;
+        ParseaParametroCadena();
+        break;
+      case cad_min:
+        jj_consume_token(cad_min);
+        jj_consume_token(igual);
+        cadena = S();
+                        this.CadenaMin = cadena;
+        ParseaParametroCadena();
+        break;
+      case cad_fila:
+        jj_consume_token(cad_fila);
+        jj_consume_token(igual);
+        cadena = S();
+                        this.Fila = cadena;
+        ParseaParametroCadena();
+        break;
+      default:
+        jj_la1[9] = jj_gen;
+        EMPTY();
+      }
+    } catch (ParseException e) {
+                skip_error_recovery(0, this.archivo, this.columna);
+    }
+  }
+
+  final public void ParseaParametroRango() throws ParseException {
+        String cadena = "";
+    try {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case iniciar:
+        jj_consume_token(iniciar);
+        jj_consume_token(igual);
+        cadena = S();
+                        this.init = cadena;
+        ParseaParametroRango();
+        break;
+      case finalizar:
+        jj_consume_token(finalizar);
+        jj_consume_token(igual);
+        cadena = S();
+                        this.finit = cadena;
+        ParseaParametroRango();
+        break;
+      default:
+        jj_la1[10] = jj_gen;
+        EMPTY();
+      }
+    } catch (ParseException e) {
+                skip_error_recovery(0, this.archivo, this.columna);
+    }
+  }
+
+  final public void ParseParametroCondicion() throws ParseException {
+    try {
+      jj_consume_token(opcion);
+      jj_consume_token(igual);
+      OV();
+    } catch (ParseException e) {
+                skip_error_recovery(0, this.archivo, this.columna);
+    }
+  }
+
+  final public void OV() throws ParseException {
+    try {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case vf:
+        jj_consume_token(vf);
+                       this.v = "Verdadero"; this.f = "False";
+        break;
+      case sino:
+        jj_consume_token(sino);
+                         this.v = "Si"; this.f = "No";
+        break;
+      default:
+        jj_la1[11] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+    } catch (ParseException e) {
+                skip_error_recovery(0, this.archivo, this.columna);
+    }
+  }
+
   /** Generated Token Manager. */
   public MultimediaParserTokenManager token_source;
   SimpleCharStream jj_input_stream;
@@ -673,7 +777,7 @@ public class MultimediaParser implements MultimediaParserConstants {
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[9];
+  final private int[] jj_la1 = new int[12];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static {
@@ -681,10 +785,10 @@ public class MultimediaParser implements MultimediaParserConstants {
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x1c0,0x200,0x1400000,0x1400000,0x3f0000,0x3f0000,0xfc00,0xfc00,0xd2800000,};
+      jj_la1_0 = new int[] {0x1c0,0x200,0x1400000,0x1400000,0x3f0000,0x3f0000,0xfc00,0xfc00,0xd2800000,0x0,0x0,0x0,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0x40,0x0,0x0,0x0,0x0,0x0,0x0,0x1ff8,};
+      jj_la1_1 = new int[] {0x0,0x800,0x0,0x0,0x0,0x0,0x0,0x0,0x3ff00,0x7,0x18,0x60,};
    }
 
   /** Constructor with InputStream. */
@@ -698,7 +802,7 @@ public class MultimediaParser implements MultimediaParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 12; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -712,7 +816,7 @@ public class MultimediaParser implements MultimediaParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 12; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -722,7 +826,7 @@ public class MultimediaParser implements MultimediaParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 12; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -732,7 +836,7 @@ public class MultimediaParser implements MultimediaParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 12; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -741,7 +845,7 @@ public class MultimediaParser implements MultimediaParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 12; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -750,7 +854,7 @@ public class MultimediaParser implements MultimediaParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 12; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -801,12 +905,12 @@ public class MultimediaParser implements MultimediaParserConstants {
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[45];
+    boolean[] la1tokens = new boolean[51];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 9; i++) {
+    for (int i = 0; i < 12; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -818,7 +922,7 @@ public class MultimediaParser implements MultimediaParserConstants {
         }
       }
     }
-    for (int i = 0; i < 45; i++) {
+    for (int i = 0; i < 51; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

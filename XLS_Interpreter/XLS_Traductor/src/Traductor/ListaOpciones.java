@@ -63,4 +63,34 @@ public class ListaOpciones {
         }
         return false;
     }
+    
+    public ArrayList<String> listaTraducida()
+    {
+        ArrayList<String> listado = new ArrayList<>();
+        listado.add("Opciones "+this.nombreLista+" = Nuevo Opciones();");
+        for(Opcion op : this.opciones)
+        {
+            String opc = removeComillas(op.getIdOpcion());
+            String eti = removeComillas(op.getEtiqueta());
+            String mul = removeComillas(op.getMultimedia());
+            
+            if(mul.equals(""))
+            {
+                listado.add(this.nombreLista+".Agregar(\""+opc+"\",\""+eti+"\");");
+            }
+            else
+            {
+                listado.add(this.nombreLista+".Agregar(\""+opc+"\",\""+eti+"\",\""+mul+"\");");
+            }
+            
+        }
+        return listado;
+    }
+    
+    private String removeComillas(String cadena)
+    {
+        cadena = cadena.replace("\"", "");
+        cadena = cadena.replace("\'", "");
+        return cadena;
+    }
 }

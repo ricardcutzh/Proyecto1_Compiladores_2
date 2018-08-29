@@ -63,7 +63,7 @@ public class TraductorForm {
     
     
     
-    public String traducirForm()
+    public String traducirForm(String nombre)
     {
         String cad = dameTabulaciones()+"\n";
         //OBTENER EL FORMULARIO
@@ -72,7 +72,9 @@ public class TraductorForm {
         if(this.f!=null)
         {
             this.f.settOpc(tOps);
+            this.f.setNombre(nombre);
             cad += (String)this.f.traducirGlobal(ts, tabs, errores);
+            cad += (String)this.f.traducirLocal(ts, tabs, errores);
         }
         
         return cad;

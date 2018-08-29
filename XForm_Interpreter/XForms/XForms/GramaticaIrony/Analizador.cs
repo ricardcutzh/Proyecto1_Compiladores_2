@@ -39,6 +39,8 @@ namespace XForms.GramaticaIrony
                 }
                 else
                 {
+                    ASTGraph g = new ASTGraph();
+                    g.graficarAST(raiz);
                     return true;
                 }
             }

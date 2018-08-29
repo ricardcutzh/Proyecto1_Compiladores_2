@@ -11,7 +11,8 @@ package Traductor;
  */
 import ASTTree.ASTNode;
 import java.util.ArrayList;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 public class Conf {
     
     ASTNode raiz;
@@ -92,6 +93,7 @@ public class Conf {
                     {
                         //this.importa = componeCodigo(this.importa);
                     }
+                    ArreglaImportaciones(this.importa);
                 }
                 break;
             }
@@ -173,6 +175,26 @@ public class Conf {
         ///////////////////////////////////////////
         
         return cad;
+    }
+    
+    
+    private void ArreglaImportaciones(String cadena)
+    {
+        ArrayList<String> importaciones = new ArrayList<>();
+        cadena = cadena.replace("importar", "");
+        cadena = cadena.replace(".xform", "");
+        Pattern p = Pattern.compile("[a-zA-Z]([a-zA-Z0-9_])*");
+        Matcher m = p.matcher(cadena.toLowerCase());
+        while(m.find())
+        {
+            String group = m.group(0);
+            importaciones.add("importar ("+group+".xform);\n");
+        }
+        this.importa = "";
+        for(String s :importaciones)
+        {
+            this.importa += s;
+        }
     }
     
     private void tabula() {

@@ -1120,7 +1120,7 @@ Pregunta OTROS(Pregunta p):
 		|<parametro> {atributo = p.getIdpregunta() + ", parametro";} <dPts> t = <texto_pl> <ptComa> 
 		{ 
 			/*ANADIR AQUI!*/
-			if(!p.addAtributo(new Parametro(extractExpre(t.image)),"parametro"))
+			if(!p.addAtributo(new Parametro(extractText(t.image)),"parametro"))
 			{
 				this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: ","","Encuesta"));
 			}
@@ -1164,24 +1164,25 @@ boolean BOOLEANO(String col):
 
 String APARIENCIA(String col):
 {
-	
+	Token t;
 }
 {
 	try
 	{
-		 <texto> {return "texto";}
-		|<entero>{return "entero";} 
-		|<decimal> {return "decimal";}
-		|<rango> {return "rango";}
-		|<condicion> {return "condicion";}
-		|<fecha> {return "fecha";}
-		|<hora> {return "hora";}
-		|<fechahora> {return "fechahora";}
-		|<sel_un> {return "selecciona_uno";}
-		|<sel_mul> {return "selecciona_multiples";}
-		|<nota> {return "nota";}
-		|<fichero> {return "fichero";}
-		|<calcular> {return "calcular";}
+		 <texto> {return "Apariencia().Cadena()";}
+		|<entero>{return "Apariencia().Entero()";} 
+		|<decimal> {return "Apariencia().Decimal()";}
+		|<rango> {return "Apariencia().Rango(0,0)";}
+		|<condicion> {return "Apariencia().Condicion('Si','No')";}
+		|<fecha> {return "Apariencia().Fecha()";}
+		|<hora> {return "Apariencia().Hora()";}
+		|<fechahora> {return "Apariencia().FechaHora()";}
+		|<sel_un> {return "Apariencia().Seleccionar_1(Nada)";}
+		|<sel_mul> {return "Apariencia().Seleccionar(Nada)";}
+		|<nota> {return "Apariencia().Nota()";}
+		|<fichero> {return "Apariencia().Fichero()";}
+		|<calcular> {return "Apariencia().Calcular()";}
+		|t = <pos> {return "Apariencia('"+t.image+"')"; }
 	}
 	catch(ParseException p)
 	{

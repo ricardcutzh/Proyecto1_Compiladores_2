@@ -939,7 +939,7 @@ public class XLSParser implements XLSParserConstants {
         t = jj_consume_token(texto_pl);
         jj_consume_token(ptComa);
                         /*ANADIR AQUI!*/
-                        if(!p.addAtributo(new Parametro(extractExpre(t.image)),"parametro"))
+                        if(!p.addAtributo(new Parametro(extractText(t.image)),"parametro"))
                         {
                                 this.errores.add(new TError("Semantico", "Columna ya declarada anteriormente: ","","Encuesta"));
                         }
@@ -998,59 +998,64 @@ public class XLSParser implements XLSParserConstants {
   }
 
   final public String APARIENCIA(String col) throws ParseException {
+        Token t;
     try {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case texto:
         jj_consume_token(texto);
-                          {if (true) return "texto";}
+                          {if (true) return "Apariencia().Cadena()";}
         break;
       case entero:
         jj_consume_token(entero);
-                          {if (true) return "entero";}
+                          {if (true) return "Apariencia().Entero()";}
         break;
       case decimal:
         jj_consume_token(decimal);
-                            {if (true) return "decimal";}
+                            {if (true) return "Apariencia().Decimal()";}
         break;
       case rango:
         jj_consume_token(rango);
-                          {if (true) return "rango";}
+                          {if (true) return "Apariencia().Rango(0,0)";}
         break;
       case condicion:
         jj_consume_token(condicion);
-                              {if (true) return "condicion";}
+                              {if (true) return "Apariencia().Condicion('Si','No')";}
         break;
       case fecha:
         jj_consume_token(fecha);
-                          {if (true) return "fecha";}
+                          {if (true) return "Apariencia().Fecha()";}
         break;
       case hora:
         jj_consume_token(hora);
-                         {if (true) return "hora";}
+                         {if (true) return "Apariencia().Hora()";}
         break;
       case fechahora:
         jj_consume_token(fechahora);
-                              {if (true) return "fechahora";}
+                              {if (true) return "Apariencia().FechaHora()";}
         break;
       case sel_un:
         jj_consume_token(sel_un);
-                           {if (true) return "selecciona_uno";}
+                           {if (true) return "Apariencia().Seleccionar_1(Nada)";}
         break;
       case sel_mul:
         jj_consume_token(sel_mul);
-                            {if (true) return "selecciona_multiples";}
+                            {if (true) return "Apariencia().Seleccionar(Nada)";}
         break;
       case nota:
         jj_consume_token(nota);
-                         {if (true) return "nota";}
+                         {if (true) return "Apariencia().Nota()";}
         break;
       case fichero:
         jj_consume_token(fichero);
-                            {if (true) return "fichero";}
+                            {if (true) return "Apariencia().Fichero()";}
         break;
       case calcular:
         jj_consume_token(calcular);
-                             {if (true) return "calcular";}
+                             {if (true) return "Apariencia().Calcular()";}
+        break;
+      case pos:
+        t = jj_consume_token(pos);
+                            {if (true) return "Apariencia('"+t.image+"')";}
         break;
       default:
         jj_la1[12] = jj_gen;
@@ -1318,7 +1323,7 @@ public class XLSParser implements XLSParserConstants {
       jj_la1_0 = new int[] {0x8000,0x10,0x10,0x70000,0x10,0x10,0x40,0x100000,0x0,0x0,0xfe000000,0x0,0x0,0x0,0x100000,0x0,0x100000,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x28000000,0x7ffc000,0x0,0x17f,0x3e80,0x7ffc000,0x10,0x28000000,0x100,0x28000000,};
+      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x28000000,0x7ffc000,0x0,0x17f,0x3e80,0x47ffc000,0x10,0x28000000,0x100,0x28000000,};
    }
    private static void jj_la1_init_2() {
       jj_la1_2 = new int[] {0x0,0x200,0x10,0x0,0x10,0x10,0x0,0x0,0x0,0x20,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};

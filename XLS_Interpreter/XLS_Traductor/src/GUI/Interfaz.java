@@ -398,7 +398,24 @@ public class Interfaz extends javax.swing.JFrame {
     private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
         // TODO add your handling code here:
         //AQUI VA A IR PARA GUARDAR EL ARCHIVO XFORM QUE SE GENERE
-        
+        JFileChooser guardar = new JFileChooser();
+        guardar.setDialogTitle("Guardar XFORM");
+        int seleccion = guardar.showSaveDialog(this);
+        if(seleccion == JFileChooser.APPROVE_OPTION)
+        {
+            try {
+                File expo = guardar.getSelectedFile();
+                expo.createNewFile();
+                FileWriter flw = new FileWriter(expo);
+                BufferedWriter buffw = new BufferedWriter(flw);
+                JTextArea temp = getEditorAt();
+                buffw.write(temp.getText());
+                buffw.close();
+                JOptionPane.showMessageDialog(this, "Archivo Guardado: "+expo.getAbsolutePath()+", Exitosamente!", "Guardado", JOptionPane.PLAIN_MESSAGE);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Ocurrio Un Error al Exportal el Archivo XFORM!", "Error!", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_jLabel6MouseClicked
   
     private JTextArea getEditorAt()
@@ -450,7 +467,7 @@ public class Interfaz extends javax.swing.JFrame {
                    FileInputStream fis = new FileInputStream(f);
                    XLSParser p = new XLSParser(fis);
                    ASTTree.ASTNode n = p.INICIO();
-                   System.out.println(n.graficaAST(n));
+                   //System.out.println(n.graficaAST(n));
                    this.errores = p.getErrores();
                    if(this.errores.size() > 0)
                    {
@@ -471,9 +488,7 @@ public class Interfaz extends javax.swing.JFrame {
                        return;
                    }
                    //MANDAR AL CONSTRUCTOR EL TEXTO QUE SE VA A COLOCAR!!!!
-                   this.Pestanias.addTab(this.archiv, new EditorTexto());
-                   JTextArea aux = getEditorAt();
-                   aux.setText(cadena);
+                   this.Pestanias.addTab(this.archiv, new EditorTexto(cadena));
                    JOptionPane.showMessageDialog(this, "Traduccion Finalizada!","Estado de Traduccion",JOptionPane.INFORMATION_MESSAGE);
                    //
                 } catch (Exception e) 

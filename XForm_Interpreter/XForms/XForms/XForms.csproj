@@ -56,8 +56,11 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="GramaticaIrony\Analizador.cs" />
+    <Compile Include="GramaticaIrony\ASTGraph.cs" />
     <Compile Include="GramaticaIrony\Gramatica.cs" />
+    <Compile Include="GramaticaIrony\Recorrido.cs" />
     <Compile Include="GramaticaIrony\TError.cs" />
+    <Compile Include="Objetos\Clase.cs" />
     <Compile Include="Objs\XFormFile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

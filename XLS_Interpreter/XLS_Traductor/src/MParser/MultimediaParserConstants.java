@@ -69,25 +69,37 @@ public interface MultimediaParserConstants {
   /** RegularExpression Id. */
   int cad_max = 34;
   /** RegularExpression Id. */
-  int identificador = 35;
+  int finalizar = 35;
   /** RegularExpression Id. */
-  int entero = 36;
+  int iniciar = 36;
   /** RegularExpression Id. */
-  int decimal = 37;
+  int sino = 37;
   /** RegularExpression Id. */
-  int str1 = 38;
+  int vf = 38;
   /** RegularExpression Id. */
-  int str2 = 39;
+  int opcion = 39;
   /** RegularExpression Id. */
-  int verdadero = 40;
+  int identificador = 40;
   /** RegularExpression Id. */
-  int falso = 41;
+  int entero = 41;
   /** RegularExpression Id. */
-  int fecha = 42;
+  int decimal = 42;
   /** RegularExpression Id. */
-  int hora = 43;
+  int str1 = 43;
   /** RegularExpression Id. */
-  int fechahora = 44;
+  int str2 = 44;
+  /** RegularExpression Id. */
+  int verdadero = 45;
+  /** RegularExpression Id. */
+  int falso = 46;
+  /** RegularExpression Id. */
+  int fecha = 47;
+  /** RegularExpression Id. */
+  int hora = 48;
+  /** RegularExpression Id. */
+  int fechahora = 49;
+  /** RegularExpression Id. */
+  int err = 50;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -129,6 +141,11 @@ public interface MultimediaParserConstants {
     "\"cad_min\"",
     "\"cad_fila\"",
     "\"cad_max\"",
+    "\"finalizar\"",
+    "\"iniciar\"",
+    "\"si_no\"",
+    "\"v_f\"",
+    "\"opcion\"",
     "<identificador>",
     "<entero>",
     "<decimal>",
@@ -139,6 +156,7 @@ public interface MultimediaParserConstants {
     "<fecha>",
     "<hora>",
     "<fechahora>",
+    "<err>",
   };
 
 }

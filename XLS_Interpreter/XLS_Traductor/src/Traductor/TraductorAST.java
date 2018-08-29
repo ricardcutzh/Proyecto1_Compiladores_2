@@ -46,7 +46,7 @@ public class TraductorAST {
         TraductorForm tform = new TraductorForm(raizArbol, tabs, nombreArchivo, ts);
         tform.settOps(tOp);
         tform.setErrores(errores);
-        cad += (String)tform.traducirForm();
+        cad += (String)tform.traducirForm(this.nombreArchivo);
         //FINAL
         desTabula();
         cad += "\n}";

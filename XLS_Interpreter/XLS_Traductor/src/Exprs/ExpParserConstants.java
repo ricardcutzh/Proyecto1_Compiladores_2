@@ -55,25 +55,27 @@ public interface ExpParserConstants {
   /** RegularExpression Id. */
   int ahora = 22;
   /** RegularExpression Id. */
-  int identificador = 23;
+  int identificador = 28;
   /** RegularExpression Id. */
-  int entero = 24;
+  int entero = 29;
   /** RegularExpression Id. */
-  int decimal = 25;
+  int decimal = 30;
   /** RegularExpression Id. */
-  int str1 = 26;
+  int str1 = 31;
   /** RegularExpression Id. */
-  int str2 = 27;
+  int str2 = 32;
   /** RegularExpression Id. */
-  int verdadero = 28;
+  int verdadero = 33;
   /** RegularExpression Id. */
-  int falso = 29;
+  int falso = 34;
   /** RegularExpression Id. */
-  int fecha = 30;
+  int fecha = 35;
   /** RegularExpression Id. */
-  int hora = 31;
+  int hora = 36;
   /** RegularExpression Id. */
-  int fechahora = 32;
+  int fechahora = 37;
+  /** RegularExpression Id. */
+  int err = 38;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -103,6 +105,11 @@ public interface ExpParserConstants {
     "\")\"",
     "\"hoy()\"",
     "\"ahora()\"",
+    "\" \"",
+    "\"\\n\"",
+    "\"\\r\"",
+    "\"\\r\\n\"",
+    "\"\\t\"",
     "<identificador>",
     "<entero>",
     "<decimal>",
@@ -113,11 +120,7 @@ public interface ExpParserConstants {
     "<fecha>",
     "<hora>",
     "<fechahora>",
-    "\" \"",
-    "\"\\n\"",
-    "\"\\r\"",
-    "\"\\r\\n\"",
-    "\"\\t\"",
+    "<err>",
   };
 
 }

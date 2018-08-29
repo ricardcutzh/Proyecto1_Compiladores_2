@@ -118,7 +118,7 @@ public class ExpParser implements ExpParserConstants {
         }
 
   void skip_error_recovery(int kind, String archivo, String columna) throws ParseException {
-        errores.add(new TError("Sintactico","Error en la columna: "+columna,columna,archivo));
+        errores.add(new TError("Sintactico","Error en la columna: "+columna,columna+", Posible declaracion de Identificador con espacios dentro, o caracter no reconocido: "+getToken(0).image,archivo+" | Pregunta: "+this.idPreguntaActual));
         Token t;
         do {
         t = getNextToken();
@@ -126,7 +126,6 @@ public class ExpParser implements ExpParserConstants {
     } while (t.kind != 0);
   }
 
-//GRAMARTICA
   final public void EMPTY() throws ParseException {
                 //VACIO
                 System.out.println("VACIO");
@@ -625,10 +624,10 @@ public class ExpParser implements ExpParserConstants {
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0xa000,0xa000,0x1f80,0x1f80,0x7e,0x7e,0xffe94000,};
+      jj_la1_0 = new int[] {0xa000,0xa000,0x1f80,0x1f80,0x7e,0x7e,0xf0694000,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x1,};
+      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x3f,};
    }
 
   /** Constructor with InputStream. */
@@ -745,7 +744,7 @@ public class ExpParser implements ExpParserConstants {
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[38];
+    boolean[] la1tokens = new boolean[39];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -762,7 +761,7 @@ public class ExpParser implements ExpParserConstants {
         }
       }
     }
-    for (int i = 0; i < 38; i++) {
+    for (int i = 0; i < 39; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

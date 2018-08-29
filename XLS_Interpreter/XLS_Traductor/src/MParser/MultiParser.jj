@@ -43,6 +43,18 @@ public class MultimediaParser
 	public String tipoMedia = "";
 	public String ruta = "";
 	public String repro = "Falso";
+
+	//CADENA PARAMETROS
+	public String cadenaMax = "Nada",CadenaMin = "Nada",Fila = "Nada";
+	///////////////////
+
+	//RANGO PARAMETROS
+	public String init = "0", finit = "0";
+	//////////////////
+
+	//CONDICION
+	public String v = "Si", f = "No";
+	//////////////////
 	
 	public void setUp(ArrayList<TError> errores, TablaSimbolos ts, String padre, String actual, String columna, String archivo, int tipo)
 	{
@@ -143,7 +155,7 @@ PARSER_END(MultimediaParser)
 JAVACODE
 void skip_error_recovery(int kind, String archivo, String columna)
 {
-	errores.add(new TError("Sintactico","Error en la columna: "+columna,columna,archivo));
+	errores.add(new TError("Sintactico","Error en la columna: "+columna,columna+", Posible declaracion de Identificador con espacios dentro, o caracter no reconocido: "+getToken(0).image,archivo+" | Pregunta: "+this.idPreguntaActual));
 	Token t;
 	do {
         t = getNextToken();
@@ -189,6 +201,11 @@ TOKEN:
 	|<cad_min: "cad_min">
 	|<cad_fila: "cad_fila">
 	|<cad_max: "cad_max">
+	|<finalizar: "finalizar">
+	|<iniciar: "iniciar">
+	|<sino: "si_no">
+	|<vf: "v_f">
+	|<opcion: "opcion"> 
 }
 TOKEN:
 {
@@ -201,7 +218,8 @@ TOKEN:
 	|<falso: "falso">
 	|<fecha: ["0"-"9"]["0"-"9"]["/"]["0"-"9"]["0"-"9"]["/"]["0"-"9"]["0"-"9"]["0"-"9"]["0"-"9"]>
 	|<hora:  ["0"-"9"]["0"-"9"][":"]["0"-"9"]["0"-"9"][":"]["0"-"9"]["0"-"9"]>
-	|<fechahora: <fecha>[" "]<hora> > 
+	|<fechahora: <fecha>[" "]<hora> >
+	|<err: (~[])>
 }
 //GRAMARTICA
 
@@ -725,13 +743,91 @@ String G(String cadena):
 	}
 }
 
+void ParseaParametroCadena():
+{
+	String cadena = "";
+}
+{
+	try
+	{
+		<cad_max> <igual> cadena = S()
+		{
+			this.cadenaMax = cadena;
+		}
+		ParseaParametroCadena()
+		|<cad_min> <igual> cadena = S()
+		{
+			this.CadenaMin = cadena;
+		}
+		ParseaParametroCadena()
+		|<cad_fila> <igual> cadena = S()
+		{
+			this.Fila = cadena;
+		}
+		ParseaParametroCadena()
+		|EMPTY()
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(0, this.archivo, this.columna);
+	}
+}
 
+void ParseaParametroRango():
+{
+	String cadena = "";
+}
+{
+	try
+	{
+		<iniciar> <igual> cadena = S()
+		{
+			this.init = cadena;
+		}
+		ParseaParametroRango()
+		|<finalizar> <igual> cadena = S()
+		{
+			this.finit = cadena;
+		}
+		ParseaParametroRango()
+		|EMPTY()
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(0, this.archivo, this.columna);
+	}
+}
 
+void ParseParametroCondicion():
+{
+	
+}
+{
+	try
+	{
+		<opcion> <igual> OV()
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(0, this.archivo, this.columna);
+	}
+}
 
+void OV():
+{
 
-
-
-
+}
+{
+	try
+	{
+		 <vf> {this.v = "Verdadero"; this.f = "False";}
+		|<sino> {this.v = "Si"; this.f = "No";}
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(0, this.archivo, this.columna);
+	}
+}
 
 
 

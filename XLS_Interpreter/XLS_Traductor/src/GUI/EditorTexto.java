@@ -19,6 +19,12 @@ public class EditorTexto extends javax.swing.JPanel {
     public EditorTexto() {
         initComponents();
     }
+    
+    public EditorTexto(String cadena)
+    {
+        initComponents();
+        this.Texto.setText(cadena);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.

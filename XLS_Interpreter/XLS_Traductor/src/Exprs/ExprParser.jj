@@ -141,7 +141,7 @@ PARSER_END(ExpParser)
 JAVACODE
 void skip_error_recovery(int kind, String archivo, String columna)
 {
-	errores.add(new TError("Sintactico","Error en la columna: "+columna,columna,archivo));
+	errores.add(new TError("Sintactico","Error en la columna: "+columna,columna+", Posible declaracion de Identificador con espacios dentro, o caracter no reconocido: "+getToken(0).image,archivo+" | Pregunta: "+this.idPreguntaActual));
 	Token t;
 	do {
         t = getNextToken();
@@ -173,6 +173,12 @@ TOKEN:
 	|<hoy: "hoy()">
 	|<ahora: "ahora()">
 }
+//LOS TOKENS QUE VA A IGNORAR
+SKIP:
+{
+    " " | "\n" | "\r" | "\r\n" | "\t" 
+}
+//GRAMARTICA
 TOKEN:
 {
 	 <identificador: "#["["a"-"z","A"-"A"](["a"-"z","A"-"A","_","0"-"9"])*"]">
@@ -184,14 +190,10 @@ TOKEN:
 	|<falso: "falso">
 	|<fecha: ["0"-"9"]["0"-"9"]["/"]["0"-"9"]["0"-"9"]["/"]["0"-"9"]["0"-"9"]["0"-"9"]["0"-"9"]>
 	|<hora:  ["0"-"9"]["0"-"9"][":"]["0"-"9"]["0"-"9"][":"]["0"-"9"]["0"-"9"]>
-	|<fechahora: <fecha>[" "]<hora> > 
+	|<fechahora: <fecha>[" "]<hora> >
+	|<err: (~[])>
 }
-//LOS TOKENS QUE VA A IGNORAR
-SKIP:
-{
-    " " | "\n" | "\r" | "\r\n" | "\t" 
-}
-//GRAMARTICA
+
 void EMPTY():
 {
 	

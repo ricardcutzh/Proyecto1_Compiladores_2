@@ -62,17 +62,33 @@ public class Formulario implements ArbolForm {
         this.ciclos.add(c);
         this.elementos.add(c);
     }
-
-    @Override
-    public Object traducirLocal(TablaSimbolos ts, ArrayList<String> tabs, ArrayList<TError> errores) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    String nombreForm = "";
+    public void setNombre(String name)
+    {
+        this.nombreForm = name;
     }
 
     @Override
+    public Object traducirLocal(TablaSimbolos ts, ArrayList<String> tabs, ArrayList<TError> errores) {
+        String cad = dameTabulaciones() + "Formulario "+this.nombreForm+"(){\n";
+        tabula();
+        cad += dameTabulaciones()+"Respuestas resp;\n";
+        destabula();
+        for(String s : Traducciones)
+        {
+            cad +=  s;
+        }
+        cad += dameTabulaciones()+"}\n";
+        return  cad;
+    }
+    
+    ArrayList<String> Traducciones;
+    @Override
     public Object traducirGlobal(TablaSimbolos ts, ArrayList<String> tabs, ArrayList<TError> errores) {
         try {
+            Traducciones = new ArrayList<>();
             this.tabs = tabs;
-            String cad = dameTabulaciones() + "$$INICIA LA TRADUCCION DEL FORMULARIO\n\n";
+            String cad = dameTabulaciones(); //+ "$$INICIA LA TRADUCCION DEL FORMULARIO\n\n";
             ///AQUI EN MEDIO IRIA LA TRADUCCION DE LAS PREGUNTAS DE FORMA GENERAL
             for (Object ob : elementos) {
                 if (ob instanceof Pregunta) {
@@ -80,13 +96,28 @@ public class Formulario implements ArbolForm {
                     ((Pregunta) ob).setTablaOpciones(tOpc);
                     ((Pregunta) ob).setPadre("");
                     cad += ((Pregunta) ob).traducirLocal(ts, tabs, errores);
+                    //tabula();
+                    Traducciones.add((String)((Pregunta) ob).traducirGlobal(ts, tabs, errores));
+                    //destabula();
                 } else if (ob instanceof Grupo) {
-                    cad += dameTabulaciones() + "$$TRADUCIENDO GRUPO...\n";
+                    Grupo g = (Grupo)ob;
+                    g.setPadre("");
+                    g.settOpc(tOpc);
+                    cad += g.traducirGlobal(ts, tabs, errores);
+                    tabula();
+                    Traducciones.add((String)g.traducirLocal(ts, tabs, errores));
+                    destabula();
                 } else if (ob instanceof Ciclo) {
-                    cad += dameTabulaciones() + "$$TRADUCIENDO CICLO...\n";
+                    Ciclo c = (Ciclo)ob;
+                    c.setPadre("");
+                    c.settOpc(tOpc);
+                    cad += c.traducirGlobal(ts, tabs, errores);
+                    tabula();
+                    Traducciones.add((String)c.traducirLocal(ts, tabs, errores));
+                    destabula();
                 }
             }
-            cad += "\n"+dameTabulaciones() + "$$FINALIZA LA TRADUCCION DEL FORMULARIO\n";
+            cad += "\n";//+dameTabulaciones() + "$$FINALIZA LA TRADUCCION DEL FORMULARIO\n";
             return cad;
         } catch (Exception e) {
             return "$$ERROR EN LA TRADUCCION DE EL FORMULARIO";
