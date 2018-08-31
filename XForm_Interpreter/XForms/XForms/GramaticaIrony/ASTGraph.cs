@@ -29,13 +29,13 @@ namespace XForms.GramaticaIrony
             ProcessStartInfo startInfo = new ProcessStartInfo(rutaDot);
             startInfo.Arguments = "-Tpng Arbol.dot -o Arbol.png";
             DialogResult verImagen = MessageBox.Show("¿Desea visualizar el AST de la cadena ingresada?", "Grafica AST", MessageBoxButtons.YesNo);
-            if (verImagen == DialogResult.Yes)
+            /*if (verImagen == DialogResult.Yes)
             {
                 Thread.Sleep(1000);
                 Process.Start(startInfo);
                 startInfo.FileName = "Arbol.png";
                 Process.Start(startInfo);
-            }
+            }*/
         }
 
         public void definirNodos(ParseTreeNode nodo, ref string contenido)

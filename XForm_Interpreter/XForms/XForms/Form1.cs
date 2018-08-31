@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using XForms.GramaticaIrony;
+using XForms.Objs;
+using System.Collections;
 
 namespace XForms
 {
@@ -19,7 +21,8 @@ namespace XForms
             InitializeComponent();
         }
 
-
+        String ProyectoPath;
+        String archivo;
 
         /*
          * REGION DE LOS BOTONES
@@ -121,6 +124,12 @@ namespace XForms
                 if ((str = abrir.OpenFile()) != null)
                 {
                     String archivo = abrir.FileName;
+                    ////////////////////////////////
+                    // AQUI TOMO EL PATH DE DONDE SE
+                    // ABRIO EL ARCHIVO
+                    this.ProyectoPath = archivo.Replace(abrir.SafeFileName,"");
+                    this.archivo = archivo;
+                    ////////////////////////////////
                     String texto = File.ReadAllText(archivo);
                     crearNuevaPestania(abrir.SafeFileName.Replace(".xform", ""), texto);
                 }
@@ -130,12 +139,36 @@ namespace XForms
         //PERMITE LA GENERACION DEL FORMULARIO
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
+            Estatico.setUp(Consola);
+            Hashtable clasesPreanalizadas = new Hashtable();
             if(Editor.TabCount > 0)
             {
                 RichTextBox principal = (RichTextBox)Editor.TabPages[Editor.SelectedIndex].Controls[0].Controls[1];
                 String cadena = principal.Text;
-                Analizador an = new Analizador(cadena);
-                an.analizar();
+                //Analizador an = new Analizador(cadena);
+                Analizador an = new Analizador(cadena, this.ProyectoPath, archivo);
+                if(an.analizar())
+                {
+                    //AQUI DEBERIA DE TRAER LAS CLASES QUE SE LOGRARON CAPTURAR
+                    List<ClasePreAnalizada> c = an.clases;
+                    foreach(ClasePreAnalizada a in c)
+                    {
+                        if(!clasesPreanalizadas.Contains(a.id))
+                        {
+                            clasesPreanalizadas.Add(a.id, a);//METO LAS CLASES AL HASHTABLE PARA LUEGO LAS PREANALIZADAS LLEVARLAS A ANALIZARLAS 
+                            //CREAR SU TABLA DE SIMBOLOS CON SUS FUNCIONES CORRESPONDIENTES
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("No se logro Analizar la cadena de entrada", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+                if(Estatico.errores.Count>0)
+                {
+                    MessageBox.Show("Existen: "+Estatico.errores.Count()+" En la cadena de Entrada!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 

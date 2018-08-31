@@ -7,7 +7,7 @@ using Irony.Parsing;
 using Irony.Interpreter;
 using Irony.Ast;
 using System.Windows.Forms;
-
+using XForms.Objs; 
 namespace XForms.GramaticaIrony
 {
     class Analizador
@@ -15,11 +15,23 @@ namespace XForms.GramaticaIrony
         public List<TError> errores { get; set; }//LISTA DE LOS ERRORES EN IRONY
         public ParseTreeNode raiz { get; set; } //RAIZ DEL ARBOL
         String cadena;
+        String archivo;
+        String pathProyecto;
+        public List<ClasePreAnalizada> clases { get; set; }
 
         public Analizador(String cadena)
         {
             this.cadena = cadena;
             this.errores = new List<TError>();
+            this.clases = new List<ClasePreAnalizada>();
+        }
+
+        public Analizador(String cadena, String PathProyecto, String archivo)
+        {
+            this.cadena = cadena;
+            this.archivo = archivo;
+            this.pathProyecto = PathProyecto;
+            this.clases = new List<ClasePreAnalizada>();
         }
 
         public bool analizar()
@@ -41,11 +53,16 @@ namespace XForms.GramaticaIrony
                 {
                     ASTGraph g = new ASTGraph();
                     g.graficarAST(raiz);
+                    Recorrido r = new Recorrido(this.raiz, this.archivo, this.pathProyecto);
+                    r.iniciaRecorrido();
+                    //OBTENGO LAS CLASES DEL ANALIZADOR
+                    this.clases = r.clases;
                     return true;
                 }
             }
             catch(Exception e)
             {
+                MessageBox.Show(e.Message);
                 return false;
             }
         }
@@ -54,12 +71,12 @@ namespace XForms.GramaticaIrony
         {
             for(int x = 0; x < raiz.ParserMessages.Count(); x++)
             {
-                String men = "Mensaje: " + raiz.ParserMessages.ElementAt(x).Message + " | Linea: " + raiz.ParserMessages.ElementAt(x).Location.Line + " | Columna: " + raiz.ParserMessages.ElementAt(x).Location.Column + " | Esperaba: ";
-                for(int y = 0; y < raiz.ParserMessages.ElementAt(x).ParserState.ExpectedTerminals.Count(); y ++)
+                TError error = new TError("Sintatico", raiz.ParserMessages.ElementAt(x).Message+" | En Archivo: "+this.archivo, raiz.ParserMessages.ElementAt(x).Location.Line, raiz.ParserMessages.ElementAt(x).Location.Column);
+                for (int y = 0; y < raiz.ParserMessages.ElementAt(x).ParserState.ExpectedTerminals.Count(); y++)
                 {
-                    men += "* -" + raiz.ParserMessages.ElementAt(x).ParserState.ExpectedTerminals.ElementAt(y).ErrorAlias + "\n";
+                    error.AddEsperado((String)raiz.ParserMessages.ElementAt(x).ParserState.ExpectedTerminals.ElementAt(y).ErrorAlias);
                 }
-                MessageBox.Show(men);
+                Estatico.errores.Add(error);
             }
         }
 

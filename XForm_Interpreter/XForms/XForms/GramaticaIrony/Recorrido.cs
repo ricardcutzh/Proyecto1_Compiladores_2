@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Irony.Parsing;
+using System.Windows.Forms;
+using XForms.Objs;
+using System.IO;
 
 namespace XForms.GramaticaIrony
 {
@@ -11,10 +14,29 @@ namespace XForms.GramaticaIrony
     {
         ParseTreeNode raiz;
 
+        String archivo;
+        String ProyectoPath;
+
+        public List<ClasePreAnalizada> clases { get; }
+
+        public Recorrido(ParseTreeNode raiz)
+        {
+            this.raiz = raiz;
+            this.clases = new List<ClasePreAnalizada>();
+        }
+
+        public Recorrido(ParseTreeNode raiz, String archivo, String path)
+        {
+            this.raiz = raiz;
+            this.archivo = archivo;
+            this.ProyectoPath = path;
+            this.clases = new List<ClasePreAnalizada>();
+        }
+
         //INICIO DE RECORRIDO PARA CONSTRUCCION DEL LAS CLASES CON SUS SIMBOLOS
         public void iniciaRecorrido()
         {
-
+            recorre(this.raiz);
         }
 
         #region GENERAL
@@ -35,8 +57,8 @@ namespace XForms.GramaticaIrony
                         }
                         if(raiz.ChildNodes.Count == 2)
                         {
-                            recorre(raiz.ChildNodes.ElementAt(0));//ME MUEVO A LAS IMPORTACIONES
                             recorre(raiz.ChildNodes.ElementAt(1));//ME MUEVO A LAS CLASES
+                            recorre(raiz.ChildNodes.ElementAt(0));//ME MUEVO A LAS IMPORTACIONES
                             return null;
                         }
                         break;
@@ -47,7 +69,14 @@ namespace XForms.GramaticaIrony
                         {
                             foreach(ParseTreeNode n in raiz.ChildNodes)//POR CADA HIJO VOY REALIZAR LA IMPORTACION DE OTROS ARCHIVOS
                             {
-
+                                List<ClasePreAnalizada> aux = (List<ClasePreAnalizada>)recorreImportaciones(n);
+                                if(aux!=null)
+                                {
+                                    foreach(ClasePreAnalizada c in aux)
+                                    {
+                                        this.clases.Add(c);
+                                    }
+                                }
                             }
                         }
                         break;
@@ -58,7 +87,14 @@ namespace XForms.GramaticaIrony
                         {
                             foreach(ParseTreeNode n in raiz.ChildNodes)//POR CADA HIJO VOY A REALIZAR EL ANALISIS DE SUS CLASES CON SU RESPECTIVA TS
                             {
-
+                                ClasePreAnalizada c = (ClasePreAnalizada)recorreClases(n);
+                                if(c!=null)
+                                {
+                                    if(c!=null)
+                                    {
+                                        this.clases.Add(c);
+                                    }
+                                }
                             }
                         }
                         break;
@@ -79,19 +115,32 @@ namespace XForms.GramaticaIrony
                     {
                         if(raiz.ChildNodes.Count == 6)//SI EXACTAMENTE TIENE 6 HIJOS
                         {
-
+                            String idclase = raiz.ChildNodes.ElementAt(1).Token.Text;
+                            Estatico.Vibililidad visi = (Estatico.Vibililidad)obtenerVisibilidad(raiz.ChildNodes.ElementAt(2));
+                            String padre = raiz.ChildNodes.ElementAt(4).Token.Text;
+                            ClasePreAnalizada clase = new ClasePreAnalizada(idclase, visi, raiz.ChildNodes.ElementAt(5), padre);
+                            return clase;
                         }
                         if(raiz.ChildNodes.Count == 5)//SI EXACTAMENTE TIENE 5 HIJOS
                         {
-
+                            String idClase = raiz.ChildNodes.ElementAt(1).Token.Text;
+                            String padre = raiz.ChildNodes.ElementAt(3).Token.Text;
+                            ClasePreAnalizada clase = new ClasePreAnalizada(idClase, Estatico.Vibililidad.PRIVADO, raiz.ChildNodes.ElementAt(4),padre);
+                            return clase;
                         }
                         if(raiz.ChildNodes.Count == 4)//SI EXACTAMENTE TIENE 4 HIJOS
                         {
-
+                            String idclase = raiz.ChildNodes.ElementAt(1).Token.Text;
+                            Estatico.Vibililidad visi = (Estatico.Vibililidad)obtenerVisibilidad(raiz.ChildNodes.ElementAt(2));
+                            ClasePreAnalizada clase = new ClasePreAnalizada(idclase, visi, raiz.ChildNodes.ElementAt(3));
+                            return clase;
                         }
                         if(raiz.ChildNodes.Count == 3)//SI EXACTAMENTE TIENE 3 HIJOS
                         {
-
+                            /*SI NO TIENE VISIBILIDAD LA CLASE SERA PRIVADA*/
+                            String idclase = raiz.ChildNodes.ElementAt(1).Token.Text;
+                            ClasePreAnalizada clase = new ClasePreAnalizada(idclase, Estatico.Vibililidad.PRIVADO, raiz.ChildNodes.ElementAt(2));
+                            return clase;
                         }
                         break;
                     }
@@ -111,12 +160,57 @@ namespace XForms.GramaticaIrony
                     {
                         if(raiz.ChildNodes.Count == 2)//SI EXTACTAMENTE TIENE 2 HIJOS
                         {
-
+                            String importacion = raiz.ChildNodes.ElementAt(1).Token.Text+".xform";
+                            try
+                            {
+                                String cad = File.ReadAllText(this.ProyectoPath + "\\" + importacion);
+                                Analizador a = new Analizador(cad, ProyectoPath, importacion);
+                                if(a.analizar())
+                                {
+                                    return a.clases;
+                                }
+                            }
+                            catch
+                            {
+                                Estatico.errores.Add(new TError("Semantico", "Error Al importar: "+importacion, raiz.ChildNodes.ElementAt(1).Token.Location.Line, raiz.ChildNodes.ElementAt(1).Token.Location.Column));
+                            }
                         }
                         break;
                     }
             }
             return null;
+        }
+        #endregion
+
+        #region VISIBILIDAD
+        private Object obtenerVisibilidad(ParseTreeNode raiz)
+        {
+            String visi = raiz.ToString();
+            switch(visi)
+            {
+                case "VISIBILIDAD":
+                    {
+                        if(raiz.ChildNodes.Count ==1)
+                        {
+                            String vi = raiz.ChildNodes.ElementAt(0).Token.Text;
+                            if(vi.Equals("privado"))
+                            {
+                                return Estatico.Vibililidad.PRIVADO;
+                            }
+                            else if(vi.Equals("publico"))
+                            {
+                                return Estatico.Vibililidad.PUBLICO;
+                            }
+                            else if(vi.Equals("protegido"))
+                            {
+                                return Estatico.Vibililidad.PROTEGIDO;
+                            }
+                        }
+                        break;
+                    }
+            }
+
+            return Estatico.Vibililidad.PRIVADO;
         }
         #endregion
     }

@@ -45,6 +45,25 @@ namespace XForms.GramaticaIrony
             var publico = ToTerm("publico");
             var protegido = ToTerm("protegido");
             var importar = ToTerm("importar");
+
+            //------> OPERADORES
+            var and = ToTerm("&&");
+            var or = ToTerm("||");
+            var not = ToTerm("!");
+            var equal = ToTerm("==");
+            var nequal = ToTerm("!=");
+            var gequal = ToTerm(">=");
+            var lequal = ToTerm("<=");
+            var grater = ToTerm(">");
+            var lower = ToTerm("<");
+            var sum = ToTerm("+");
+            var res = ToTerm("-");
+            var mult = ToTerm("*");
+            var divi = ToTerm("/");
+            var pot = ToTerm("^");
+            var mod = ToTerm("%");
+            var inc = ToTerm("++");
+            var dec = ToTerm("--");
             #endregion
 
             #region NoTerminales
@@ -63,7 +82,12 @@ namespace XForms.GramaticaIrony
             PARAMETRO = new NonTerminal("PARAMETRO"),
             CONSTRUCTOR = new NonTerminal("CONSTRUCTOR"),
             EXP = new NonTerminal("EXP"),
-            E = new NonTerminal("E");
+            E = new NonTerminal("E"),
+            PREGUNTA = new NonTerminal("PREGUNTA"),
+            GRUPO = new NonTerminal("GRUPO"),
+            FORMULARIO = new NonTerminal("FORMULARIO"),
+            DECLARACION_GLOBAL = new NonTerminal("DECLARACION_GLOBAL"),
+            DECLARACION_LOCAL = new NonTerminal("DECLARACION_LOCAL");
             #endregion
 
             #region Reglas
@@ -117,9 +141,13 @@ namespace XForms.GramaticaIrony
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------
-            CUERPOCLASE.Rule = MakeStarRule(CUERPOCLASE, PRINCIPAL)
+            CUERPOCLASE.Rule = MakeStarRule(CUERPOCLASE, DECLARACION_GLOBAL)
+                             | MakeStarRule(CUERPOCLASE, PRINCIPAL)
                              | MakeStarRule(CUERPOCLASE, FUNCIONES)
-                             | MakeStarRule(CUERPOCLASE, CONSTRUCTOR);
+                             | MakeStarRule(CUERPOCLASE, CONSTRUCTOR)
+                             | MakeStarRule(CUERPOCLASE, PREGUNTA)
+                             | MakeStarRule(CUERPOCLASE, GRUPO)
+                             | MakeStarRule(CUERPOCLASE, FORMULARIO);
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------
@@ -145,24 +173,54 @@ namespace XForms.GramaticaIrony
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------
-            EXP.Rule = E + ToTerm("&&") + E
-                     | E + ToTerm("||") + E
-                     | E + ToTerm("==") + E
-                     | E + ToTerm("!=") + E
-                     | E + ToTerm(">=") + E
-                     | E + ToTerm("<=") + E
-                     | E + ToTerm(">") + E
-                     | E + ToTerm("<") + E
-                     | E + ToTerm("+") + E
-                     | E + ToTerm("-") + E
-                     | E + ToTerm("*") + E
-                     | E + ToTerm("/") + E
-                     | E + ToTerm("%") + E
-                     | ToTerm("(") + E + ToTerm(")")
-                     | E + ToTerm("++") 
-                     | E + ToTerm("--") 
-                     | ToTerm("-") + E
-                     | ToTerm("!") + E
+            PREGUNTA.Rule = ToTerm("pregunta") + identificador + "(" + PARAMETROS + ")" + "{" + "}";
+            PREGUNTA.ErrorRule = SyntaxError + "}";
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            GRUPO.Rule = ToTerm("grupo") + identificador + "{" + "}";
+            GRUPO.ErrorRule = SyntaxError + "}";
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            FORMULARIO.Rule = ToTerm("formulario") + identificador + "{" + "}";
+            FORMULARIO.ErrorRule = SyntaxError + "}";
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            DECLARACION_GLOBAL.Rule = TIPO + VISIBILIDAD + identificador + "=" + EXP + ";"
+                                   | TIPO + VISIBILIDAD + identificador + ";"
+                                   | DECLARACION_LOCAL;
+
+            DECLARACION_GLOBAL.ErrorRule = SyntaxError + ";";
+
+            DECLARACION_LOCAL.Rule = TIPO + identificador + "=" + EXP + ";"
+                                   | TIPO + identificador + ";";
+
+            DECLARACION_LOCAL.ErrorRule = SyntaxError + ";";
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            EXP.Rule = E;
+            E.Rule =   E + and + E
+                     | E + or  + E
+                     | not + E
+                     | E + equal + E
+                     | E + nequal + E
+                     | E + gequal + E
+                     | E + lequal + E
+                     | E + grater + E
+                     | E + lower + E
+                     | E + sum + E
+                     | E + res + E
+                     | E + mult + E
+                     | E + divi + E
+                     | E + pot  + E
+                     | E + mod + E
+                     | E + inc
+                     | E + dec
+                     | res + E
+                     | ToTerm("(") + E + ToTerm(")") 
                      | cadena
                      | cadena2
                      | entero
@@ -170,21 +228,18 @@ namespace XForms.GramaticaIrony
                      | verdadero
                      | falso
                      | identificador
-                     //PROPIEDADES DE OBJETOS
-                     //LLAMADAS A FUNCIONES
-                     //LLAMADAS A PROPIOS ATRIBUTOS
                      ;
             //-------------------------------------------------------------------------------------------
             #endregion
 
             #region Preferencias
-            RegisterOperators(1, Associativity.Left, ToTerm("||"));
-            RegisterOperators(2, Associativity.Left, ToTerm("&&"));
-            RegisterOperators(3, Associativity.Left, ToTerm("!="), ToTerm("=="));
-            RegisterOperators(4, Associativity.Left, ToTerm(">"), ToTerm("<"), ToTerm(">="), ToTerm("<="));
-            RegisterOperators(5, Associativity.Left, ToTerm("+"), ToTerm("-"));
-            RegisterOperators(6, Associativity.Left, ToTerm("/"), ToTerm("*"), ToTerm("%"));
-            RegisterOperators(7, Associativity.Right, ToTerm("++"), ToTerm("--"), ToTerm("!"), ToTerm("-"));
+            RegisterOperators(1, Associativity.Left, or);
+            RegisterOperators(2, Associativity.Left, and);
+            RegisterOperators(3, Associativity.Left, nequal, equal);
+            RegisterOperators(4, Associativity.Left, grater, lower, gequal, lequal);
+            RegisterOperators(5, Associativity.Left, sum, res);
+            RegisterOperators(6, Associativity.Left, divi, mult, mod, pot);
+            RegisterOperators(7, Associativity.Right, inc, dec, not, res);
             RegisterOperators(8, Associativity.Left, ToTerm("("));
 
             this.MarkPunctuation("{", "}", "(", ")", ";",".xform","{","}");

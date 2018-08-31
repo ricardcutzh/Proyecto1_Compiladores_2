@@ -60,7 +60,8 @@
     <Compile Include="GramaticaIrony\Gramatica.cs" />
     <Compile Include="GramaticaIrony\Recorrido.cs" />
     <Compile Include="GramaticaIrony\TError.cs" />
-    <Compile Include="Objetos\Clase.cs" />
+    <Compile Include="Objs\ClasePreAnalizada.cs" />
+    <Compile Include="Objs\Estatico.cs" />
     <Compile Include="Objs\XFormFile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -96,6 +97,8 @@
   <ItemGroup>
     <None Include="Resources\if_document-open_118911.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Simbolos\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

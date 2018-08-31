@@ -13,14 +13,22 @@ namespace XForms.GramaticaIrony
         int Linea { get; }
         int Columna { get; }
 
+        List<String> esperados { get; }
+
         public TError(String tipo, String mensaje, int linea, int columna)
         {
             this.Tipo = tipo;
             this.Mensaje = mensaje;
             this.Linea = linea;
             this.Columna = columna;
+            this.esperados = new List<string>();
         }
 
+        public void AddEsperado(String esperado)
+        {
+            this.esperados.Add(esperado);
+        }
 
+        
     }
 }
