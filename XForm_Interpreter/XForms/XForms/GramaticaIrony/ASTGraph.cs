@@ -28,7 +28,7 @@ namespace XForms.GramaticaIrony
             archivo.Close();
             ProcessStartInfo startInfo = new ProcessStartInfo(rutaDot);
             startInfo.Arguments = "-Tpng Arbol.dot -o Arbol.png";
-            DialogResult verImagen = MessageBox.Show("¿Desea visualizar el AST de la cadena ingresada?", "Grafica AST", MessageBoxButtons.YesNo);
+            //DialogResult verImagen = MessageBox.Show("¿Desea visualizar el AST de la cadena ingresada?", "Grafica AST", MessageBoxButtons.YesNo);
             /*if (verImagen == DialogResult.Yes)
             {
                 Thread.Sleep(1000);

@@ -155,8 +155,13 @@ namespace XForms
                     {
                         if(!clasesPreanalizadas.Contains(a.id))
                         {
+                            
                             clasesPreanalizadas.Add(a.id, a);//METO LAS CLASES AL HASHTABLE PARA LUEGO LAS PREANALIZADAS LLEVARLAS A ANALIZARLAS 
                             //CREAR SU TABLA DE SIMBOLOS CON SUS FUNCIONES CORRESPONDIENTES
+                        }
+                        else
+                        {
+                            Estatico.errores.Add(new TError("Advertencia", "Se encontro una nueva definicion de la clase: " + a.id + " En el archivo: "+a.archivoOringen+", Por lo que Se descarto", 0, 0, true));
                         }
                     }
                 }
@@ -164,11 +169,8 @@ namespace XForms
                 {
                     MessageBox.Show("No se logro Analizar la cadena de entrada", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-
-                if(Estatico.errores.Count>0)
-                {
-                    MessageBox.Show("Existen: "+Estatico.errores.Count()+" En la cadena de Entrada!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                errorLabel.Text = Convert.ToString(Estatico.NumeroErroes());
+                warningsLabel.Text = Convert.ToString(Estatico.NumeroAdvertencias());
             }
         }
 
@@ -291,6 +293,26 @@ namespace XForms
                 actualizaNumeroDeLineas(2);
             }
         }
-        
+
+        private void toolStripButton4_Click(object sender, EventArgs e)
+        {
+            if(Estatico.NumeroErroes() > 0 || Estatico.NumeroAdvertencias() > 0)
+            {
+                ErrorReport errorRep = new ErrorReport(Estatico.errores);
+                bool aux = errorRep.writeReport();
+                if(aux)
+                {
+                    errorRep.openReport();
+                }
+                else
+                {
+                    MessageBox.Show("No se Pudo generar el Reporte!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("No Existen Errores o Advertencias", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }

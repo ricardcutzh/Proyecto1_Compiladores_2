@@ -39,5 +39,52 @@ namespace XForms.Objs
             PROTEGIDO,
             LOCAL /*SOLO SI LA VARIABLE ES INICIALIZADA LOCALMENTE*/
         };
+
+        public enum Operandos
+        {
+            SUMA,
+            RESTA,
+            MULT,
+            DIVI,
+            POT,
+            MOD,
+            INC,
+            DEC,
+            MENOR,
+            MAYOR,
+            MENORIGUAL,
+            MAYORIGUAL,
+            IGUAL,
+            DIFERENTE,
+            AND,
+            OR,
+            NOT
+        }
+
+        public static int NumeroErroes()
+        {
+            int x = 0;
+            foreach(TError e in errores)
+            {
+                if (!e.esAdvertencia)
+                {
+                    x++;
+                }
+            }
+            return x;
+        }
+
+        public static int NumeroAdvertencias()
+        {
+            int x = 0;
+            foreach(TError e in errores)
+            {
+                if(e.esAdvertencia)
+                {
+                    x++;
+                }
+            }
+            return x;
+        }
     }
 }

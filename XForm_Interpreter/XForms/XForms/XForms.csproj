@@ -49,6 +49,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ASTTree\ASTConstructor\ASTTreeConstructor.cs" />
+    <Compile Include="ASTTree\ASTConstructor\ASTTreeExpresion.cs" />
+    <Compile Include="ASTTree\Instrucciones\DeclaracionArr.cs" />
+    <Compile Include="ASTTree\Instrucciones\DeclaracionVar.cs" />
+    <Compile Include="ASTTree\Interfaces\Expresion.cs" />
+    <Compile Include="ASTTree\Interfaces\Instruccion.cs" />
+    <Compile Include="ASTTree\Interfaces\NodoAST.cs" />
+    <Compile Include="ASTTree\Valores\Operacion.cs" />
+    <Compile Include="ASTTree\Valores\ValorPrimitivo.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -57,6 +66,7 @@
     </Compile>
     <Compile Include="GramaticaIrony\Analizador.cs" />
     <Compile Include="GramaticaIrony\ASTGraph.cs" />
+    <Compile Include="GramaticaIrony\ErrorReport.cs" />
     <Compile Include="GramaticaIrony\Gramatica.cs" />
     <Compile Include="GramaticaIrony\Recorrido.cs" />
     <Compile Include="GramaticaIrony\TError.cs" />
@@ -65,6 +75,11 @@
     <Compile Include="Objs\XFormFile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Simbolos\Ambito.cs" />
+    <Compile Include="Simbolos\Funcion.cs" />
+    <Compile Include="Simbolos\Simbolo.cs" />
+    <Compile Include="Simbolos\TablaVariables.cs" />
+    <Compile Include="Simbolos\Variable.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -97,8 +112,9 @@
   <ItemGroup>
     <None Include="Resources\if_document-open_118911.ico" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Simbolos\" />
+    <Content Include="Resources\if_Warning_34248.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

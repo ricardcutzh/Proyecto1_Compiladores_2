@@ -74,7 +74,11 @@ namespace XForms.GramaticaIrony
                                 {
                                     foreach(ClasePreAnalizada c in aux)
                                     {
-                                        this.clases.Add(c);
+                                        //IMPORTANTO SOLO LAS CLASES PUBLICAS
+                                        if(c.vibililidad == Estatico.Vibililidad.PUBLICO)
+                                        {
+                                            this.clases.Add(c);
+                                        }  
                                     }
                                 }
                             }
@@ -118,28 +122,28 @@ namespace XForms.GramaticaIrony
                             String idclase = raiz.ChildNodes.ElementAt(1).Token.Text;
                             Estatico.Vibililidad visi = (Estatico.Vibililidad)obtenerVisibilidad(raiz.ChildNodes.ElementAt(2));
                             String padre = raiz.ChildNodes.ElementAt(4).Token.Text;
-                            ClasePreAnalizada clase = new ClasePreAnalizada(idclase, visi, raiz.ChildNodes.ElementAt(5), padre);
+                            ClasePreAnalizada clase = new ClasePreAnalizada(idclase, visi, raiz.ChildNodes.ElementAt(5), padre, this.archivo);
                             return clase;
                         }
                         if(raiz.ChildNodes.Count == 5)//SI EXACTAMENTE TIENE 5 HIJOS
                         {
                             String idClase = raiz.ChildNodes.ElementAt(1).Token.Text;
                             String padre = raiz.ChildNodes.ElementAt(3).Token.Text;
-                            ClasePreAnalizada clase = new ClasePreAnalizada(idClase, Estatico.Vibililidad.PRIVADO, raiz.ChildNodes.ElementAt(4),padre);
+                            ClasePreAnalizada clase = new ClasePreAnalizada(idClase, Estatico.Vibililidad.PRIVADO, raiz.ChildNodes.ElementAt(4),padre, this.archivo);
                             return clase;
                         }
                         if(raiz.ChildNodes.Count == 4)//SI EXACTAMENTE TIENE 4 HIJOS
                         {
                             String idclase = raiz.ChildNodes.ElementAt(1).Token.Text;
                             Estatico.Vibililidad visi = (Estatico.Vibililidad)obtenerVisibilidad(raiz.ChildNodes.ElementAt(2));
-                            ClasePreAnalizada clase = new ClasePreAnalizada(idclase, visi, raiz.ChildNodes.ElementAt(3));
+                            ClasePreAnalizada clase = new ClasePreAnalizada(idclase, visi, raiz.ChildNodes.ElementAt(3), this.archivo);
                             return clase;
                         }
                         if(raiz.ChildNodes.Count == 3)//SI EXACTAMENTE TIENE 3 HIJOS
                         {
                             /*SI NO TIENE VISIBILIDAD LA CLASE SERA PRIVADA*/
                             String idclase = raiz.ChildNodes.ElementAt(1).Token.Text;
-                            ClasePreAnalizada clase = new ClasePreAnalizada(idclase, Estatico.Vibililidad.PRIVADO, raiz.ChildNodes.ElementAt(2));
+                            ClasePreAnalizada clase = new ClasePreAnalizada(idclase, Estatico.Vibililidad.PRIVADO, raiz.ChildNodes.ElementAt(2), this.archivo);
                             return clase;
                         }
                         break;
@@ -172,7 +176,7 @@ namespace XForms.GramaticaIrony
                             }
                             catch
                             {
-                                Estatico.errores.Add(new TError("Semantico", "Error Al importar: "+importacion, raiz.ChildNodes.ElementAt(1).Token.Location.Line, raiz.ChildNodes.ElementAt(1).Token.Location.Column));
+                                Estatico.errores.Add(new TError("Semantico", "Error Al importar: "+importacion+" | En: "+this.archivo, raiz.ChildNodes.ElementAt(1).Token.Location.Line, raiz.ChildNodes.ElementAt(1).Token.Location.Column));
                             }
                         }
                         break;

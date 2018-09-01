@@ -242,7 +242,7 @@ namespace XForms.GramaticaIrony
             RegisterOperators(7, Associativity.Right, inc, dec, not, res);
             RegisterOperators(8, Associativity.Left, ToTerm("("));
 
-            this.MarkPunctuation("{", "}", "(", ")", ";",".xform","{","}");
+            this.MarkPunctuation("{", "}", "(", ")", ";",".xform","{","}", "=");
             NonGrammarTerminals.Add(LineComment);
             NonGrammarTerminals.Add(MultiLineComment);
             this.Root = INICIO;
