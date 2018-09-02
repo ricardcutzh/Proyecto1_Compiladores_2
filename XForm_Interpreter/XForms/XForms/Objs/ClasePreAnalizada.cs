@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Irony.Parsing;
-
+using XForms.ASTTree.ASTConstructor;
+using XForms.ASTTree.Instrucciones;
+using System.Windows.Forms;
 namespace XForms.Objs
 {
     class ClasePreAnalizada
@@ -15,6 +17,11 @@ namespace XForms.Objs
         Boolean Hereda { get; } /*BANDERA QUE ME INDICA SI ESTA CLASE HEREDA DE ALGUNA OTRA*/
         ParseTreeNode cuerpoClase { get; } /*EL PARSE TREE NODE DE LA CASE EN SI, CONTIENE EL CUERPO DE LA CLASE*/
         public String archivoOringen { get; }
+
+        ASTTreeConstructor constructor;
+        CuerpoClase arbolClase;
+
+
         /*
          * Primer constructor de una clase que no hereda
          */
@@ -44,6 +51,16 @@ namespace XForms.Objs
             this.padre = padre.ToLower();
             this.Hereda = true;
             this.archivoOringen = origen;
+        }
+
+        /*
+         * EL METODO SIGUIENTE ME VA  A SERVIR PARA CONSTRUIR EL AST PERSONALIZADO Y DEVOLVERME UNA CLASE EN SI
+         */
+        public void metodoAuxiliar()
+        {
+            this.constructor = new ASTTreeConstructor(this.cuerpoClase, id, archivoOringen);
+            arbolClase = (CuerpoClase)constructor.ConstruyerAST();
+            MessageBox.Show(Convert.ToString(arbolClase.numeroInstrucciones()));
         }
 
         public String toString()

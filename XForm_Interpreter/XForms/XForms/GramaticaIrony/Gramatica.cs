@@ -87,7 +87,13 @@ namespace XForms.GramaticaIrony
             GRUPO = new NonTerminal("GRUPO"),
             FORMULARIO = new NonTerminal("FORMULARIO"),
             DECLARACION_GLOBAL = new NonTerminal("DECLARACION_GLOBAL"),
-            DECLARACION_LOCAL = new NonTerminal("DECLARACION_LOCAL");
+            DECLARACION_LOCAL = new NonTerminal("DECLARACION_LOCAL"),
+            LLAMADAID_OBJ = new NonTerminal("LLAMADAID_OBJ"),
+            LLAMADA = new NonTerminal("LLAMADA"),
+            L_EXPRE = new NonTerminal("L_EXPRE"),
+            DIMENSIONES = new NonTerminal("DIMENSIONES"),
+            DIMENSION = new NonTerminal("DIMENSION"),
+            ARRAY = new NonTerminal("ARRAY");
             #endregion
 
             #region Reglas
@@ -142,6 +148,7 @@ namespace XForms.GramaticaIrony
 
             //-------------------------------------------------------------------------------------------
             CUERPOCLASE.Rule = MakeStarRule(CUERPOCLASE, DECLARACION_GLOBAL)
+                             | MakeStarRule(CUERPOCLASE, DECLARACION_LOCAL)
                              | MakeStarRule(CUERPOCLASE, PRINCIPAL)
                              | MakeStarRule(CUERPOCLASE, FUNCIONES)
                              | MakeStarRule(CUERPOCLASE, CONSTRUCTOR)
@@ -190,20 +197,24 @@ namespace XForms.GramaticaIrony
             //-------------------------------------------------------------------------------------------
             DECLARACION_GLOBAL.Rule = TIPO + VISIBILIDAD + identificador + "=" + EXP + ";"
                                    | TIPO + VISIBILIDAD + identificador + ";"
-                                   | DECLARACION_LOCAL;
+                                   | TIPO + VISIBILIDAD + identificador + DIMENSIONES + ";"
+                                   | TIPO + VISIBILIDAD + identificador + DIMENSIONES + "=" + EXP + ";";
+            //| DECLARACION_LOCAL;
 
             DECLARACION_GLOBAL.ErrorRule = SyntaxError + ";";
 
             DECLARACION_LOCAL.Rule = TIPO + identificador + "=" + EXP + ";"
-                                   | TIPO + identificador + ";";
+                                   | TIPO + identificador + ";"
+                                   | TIPO + identificador + DIMENSIONES + ";"
+                                   | TIPO + identificador + DIMENSIONES + "=" + EXP + ";";
 
             DECLARACION_LOCAL.ErrorRule = SyntaxError + ";";
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------
             EXP.Rule = E;
-            E.Rule =   E + and + E
-                     | E + or  + E
+            E.Rule = E + and + E
+                     | E + or + E
                      | not + E
                      | E + equal + E
                      | E + nequal + E
@@ -215,20 +226,41 @@ namespace XForms.GramaticaIrony
                      | E + res + E
                      | E + mult + E
                      | E + divi + E
-                     | E + pot  + E
+                     | E + pot + E
                      | E + mod + E
                      | E + inc
                      | E + dec
                      | res + E
-                     | ToTerm("(") + E + ToTerm(")") 
+                     | ToTerm("(") + E + ToTerm(")")
                      | cadena
                      | cadena2
                      | entero
                      | deci
                      | verdadero
                      | falso
-                     | identificador
+                     | LLAMADAID_OBJ
+                     | ARRAY
                      ;
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            LLAMADAID_OBJ.Rule = MakePlusRule(LLAMADAID_OBJ, ToTerm("."), identificador)
+                               | MakePlusRule(LLAMADAID_OBJ, ToTerm("."), LLAMADA);
+
+            LLAMADA.Rule = identificador + "(" + L_EXPRE + ")";
+
+            L_EXPRE.Rule = MakeStarRule(L_EXPRE, ToTerm(","), EXP);
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            DIMENSIONES.Rule = MakePlusRule(DIMENSIONES, DIMENSION);
+
+            DIMENSION.Rule = "[" + EXP + "]"
+                            | "[" + Empty + "]";
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            ARRAY.Rule = "{" + L_EXPRE + "}";
             //-------------------------------------------------------------------------------------------
             #endregion
 
@@ -242,7 +274,7 @@ namespace XForms.GramaticaIrony
             RegisterOperators(7, Associativity.Right, inc, dec, not, res);
             RegisterOperators(8, Associativity.Left, ToTerm("("));
 
-            this.MarkPunctuation("{", "}", "(", ")", ";",".xform","{","}", "=");
+            this.MarkPunctuation("{", "}", "(", ")", ";",".xform","{","}", "=", "[", "]");
             NonGrammarTerminals.Add(LineComment);
             NonGrammarTerminals.Add(MultiLineComment);
             this.Root = INICIO;

@@ -71,11 +71,12 @@ namespace XForms.GramaticaIrony
         {
             for(int x = 0; x < raiz.ParserMessages.Count(); x++)
             {
-                TError error = new TError("Sintatico", raiz.ParserMessages.ElementAt(x).Message+" | En Archivo: "+this.archivo, raiz.ParserMessages.ElementAt(x).Location.Line, raiz.ParserMessages.ElementAt(x).Location.Column);
+                String mensajeEsperados = "";
                 for (int y = 0; y < raiz.ParserMessages.ElementAt(x).ParserState.ExpectedTerminals.Count(); y++)
                 {
-                    error.AddEsperado((String)raiz.ParserMessages.ElementAt(x).ParserState.ExpectedTerminals.ElementAt(y).ErrorAlias);
+                    mensajeEsperados += " Simbolo: "+(String)raiz.ParserMessages.ElementAt(x).ParserState.ExpectedTerminals.ElementAt(y).ErrorAlias+"\n";
                 }
+                TError error = new TError("Sintatico", "Error Sintactico"+ " En Archivo: " + this.archivo+" | Se esperaba: \n"+mensajeEsperados, raiz.ParserMessages.ElementAt(x).Location.Line, raiz.ParserMessages.ElementAt(x).Location.Column);
                 Estatico.errores.Add(error);
             }
         }

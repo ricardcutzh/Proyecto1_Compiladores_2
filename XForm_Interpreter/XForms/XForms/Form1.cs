@@ -155,8 +155,8 @@ namespace XForms
                     {
                         if(!clasesPreanalizadas.Contains(a.id))
                         {
-                            
-                            clasesPreanalizadas.Add(a.id, a);//METO LAS CLASES AL HASHTABLE PARA LUEGO LAS PREANALIZADAS LLEVARLAS A ANALIZARLAS 
+                            //a.metodoAuxiliar();
+                            //clasesPreanalizadas.Add(a.id, a);//METO LAS CLASES AL HASHTABLE PARA LUEGO LAS PREANALIZADAS LLEVARLAS A ANALIZARLAS 
                             //CREAR SU TABLA DE SIMBOLOS CON SUS FUNCIONES CORRESPONDIENTES
                         }
                         else
@@ -177,7 +177,9 @@ namespace XForms
         //PERMITE VER LOS FORMULARIOS
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
-
+            String mihora = "12/10/96 12:34:00";
+            DateTime p = DateTime.ParseExact(mihora, "dd/MM/yy hh:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+            MessageBox.Show(p.Day.ToString());
         }
 
         #endregion
