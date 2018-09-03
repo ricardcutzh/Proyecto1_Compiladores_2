@@ -149,20 +149,28 @@ namespace XForms
                 Analizador an = new Analizador(cadena, this.ProyectoPath, archivo);
                 if(an.analizar())
                 {
-                    //AQUI DEBERIA DE TRAER LAS CLASES QUE SE LOGRARON CAPTURAR
-                    List<ClasePreAnalizada> c = an.clases;
-                    foreach(ClasePreAnalizada a in c)
+                    if(Estatico.NumeroErroes()> 0)
                     {
-                        if(!clasesPreanalizadas.Contains(a.id))
+                        MessageBox.Show("Existen: "+Estatico.NumeroErroes()+" en La cadena! Revisalos en el reporte", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else
+                    {
+                        //AQUI DEBERIA DE TRAER LAS CLASES QUE SE LOGRARON CAPTURAR
+                        List<ClasePreAnalizada> c = an.clases;
+                        foreach (ClasePreAnalizada a in c)
                         {
-                            //a.metodoAuxiliar();
-                            //clasesPreanalizadas.Add(a.id, a);//METO LAS CLASES AL HASHTABLE PARA LUEGO LAS PREANALIZADAS LLEVARLAS A ANALIZARLAS 
-                            //CREAR SU TABLA DE SIMBOLOS CON SUS FUNCIONES CORRESPONDIENTES
+                            if (!clasesPreanalizadas.Contains(a.id))
+                            {
+                                //a.metodoAuxiliar();
+                                //clasesPreanalizadas.Add(a.id, a);//METO LAS CLASES AL HASHTABLE PARA LUEGO LAS PREANALIZADAS LLEVARLAS A ANALIZARLAS 
+                                //CREAR SU TABLA DE SIMBOLOS CON SUS FUNCIONES CORRESPONDIENTES
+                            }
+                            else
+                            {
+                                Estatico.errores.Add(new TError("Advertencia", "Se encontro una nueva definicion de la clase: " + a.id + " En el archivo: " + a.archivoOringen + ", Por lo que Se descarto", 0, 0, true));
+                            }
                         }
-                        else
-                        {
-                            Estatico.errores.Add(new TError("Advertencia", "Se encontro una nueva definicion de la clase: " + a.id + " En el archivo: "+a.archivoOringen+", Por lo que Se descarto", 0, 0, true));
-                        }
+                        //AQUI DEBO DE PREGUNTAR SI EN CASO HAY UN PROBLEMA CON LAS ADVERTENCIAS
                     }
                 }
                 else

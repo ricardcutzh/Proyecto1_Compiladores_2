@@ -58,9 +58,13 @@
     <Compile Include="ASTTree\Interfaces\Instruccion.cs" />
     <Compile Include="ASTTree\Interfaces\NodoAST.cs" />
     <Compile Include="ASTTree\Valores\Accesos.cs" />
+    <Compile Include="ASTTree\Valores\Dimensiones.cs" />
     <Compile Include="ASTTree\Valores\Identificador.cs" />
     <Compile Include="ASTTree\Valores\Llamada.cs" />
+    <Compile Include="ASTTree\Valores\NuevoArreglo.cs" />
+    <Compile Include="ASTTree\Valores\NuevoObjeto.cs" />
     <Compile Include="ASTTree\Valores\Operacion.cs" />
+    <Compile Include="ASTTree\Valores\ValorArreglo.cs" />
     <Compile Include="ASTTree\Valores\ValorPrimitivo.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -78,11 +82,14 @@
     <Compile Include="Objs\Date.cs" />
     <Compile Include="Objs\Estatico.cs" />
     <Compile Include="Objs\Hour.cs" />
+    <Compile Include="Objs\Nulo.cs" />
     <Compile Include="Objs\XFormFile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Simbolos\Ambito.cs" />
+    <Compile Include="Simbolos\Arreglo.cs" />
     <Compile Include="Simbolos\Funcion.cs" />
+    <Compile Include="Simbolos\Principal.cs" />
     <Compile Include="Simbolos\Simbolo.cs" />
     <Compile Include="Simbolos\TablaVariables.cs" />
     <Compile Include="Simbolos\Variable.cs" />

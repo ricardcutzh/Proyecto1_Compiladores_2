@@ -222,12 +222,19 @@ namespace XForms.ASTTree.ASTConstructor
                         ValorPrimitivo valor = new ValorPrimitivo(val, linea, col, this.clase);
                         return valor;
                     }
+                case "nulo":
+                    {
+                        int linea = raiz.Token.Location.Line;
+                        int col = raiz.Token.Location.Column;
+                        Nulo val = new Nulo();
+                        ValorPrimitivo valor = new ValorPrimitivo(val, linea, col, this.clase);
+                        return valor;
+                    }
                 default:
                     {
                         return traeLlamadas(raiz);
                     }
             }
-            return null;
         }
 
 
@@ -284,6 +291,62 @@ namespace XForms.ASTTree.ASTConstructor
                         Identificador ide = new Identificador(id, col, linea, this.clase);
                         return ide;
                     }
+                case "ARRAY":
+                    {
+                        if(raiz.ChildNodes.Count ==1)
+                        {
+                            List<Expresion> expresionesArr = new List<Expresion>();
+                            foreach(ParseTreeNode nodo in raiz.ChildNodes.ElementAt(0).ChildNodes)
+                            {
+                                Expresion exp = (Expresion)recorreExpresion(nodo);
+                                if(exp!=null)
+                                {
+                                    expresionesArr.Add(exp);
+                                }
+                            }
+                            ValorArreglo val = new ValorArreglo(expresionesArr, 0, 0, this.clase);
+                            return val;
+                        }
+                        if(raiz.ChildNodes.Count == 3)
+                        {
+                            String tipo = (String)dameTipo(raiz.ChildNodes.ElementAt(1));
+                            Dimensiones dim = (Dimensiones)getDimensiones(raiz.ChildNodes.ElementAt(2));
+                            ///AQUI CREO EL NODO NUEVOARREGLO QUE ME DEVOLVERA UN ARREGLO CON LAS CARACTERISTICAS INDICADAS
+                            ///
+                            if(tipo!=null & dim!=null)
+                            {
+                                int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                                int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+                                NuevoArreglo nuevo = new NuevoArreglo(dim, tipo, linea, col, clase);
+                                return nuevo;
+                            }
+                        }
+                        break;
+                    }
+                case "DECLARACION_OBJ":
+                    {
+                        if(raiz.ChildNodes.Count == 3)
+                        {
+                            String tipo = (String)dameTipo(raiz.ChildNodes.ElementAt(1));
+                            List<Expresion> parametros = new List<Expresion>();
+                            foreach(ParseTreeNode nodo in raiz.ChildNodes.ElementAt(2).ChildNodes)
+                            {
+                                Expresion aux = (Expresion)recorreExpresion(nodo);
+                                if(aux!=null)
+                                {
+                                    parametros.Add(aux);
+                                }
+                            }
+                            if(tipo!=null)
+                            {
+                                int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                                int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+                                NuevoObjeto ob = new NuevoObjeto(parametros, tipo, linea, col, this.clase);
+                                return ob;
+                            }
+                        }
+                        break;
+                    }
             }
             return null;
         }
@@ -334,7 +397,57 @@ namespace XForms.ASTTree.ASTConstructor
             return valor;
         }
 
+        #region TIPOS
+        private Object dameTipo(ParseTreeNode raiz)
+        {
+            String etiqueta = raiz.ToString();
+            switch (etiqueta)
+            {
+                case "TIPO":
+                    {
+                        if (raiz.ChildNodes.Count == 1)
+                        {
+                            return raiz.ChildNodes.ElementAt(0).Token.Text.ToLower();
+                        }
+                        break;
+                    }
+            }
+            return null;
+        }
+        #endregion
 
-        
+        #region DIMENSIONES
+        public Object getDimensiones(ParseTreeNode raiz)
+        {
+            String etiqueta = raiz.ToString();
+            switch (etiqueta)
+            {
+                case "DIMENSIONES":
+                    {
+                        List<Expresion> expr = new List<Expresion>();
+                        foreach (ParseTreeNode nodo in raiz.ChildNodes)
+                        {
+                            Expresion aux = (Expresion)getDimensiones(nodo);
+                            if (aux != null)
+                            {
+                                expr.Add(aux);
+                            }
+                        }
+                        Dimensiones dim = new Dimensiones(expr, 0, 0, this.clase);
+                        return dim;
+                    }
+                case "DIMENSION":
+                    {
+                        if (raiz.ChildNodes.Count == 1)
+                        {
+                            ASTTreeExpresion arbolExpre = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(0), this.clase, this.archivo);
+                            return arbolExpre.ConstruyeASTExpresion();
+                        }
+                        break;
+                    }
+            }
+            return null;
+        }
+        #endregion
     }
 }

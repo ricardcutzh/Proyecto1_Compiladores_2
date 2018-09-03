@@ -45,6 +45,7 @@ namespace XForms.GramaticaIrony
             var publico = ToTerm("publico");
             var protegido = ToTerm("protegido");
             var importar = ToTerm("importar");
+            var nulo = ToTerm("nulo");
 
             //------> OPERADORES
             var and = ToTerm("&&");
@@ -93,7 +94,8 @@ namespace XForms.GramaticaIrony
             L_EXPRE = new NonTerminal("L_EXPRE"),
             DIMENSIONES = new NonTerminal("DIMENSIONES"),
             DIMENSION = new NonTerminal("DIMENSION"),
-            ARRAY = new NonTerminal("ARRAY");
+            ARRAY = new NonTerminal("ARRAY"),
+            DECLARACION_OBJ = new NonTerminal("DECLARACION_OBJ");
             #endregion
 
             #region Reglas
@@ -198,15 +200,14 @@ namespace XForms.GramaticaIrony
             DECLARACION_GLOBAL.Rule = TIPO + VISIBILIDAD + identificador + "=" + EXP + ";"
                                    | TIPO + VISIBILIDAD + identificador + ";"
                                    | TIPO + VISIBILIDAD + identificador + DIMENSIONES + ";"
-                                   | TIPO + VISIBILIDAD + identificador + DIMENSIONES + "=" + EXP + ";";
-            //| DECLARACION_LOCAL;
-
+                                   | TIPO + VISIBILIDAD + identificador + DIMENSIONES + "=" + EXP + ";";//POR SI UNA FUNCION O ALGUN OBJETO DEVELVE UN ARREGLO
+                                  
             DECLARACION_GLOBAL.ErrorRule = SyntaxError + ";";
 
             DECLARACION_LOCAL.Rule = TIPO + identificador + "=" + EXP + ";"
                                    | TIPO + identificador + ";"
                                    | TIPO + identificador + DIMENSIONES + ";"
-                                   | TIPO + identificador + DIMENSIONES + "=" + EXP + ";";
+                                   | TIPO + identificador + DIMENSIONES + "=" + EXP + ";"; //POR SI UNA FUNCION O ALGUN OBJETO DEVELVE UN ARREGLO
 
             DECLARACION_LOCAL.ErrorRule = SyntaxError + ";";
             //-------------------------------------------------------------------------------------------
@@ -239,7 +240,9 @@ namespace XForms.GramaticaIrony
                      | verdadero
                      | falso
                      | LLAMADAID_OBJ
+                     | DECLARACION_OBJ
                      | ARRAY
+                     | nulo
                      ;
             //-------------------------------------------------------------------------------------------
 
@@ -257,10 +260,21 @@ namespace XForms.GramaticaIrony
 
             DIMENSION.Rule = "[" + EXP + "]"
                             | "[" + Empty + "]";
+
+            DIMENSION.ErrorRule = SyntaxError + "]";
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------
-            ARRAY.Rule = "{" + L_EXPRE + "}";
+            ARRAY.Rule = "{" + L_EXPRE + "}"
+                       | "nuevo" + TIPO + DIMENSIONES;
+
+            ARRAY.ErrorRule = SyntaxError + ";";
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            DECLARACION_OBJ.Rule = "nuevo" + TIPO + "(" + L_EXPRE + ")";
+
+            DECLARACION_OBJ.ErrorRule = SyntaxError + ";";
             //-------------------------------------------------------------------------------------------
             #endregion
 
