@@ -12,5 +12,10 @@ namespace XForms.Objs
         {
             //NO HAGO NADA
         }
+
+        public override string ToString()
+        {
+            return "Nulo";
+        }
     }
 }

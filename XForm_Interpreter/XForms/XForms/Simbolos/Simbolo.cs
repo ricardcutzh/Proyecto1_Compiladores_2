@@ -22,5 +22,21 @@ namespace XForms.Simbolos
             this.Tipo = Tipo;
         }
 
+        public override string ToString()
+        {
+            String cad = "";
+            cad += "Nombre: " + this.idSimbolo;
+            if(this.esVector)
+            {
+                cad += " | Vector";
+            }
+            else
+            {
+                cad += " | Variable";
+            }
+            cad += " | TIPO: " + this.Tipo;
+            cad += " | Visibilidad: " + this.Visibilidad.ToString()+"\n";
+            return cad;
+        }
     }
 }

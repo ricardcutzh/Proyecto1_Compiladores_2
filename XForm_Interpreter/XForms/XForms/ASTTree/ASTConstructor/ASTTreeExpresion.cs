@@ -51,7 +51,9 @@ namespace XForms.ASTTree.ASTConstructor
                             Estatico.Operandos oper = (Estatico.Operandos)dameOperador(raiz.ChildNodes.ElementAt(1));
                             int linea = raiz.ChildNodes.ElementAt(1).Token.Location.Line;
                             int colum = raiz.ChildNodes.ElementAt(1).Token.Location.Column;
-                            return new Operacion(operando1, operando2, oper, linea, colum, this.clase);
+                            Operacion op = new Operacion(operando1, operando2, oper, linea, colum, this.clase);
+                            op.SetArchivoOrigen(this.archivo);
+                            return op;
                         }
                         if(raiz.ChildNodes.Count == 2)
                         {
@@ -61,7 +63,9 @@ namespace XForms.ASTTree.ASTConstructor
                                 Estatico.Operandos oper = (Estatico.Operandos)dameOperador(raiz.ChildNodes.ElementAt(1));
                                 int linea = raiz.ChildNodes.ElementAt(1).Token.Location.Line;
                                 int colum = raiz.ChildNodes.ElementAt(1).Token.Location.Column;
-                                return new Operacion(operando, oper, linea, colum, this.clase);
+                                Operacion op = new Operacion(operando, oper, linea, colum, this.clase);
+                                op.SetArchivoOrigen(archivo);
+                                return op;
                             }
                             else//NEGATIVO O NOT
                             {
@@ -69,7 +73,9 @@ namespace XForms.ASTTree.ASTConstructor
                                 Estatico.Operandos oper = (Estatico.Operandos)dameOperador(raiz.ChildNodes.ElementAt(0));
                                 int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
                                 int colum = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
-                                return new Operacion(operando, oper, linea, colum, this.clase);
+                                Operacion op = new Operacion(operando, oper, linea, colum, this.clase);
+                                op.SetArchivoOrigen(archivo);
+                                return op;
                             }
                         }
                         if(raiz.ChildNodes.Count == 1)
@@ -179,6 +185,7 @@ namespace XForms.ASTTree.ASTConstructor
                         int col = raiz.Token.Location.Column;
                         String val = raiz.Token.Text;
                         ValorPrimitivo valor = new ValorPrimitivo(val, linea, col, this.clase);
+                        valor.SetArchivoOrigen(archivo);
                         return valor;
                     }
                 case "cadena2":
@@ -188,6 +195,7 @@ namespace XForms.ASTTree.ASTConstructor
                         String val = raiz.Token.Text;
                         object vallor = parsearCadena2(val);
                         ValorPrimitivo valor = new ValorPrimitivo(vallor, linea, col, this.clase);
+                        valor.SetArchivoOrigen(archivo);
                         return valor;
                     }
                 case "entero":
@@ -196,6 +204,7 @@ namespace XForms.ASTTree.ASTConstructor
                         int col = raiz.Token.Location.Column;
                         int val = Convert.ToInt32(raiz.Token.Text);
                         ValorPrimitivo valor = new ValorPrimitivo(val, linea, col, this.clase);
+                        valor.SetArchivoOrigen(archivo);
                         return valor;
                     }
                 case "decimal":
@@ -204,6 +213,7 @@ namespace XForms.ASTTree.ASTConstructor
                         int col = raiz.Token.Location.Column;
                         double val = Convert.ToDouble(raiz.Token.Text);
                         ValorPrimitivo valor = new ValorPrimitivo(val, linea, col, this.clase);
+                        valor.SetArchivoOrigen(archivo);
                         return valor;
                     }
                 case "verdadero":
@@ -220,6 +230,7 @@ namespace XForms.ASTTree.ASTConstructor
                         int col = raiz.Token.Location.Column;
                         bool val = false;
                         ValorPrimitivo valor = new ValorPrimitivo(val, linea, col, this.clase);
+                        valor.SetArchivoOrigen(archivo);
                         return valor;
                     }
                 case "nulo":
@@ -228,6 +239,7 @@ namespace XForms.ASTTree.ASTConstructor
                         int col = raiz.Token.Location.Column;
                         Nulo val = new Nulo();
                         ValorPrimitivo valor = new ValorPrimitivo(val, linea, col, this.clase);
+                        valor.SetArchivoOrigen(archivo);
                         return valor;
                     }
                 default:
@@ -248,6 +260,7 @@ namespace XForms.ASTTree.ASTConstructor
                         if(raiz.ChildNodes.Count > 0)
                         {
                             Accesos acceso = new Accesos(0, 0, this.clase);
+                            acceso.SetArchivoOrigen(archivo);
                             foreach(ParseTreeNode n in raiz.ChildNodes)
                             {
                                 Expresion ex = (Expresion)traeLlamadas(n);
@@ -268,6 +281,7 @@ namespace XForms.ASTTree.ASTConstructor
                             int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
                             int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
                             Llamada llam = new Llamada(id, linea, col, this.clase);
+                            llam.SetArchivoOrigen(archivo);
                             if(raiz.ChildNodes.ElementAt(1).ChildNodes.Count > 0)//SI EL HIJO DERECHO TIENE MAS DE UN HIJO ENTONCES LO RECORRO COMO EXP
                             {
                                 foreach(ParseTreeNode n in raiz.ChildNodes.ElementAt(1).ChildNodes)
@@ -289,6 +303,7 @@ namespace XForms.ASTTree.ASTConstructor
                         int col = raiz.Token.Location.Column;
                         String id = raiz.Token.Text.ToLower();//MINUSCULAS
                         Identificador ide = new Identificador(id, col, linea, this.clase);
+                        ide.SetArchivoOrigen(archivo);
                         return ide;
                     }
                 case "ARRAY":
@@ -305,12 +320,14 @@ namespace XForms.ASTTree.ASTConstructor
                                 }
                             }
                             ValorArreglo val = new ValorArreglo(expresionesArr, 0, 0, this.clase);
+                            val.SetArchivoOrigen(archivo);
                             return val;
                         }
                         if(raiz.ChildNodes.Count == 3)
                         {
                             String tipo = (String)dameTipo(raiz.ChildNodes.ElementAt(1));
                             Dimensiones dim = (Dimensiones)getDimensiones(raiz.ChildNodes.ElementAt(2));
+                            dim.SetArchivoOrigen(archivo);
                             ///AQUI CREO EL NODO NUEVOARREGLO QUE ME DEVOLVERA UN ARREGLO CON LAS CARACTERISTICAS INDICADAS
                             ///
                             if(tipo!=null & dim!=null)
@@ -318,6 +335,7 @@ namespace XForms.ASTTree.ASTConstructor
                                 int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
                                 int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
                                 NuevoArreglo nuevo = new NuevoArreglo(dim, tipo, linea, col, clase);
+                                nuevo.SetArchivoOrigen(archivo);
                                 return nuevo;
                             }
                         }
@@ -342,6 +360,7 @@ namespace XForms.ASTTree.ASTConstructor
                                 int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
                                 int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
                                 NuevoObjeto ob = new NuevoObjeto(parametros, tipo, linea, col, this.clase);
+                                ob.SetArchivoOrigen(archivo);
                                 return ob;
                             }
                         }
@@ -434,6 +453,7 @@ namespace XForms.ASTTree.ASTConstructor
                             }
                         }
                         Dimensiones dim = new Dimensiones(expr, 0, 0, this.clase);
+                        dim.SetArchivoOrigen(this.archivo);
                         return dim;
                     }
                 case "DIMENSION":

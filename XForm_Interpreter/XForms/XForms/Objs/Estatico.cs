@@ -22,6 +22,7 @@ namespace XForms.Objs
         public static void setUp(RichTextBox cons)
         {
             consolaSalida = cons;
+            consolaSalida.Text = ">> XForm Console | Compiladores 2 | 2018";
             errores = new List<TError>();
         }
 

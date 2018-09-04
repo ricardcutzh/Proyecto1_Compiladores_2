@@ -8,7 +8,7 @@ using XForms.Simbolos;
 
 namespace XForms.ASTTree.Valores
 {
-    class Llamada :NodoAST, Expresion
+    class Llamada :NodoAST, Expresion//ME REFIERO AUNA LLAMADA DE UNA FUNCION
     {
         String id;
         List<Expresion> expresiones;

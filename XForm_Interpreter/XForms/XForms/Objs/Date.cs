@@ -42,7 +42,7 @@ namespace XForms.Objs
 
         public override string ToString()
         {
-            String cad = "";
+            String cad = this.Dia+"/"+this.Mes+"/"+this.Anio;
 
             return cad;
         }

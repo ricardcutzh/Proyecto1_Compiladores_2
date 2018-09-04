@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using XForms.ASTTree.Interfaces;
 using XForms.Objs;
 using XForms.Simbolos;
+using System.Windows.Forms;
 
 namespace XForms.ASTTree.Instrucciones
 {
@@ -38,7 +39,26 @@ namespace XForms.ASTTree.Instrucciones
 
         public object Ejecutar(Ambito ambito)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (this.asignaValor)
+                {
+                    //OBT EL VALOR
+                    Object valor = this.expresion.getValor(ambito);//LLAMADA AL VALOR
+                    MessageBox.Show(valor.ToString());
+
+
+                }
+                else
+                {
+
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Error en La Ejecucion de una declaracion de Variable: \""+this.idVar+"\" en: Linea: "+this.linea+" y Columna: "+this.columna+" | En Clase: "+this.clase+" | Archivo: "+this.archivoOrigen, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return null;
         }
     }
 }

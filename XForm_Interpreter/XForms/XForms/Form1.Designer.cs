@@ -47,10 +47,6 @@
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
-            this.Editor = new System.Windows.Forms.TabControl();
-            this.Consola = new System.Windows.Forms.RichTextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.errorLabel = new System.Windows.Forms.ToolStripLabel();
@@ -59,6 +55,14 @@
             this.warningsLabel = new System.Windows.Forms.ToolStripLabel();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
+            this.Editor = new System.Windows.Forms.TabControl();
+            this.Consola = new System.Windows.Forms.RichTextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.Progreso = new System.Windows.Forms.ToolStripProgressBar();
+            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.StatusControl = new System.Windows.Forms.ToolStripLabel();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -166,6 +170,8 @@
             this.toolStripButton1,
             this.toolStripSeparator1,
             this.toolStripButton2,
+            this.Progreso,
+            this.StatusControl,
             this.toolStripSeparator2,
             this.toolStripButton3,
             this.toolStripSeparator3,
@@ -175,7 +181,9 @@
             this.toolStripLabel2,
             this.warningsLabel,
             this.toolStripSeparator5,
-            this.toolStripButton4});
+            this.toolStripButton4,
+            this.toolStripSeparator6,
+            this.toolStripSeparator7});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(1044, 25);
@@ -218,47 +226,6 @@
             this.toolStripButton3.Size = new System.Drawing.Size(109, 22);
             this.toolStripButton3.Text = "Ver Formularios";
             this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click);
-            // 
-            // Editor
-            // 
-            this.Editor.Location = new System.Drawing.Point(12, 78);
-            this.Editor.Name = "Editor";
-            this.Editor.SelectedIndex = 0;
-            this.Editor.Size = new System.Drawing.Size(1020, 534);
-            this.Editor.TabIndex = 2;
-            // 
-            // Consola
-            // 
-            this.Consola.BackColor = System.Drawing.SystemColors.MenuText;
-            this.Consola.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Consola.ForeColor = System.Drawing.SystemColors.Menu;
-            this.Consola.Location = new System.Drawing.Point(12, 650);
-            this.Consola.Name = "Consola";
-            this.Consola.ReadOnly = true;
-            this.Consola.Size = new System.Drawing.Size(1020, 149);
-            this.Consola.TabIndex = 3;
-            this.Consola.Text = ">> XForm Console | Compiladores 2 | 2018";
-            this.Consola.TextChanged += new System.EventHandler(this.Consola_TextChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(12, 623);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(185, 24);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "Consola de Salida:";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(12, 51);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(136, 20);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "Editor de Texto:";
             // 
             // toolStripSeparator3
             // 
@@ -309,6 +276,68 @@
             this.toolStripButton4.Size = new System.Drawing.Size(142, 22);
             this.toolStripButton4.Text = "Ver Reporte de Errores";
             this.toolStripButton4.Click += new System.EventHandler(this.toolStripButton4_Click);
+            // 
+            // Editor
+            // 
+            this.Editor.Location = new System.Drawing.Point(12, 78);
+            this.Editor.Name = "Editor";
+            this.Editor.SelectedIndex = 0;
+            this.Editor.Size = new System.Drawing.Size(1020, 534);
+            this.Editor.TabIndex = 2;
+            // 
+            // Consola
+            // 
+            this.Consola.BackColor = System.Drawing.SystemColors.MenuText;
+            this.Consola.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Consola.ForeColor = System.Drawing.SystemColors.Menu;
+            this.Consola.Location = new System.Drawing.Point(12, 650);
+            this.Consola.Name = "Consola";
+            this.Consola.ReadOnly = true;
+            this.Consola.Size = new System.Drawing.Size(1020, 149);
+            this.Consola.TabIndex = 3;
+            this.Consola.Text = ">> XForm Console | Compiladores 2 | 2018";
+            this.Consola.TextChanged += new System.EventHandler(this.Consola_TextChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(12, 623);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(185, 24);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "Consola de Salida:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(12, 51);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(136, 20);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "Editor de Texto:";
+            // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 25);
+            // 
+            // Progreso
+            // 
+            this.Progreso.Name = "Progreso";
+            this.Progreso.Size = new System.Drawing.Size(100, 22);
+            // 
+            // toolStripSeparator7
+            // 
+            this.toolStripSeparator7.Name = "toolStripSeparator7";
+            this.toolStripSeparator7.Size = new System.Drawing.Size(6, 25);
+            // 
+            // StatusControl
+            // 
+            this.StatusControl.Name = "StatusControl";
+            this.StatusControl.Size = new System.Drawing.Size(44, 22);
+            this.StatusControl.Text = "Estatus";
             // 
             // Form1
             // 
@@ -368,6 +397,10 @@
         private System.Windows.Forms.ToolStripLabel warningsLabel;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripButton toolStripButton4;
+        private System.Windows.Forms.ToolStripProgressBar Progreso;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
+        private System.Windows.Forms.ToolStripLabel StatusControl;
     }
 }
 

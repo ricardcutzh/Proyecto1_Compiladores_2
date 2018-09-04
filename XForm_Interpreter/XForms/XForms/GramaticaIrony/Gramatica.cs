@@ -95,7 +95,11 @@ namespace XForms.GramaticaIrony
             DIMENSIONES = new NonTerminal("DIMENSIONES"),
             DIMENSION = new NonTerminal("DIMENSION"),
             ARRAY = new NonTerminal("ARRAY"),
-            DECLARACION_OBJ = new NonTerminal("DECLARACION_OBJ");
+            DECLARACION_OBJ = new NonTerminal("DECLARACION_OBJ"),
+            SENTENCIAS = new NonTerminal("SENTENCIAS"),
+            SENTENCIAS_CONS = new NonTerminal("SENTENCIAS_CONS"),
+            L_DIMPARAM = new NonTerminal("L_DIMPARAM"),
+            DIM_DEF = new NonTerminal("DIM_DEF");
             #endregion
 
             #region Reglas
@@ -160,23 +164,29 @@ namespace XForms.GramaticaIrony
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------
-            FUNCIONES.Rule = VISIBILIDAD + TIPO + identificador + "(" + PARAMETROS + ")" + "{" + "}"
-                            | TIPO + identificador + "(" + PARAMETROS + ")" + "{" + "}";
+            FUNCIONES.Rule = VISIBILIDAD + TIPO + identificador + "(" + PARAMETROS + ")" + "{" + SENTENCIAS + "}"
+                            | TIPO + identificador + "(" + PARAMETROS + ")" + "{" + SENTENCIAS + "}";
 
             FUNCIONES.ErrorRule = SyntaxError + "}";
 
             PARAMETROS.Rule = MakeStarRule(PARAMETROS, ToTerm(","), PARAMETRO);
 
-            PARAMETRO.Rule = TIPO + identificador;
+            PARAMETRO.Rule = TIPO + identificador
+                           | TIPO + identificador + L_DIMPARAM;
+
+            L_DIMPARAM.Rule = MakePlusRule(L_DIMPARAM, DIM_DEF);
+
+            DIM_DEF.Rule = "[" + entero + "]";
+
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------
-            PRINCIPAL.Rule = ToTerm("principal") + "(" + ")" + "{" + "}";
+            PRINCIPAL.Rule = ToTerm("principal") + "(" + ")" + "{" + SENTENCIAS + "}";
             PRINCIPAL.ErrorRule = SyntaxError + "}";
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------
-            CONSTRUCTOR.Rule = identificador + "(" + PARAMETROS + ")" + "{" + "}";
+            CONSTRUCTOR.Rule = identificador + "(" + PARAMETROS + ")" + "{" + SENTENCIAS_CONS + "}";
 
             CONSTRUCTOR.ErrorRule = SyntaxError + "}";
             //-------------------------------------------------------------------------------------------
@@ -276,6 +286,12 @@ namespace XForms.GramaticaIrony
 
             DECLARACION_OBJ.ErrorRule = SyntaxError + ";";
             //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            SENTENCIAS.Rule = MakeStarRule(SENTENCIAS, DECLARACION_LOCAL);
+
+            SENTENCIAS_CONS.Rule = MakeStarRule(SENTENCIAS_CONS, DECLARACION_LOCAL);
+            //-------------------------------------------------------------------------------------------
             #endregion
 
             #region Preferencias
@@ -283,10 +299,11 @@ namespace XForms.GramaticaIrony
             RegisterOperators(2, Associativity.Left, and);
             RegisterOperators(3, Associativity.Left, nequal, equal);
             RegisterOperators(4, Associativity.Left, grater, lower, gequal, lequal);
-            RegisterOperators(5, Associativity.Left, sum, res);
-            RegisterOperators(6, Associativity.Left, divi, mult, mod, pot);
-            RegisterOperators(7, Associativity.Right, inc, dec, not, res);
-            RegisterOperators(8, Associativity.Left, ToTerm("("));
+            RegisterOperators(5, Associativity.Left, res, sum);
+            RegisterOperators(6, Associativity.Left, divi, mult, mod);
+            RegisterOperators(7, Associativity.Right, pot);
+            RegisterOperators(9, Associativity.Right, inc, dec, not);
+            RegisterOperators(10, Associativity.Neutral, ToTerm("("), ToTerm(")"));
 
             this.MarkPunctuation("{", "}", "(", ")", ";",".xform","{","}", "=", "[", "]");
             NonGrammarTerminals.Add(LineComment);

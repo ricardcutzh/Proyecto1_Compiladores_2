@@ -6,6 +6,8 @@ using XForms.ASTTree.Interfaces;
 using XForms.ASTTree.Instrucciones;
 using System.Collections.Generic;
 using XForms.ASTTree.Valores;
+using XForms.Simbolos;
+using XForms.GramaticaIrony;
 
 namespace XForms.ASTTree.ASTConstructor
 {
@@ -53,6 +55,81 @@ namespace XForms.ASTTree.ASTConstructor
                     {
                         return recorreDeclaraciones(raiz);
                     }
+                case "PRINCIPAL":
+                    {
+                        if (raiz.ChildNodes.Count == 2)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+                            List<Instruccion> instrucciones = new List<Instruccion>();
+                            /// FALTA TOMAR LAS INSTRUCCIONES DEL HIJO EN 1
+                            Principal principal = new Principal(instrucciones, linea, col, clase);
+                            DeclaracionMain main = new DeclaracionMain(principal, linea, col, clase);
+                            main.SetArchivoOrigen(archivo);
+                            return main;
+                        }
+                        break;
+                    }
+                case "CONSTRUCTOR":
+                    {
+                        if(raiz.ChildNodes.Count == 3)
+                        {
+                            String idCons = raiz.ChildNodes.ElementAt(0).Token.Text.ToLower();
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+                            if (this.clase.ToLower().Equals(idCons))
+                            {
+                                //SI TIENEN EL MISMO NOMBRE ENTONCES LO ANADO A LA LISTA DE INSTRUCCIONES QUE SE VAN A EJECUTAR
+                                List<NodoParametro> parametros = (List<NodoParametro>)getParametros(raiz.ChildNodes.ElementAt(1));
+                                //FALTA TOMAR LAS INSTRUCCIONES
+                                List<Instruccion> instrucciones = new List<Instruccion>();//ESTA LAS TOMO DEL HIJO EN 2
+                                DeclaracionConstructor cons = new DeclaracionConstructor(instrucciones, parametros, linea, col, this.clase);
+                                cons.SetArchivoOrigen(archivo);
+                                return cons;
+                            }
+                            else
+                            {
+                                TError error = new TError("Semantico", "Constructor no definido con el nombre de Clase, Clase: \"" + this.clase + "\" Constructor definido: \"" + idCons+"\" | Se produjo en: "+this.archivo, linea, col);
+                                Estatico.errores.Add(error);
+                            }
+                        }
+                        break;
+                    }
+                case "FUNCIONES":
+                    {
+                        if(raiz.ChildNodes.Count == 5)
+                        {
+                            Estatico.Vibililidad visibilidad = (Estatico.Vibililidad)dameVisibilidad(raiz.ChildNodes.ElementAt(0));
+                            String tipo = (String)dameTipo(raiz.ChildNodes.ElementAt(1));
+                            int linea = raiz.ChildNodes.ElementAt(2).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(2).Token.Location.Column;
+                            String idfun = raiz.ChildNodes.ElementAt(2).Token.Text.ToLower();
+                            List<NodoParametro> parametros = (List<NodoParametro>)getParametros(raiz.ChildNodes.ElementAt(3));
+                            List<Instruccion> instrucciones = new List<Instruccion>();//AQUI DEBO TRAER LAS INTRUCCIONES HIJO EN 4
+                            if(tipo!=null)
+                            {
+                                DeclaracionFuncion declaracion = new DeclaracionFuncion(instrucciones, parametros, visibilidad, idfun, linea, col, this.clase);
+                                declaracion.SetArchivoOrigen(archivo);
+                                return declaracion;
+                            }
+                        }
+                        if(raiz.ChildNodes.Count == 4)
+                        {
+                            String tipo = (String)dameTipo(raiz.ChildNodes.ElementAt(0));
+                            int linea = raiz.ChildNodes.ElementAt(1).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(1).Token.Location.Column;
+                            String idfun = raiz.ChildNodes.ElementAt(1).Token.Text.ToLower();
+                            List<NodoParametro> parametros = (List<NodoParametro>)getParametros(raiz.ChildNodes.ElementAt(2));
+                            List<Instruccion> instrucciones = new List<Instruccion>();//AQUI DEBO DE TRAER LAS INSTRUCCIONES EN HIJO 3
+                            if(tipo!=null)
+                            {
+                                DeclaracionFuncion declaracion = new DeclaracionFuncion(instrucciones, parametros, Estatico.Vibililidad.PRIVADO, idfun, linea, col, this.clase);
+                                declaracion.SetArchivoOrigen(archivo);
+                                return declaracion;
+                            }
+                        }
+                        break;
+                    }
             }
             return null;
         }
@@ -82,6 +159,7 @@ namespace XForms.ASTTree.ASTConstructor
                                     int linea = raiz.ChildNodes.ElementAt(2).Token.Location.Line;
                                     int colum = raiz.ChildNodes.ElementAt(2).Token.Location.Column;
                                     DeclaracionVar declaracion = new DeclaracionVar(exp, idvar, tipo, visibilidad, linea, colum, this.clase);
+                                    declaracion.SetArchivoOrigen(archivo);
                                     return declaracion;
                                 }
                             }
@@ -99,6 +177,7 @@ namespace XForms.ASTTree.ASTConstructor
                                     int linea = raiz.ChildNodes.ElementAt(2).Token.Location.Line;
                                     int col = raiz.ChildNodes.ElementAt(2).Token.Location.Column;
                                     DeclaracionArr declaracion = new DeclaracionArr(dim,tipo, linea, col, this.clase);
+                                    declaracion.SetArchivoOrigen(archivo);
                                     return declaracion;
                                 }
                                 /////////////////////////////////////////////////////////////////
@@ -115,6 +194,7 @@ namespace XForms.ASTTree.ASTConstructor
                                 int linea = raiz.ChildNodes.ElementAt(2).Token.Location.Line;
                                 int colum = raiz.ChildNodes.ElementAt(2).Token.Location.Column;
                                 DeclaracionVar declaracion = new DeclaracionVar(idvar, tipo, visibilidad, linea, colum, this.clase);
+                                declaracion.SetArchivoOrigen(archivo);
                                 return declaracion;
                             }
                         }
@@ -132,6 +212,7 @@ namespace XForms.ASTTree.ASTConstructor
                                 int linea = raiz.ChildNodes.ElementAt(2).Token.Location.Line;
                                 int col = raiz.ChildNodes.ElementAt(2).Token.Location.Column;
                                 DeclaracionArr declaracion = new DeclaracionArr(dim, tipo, exp, linea, col, clase);
+                                declaracion.SetArchivoOrigen(archivo);
                                 return declaracion;
                             }
                         }
@@ -170,6 +251,7 @@ namespace XForms.ASTTree.ASTConstructor
                                     int linea = raiz.ChildNodes.ElementAt(1).Token.Location.Line;
                                     int col = raiz.ChildNodes.ElementAt(1).Token.Location.Column;
                                     DeclaracionArr arr = new DeclaracionArr(dim, tipo,  linea, col, clase);
+                                    arr.SetArchivoOrigen(archivo);
                                     return arr;
                                 }
                                 /////////////////////////////////////////////////////////////////
@@ -184,6 +266,7 @@ namespace XForms.ASTTree.ASTConstructor
                                 int linea = raiz.ChildNodes.ElementAt(1).Token.Location.Line;
                                 int colum = raiz.ChildNodes.ElementAt(1).Token.Location.Column;
                                 DeclaracionVar declaracion = new DeclaracionVar(idvar, tipo, Estatico.Vibililidad.PRIVADO, linea, colum, this.clase);
+                                declaracion.SetArchivoOrigen(archivo);
                                 return declaracion;
                             }
                         }
@@ -204,11 +287,13 @@ namespace XForms.ASTTree.ASTConstructor
                                 int linea = raiz.ChildNodes.ElementAt(1).Token.Location.Line;
                                 int col = raiz.ChildNodes.ElementAt(1).Token.Location.Column;
                                 DeclaracionArr declaracion = new DeclaracionArr(dim, tipo,  exp, linea, col, clase);
+                                declaracion.SetArchivoOrigen(archivo);
                                 return declaracion;
                             }
                         }
                         break;
                     }
+                
             }
             return null;
         }
@@ -297,6 +382,61 @@ namespace XForms.ASTTree.ASTConstructor
                     }
             }
             return null;
+        }
+        #endregion
+
+        #region PARAMETROS
+        private Object getParametros(ParseTreeNode raiz)
+        {
+            String eitqueta = raiz.ToString();
+            switch(eitqueta)
+            {
+                case "PARAMETROS":
+                    {
+                        List<NodoParametro> parametros = new List<NodoParametro>();
+                        if(raiz.ChildNodes.Count > 0)
+                        {
+                            
+                            foreach(ParseTreeNode nodo in raiz.ChildNodes)
+                            {
+                                NodoParametro aux = (NodoParametro)getParametros(nodo);
+                                if(aux!=null)
+                                {
+                                    parametros.Add(aux);
+                                }
+                            }
+                        }
+                        return parametros;
+                    }
+                case "PARAMETRO":
+                    {
+                        if(raiz.ChildNodes.Count == 2)
+                        {
+                            String tipo = (String)dameTipo(raiz.ChildNodes.ElementAt(0));
+                            String idvar = raiz.ChildNodes.ElementAt(1).Token.Text.ToLower();
+                            NodoParametro param = new NodoParametro(idvar, tipo, false);
+                            return param;
+                        }
+                        if(raiz.ChildNodes.Count == 3)
+                        {
+                            String tipo = (String)dameTipo(raiz.ChildNodes.ElementAt(0));
+                            String idvar = raiz.ChildNodes.ElementAt(1).Token.Text.ToLower();
+                            List<int> dimensiones = new List<int>();
+                            foreach(ParseTreeNode nodo in raiz.ChildNodes.ElementAt(2).ChildNodes)
+                            {
+                                if(nodo.ChildNodes.Count == 1)
+                                {
+                                    int val = Convert.ToInt32(nodo.ChildNodes.ElementAt(0).Token.Text);
+                                    dimensiones.Add(val);
+                                }
+                            }
+                            NodoParametro parametro = new NodoParametro(idvar, tipo, true, dimensiones);
+                            return parametro;
+                        }
+                        break;
+                    }
+            }
+            return new List<NodoParametro>();
         }
         #endregion
     }

@@ -74,7 +74,7 @@ namespace XForms.GramaticaIrony
                 String mensajeEsperados = "";
                 for (int y = 0; y < raiz.ParserMessages.ElementAt(x).ParserState.ExpectedTerminals.Count(); y++)
                 {
-                    mensajeEsperados += " Simbolo: "+(String)raiz.ParserMessages.ElementAt(x).ParserState.ExpectedTerminals.ElementAt(y).ErrorAlias+"\n";
+                    mensajeEsperados += " Simbolo: \""+(String)raiz.ParserMessages.ElementAt(x).ParserState.ExpectedTerminals.ElementAt(y).ErrorAlias+"\"\n";
                 }
                 TError error = new TError("Sintatico", "Error Sintactico"+ " En Archivo: " + this.archivo+" | Se esperaba: \n"+mensajeEsperados, raiz.ParserMessages.ElementAt(x).Location.Line, raiz.ParserMessages.ElementAt(x).Location.Column);
                 Estatico.errores.Add(error);

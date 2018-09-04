@@ -29,7 +29,11 @@ namespace XForms.ASTTree.Instrucciones
 
         public object Ejecutar(Ambito ambito)
         {
-            throw new NotImplementedException();
+            foreach(Instruccion instruccion in this.instrucciones)
+            {
+                instruccion.Ejecutar(ambito);
+            }
+            return null;
         }
     }
 }

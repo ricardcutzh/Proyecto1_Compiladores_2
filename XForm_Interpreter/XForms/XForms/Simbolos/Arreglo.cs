@@ -18,6 +18,18 @@ namespace XForms.Simbolos
             elementos = new List<object>();
         }
 
+        public bool tieneDimensiones()
+        {
+            foreach(int dim in this.dimensiones)
+            {
+                if(dim==0)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         public Arreglo(List<Object> elementos, List<int> dimensiones, string idSimbolo, bool esVector, Estatico.Vibililidad visibilidad, String Tipo): base(idSimbolo, esVector, visibilidad, Tipo)
         {
             this.elementos = elementos;

@@ -1,5 +1,6 @@
 ﻿using XForms.ASTTree.Interfaces;
 using XForms.Simbolos;
+using XForms.Objs;
 
 namespace XForms.ASTTree.Valores
 {
@@ -15,12 +16,42 @@ namespace XForms.ASTTree.Valores
 
         public string getTipo(Ambito ambito)
         {
-            throw new System.NotImplementedException();
+            if(this.valor is bool)
+            {
+                return "Booleano";
+            }
+            else if(this.valor is string)
+            {
+                return "Cadena";
+            }
+            else if(this.valor is int)
+            {
+                return "Entero";
+            }
+            else if(this.valor is double)
+            {
+                return "Decimal";
+            }
+            else if(this.valor is System.DateTime)
+            {
+                return "FechaHora";
+            }
+            else if(this.valor is Date)
+            {
+                return "Fecha";
+            }
+            else if(this.valor is Hour)
+            {
+                return "Hora";
+            }
+
+            //AQUI FALTA EL TIPO OBJETO
+            return "Objeto";
         }
 
         public object getValor(Ambito ambito)
         {
-            throw new System.NotImplementedException();
+            return this.valor;
         }
     }
 }

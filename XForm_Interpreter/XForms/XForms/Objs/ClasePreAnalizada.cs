@@ -7,6 +7,7 @@ using Irony.Parsing;
 using XForms.ASTTree.ASTConstructor;
 using XForms.ASTTree.Instrucciones;
 using System.Windows.Forms;
+using XForms.Simbolos;
 namespace XForms.Objs
 {
     class ClasePreAnalizada
@@ -63,6 +64,24 @@ namespace XForms.Objs
             MessageBox.Show(Convert.ToString(arbolClase.numeroInstrucciones()));
         }
 
+        public Clase obtenerClase()
+        {
+            ///ESTE SE ECARGA DE CONSTRUIR EL AST PARA EJECUTAR
+            this.constructor = new ASTTreeConstructor(this.cuerpoClase, id, archivoOringen);
+            arbolClase = (CuerpoClase)constructor.ConstruyerAST();
+
+            /// CREO UN NUEVO AMBITO
+            Ambito ambito = new Ambito(null, this.id, this.archivoOringen);
+
+            ///MANDO A EJECUTAR LAS INSTRUCCIONES DEL ARBOL PARA COLOCAR TODO
+            ///
+            arbolClase.Ejecutar(ambito);
+
+            ///CREO LA NUEVA CLASE PARA RETORNARLA
+            Clase cls = new Clase(id, this.padre, this.Hereda, ambito, this.archivoOringen);
+            return cls;
+        }
+        
         public String toString()
         {
             String cad = "Clase: " + this.id + " | Visibilidad: " + this.vibililidad.ToString();

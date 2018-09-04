@@ -11,7 +11,7 @@ using System.IO;
 using XForms.GramaticaIrony;
 using XForms.Objs;
 using System.Collections;
-
+using XForms.Simbolos;
 namespace XForms
 {
     public partial class Form1 : Form
@@ -139,41 +139,41 @@ namespace XForms
         //PERMITE LA GENERACION DEL FORMULARIO
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
+            StatusControl.Text = "Estatus";
             Estatico.setUp(Consola);
             Hashtable clasesPreanalizadas = new Hashtable();
             if(Editor.TabCount > 0)
             {
                 RichTextBox principal = (RichTextBox)Editor.TabPages[Editor.SelectedIndex].Controls[0].Controls[1];
                 String cadena = principal.Text;
-                //Analizador an = new Analizador(cadena);
+                Progreso.Value = 40;
+                StatusControl.Text = "Iniciando Proceso...";
+                System.Threading.Thread.Sleep(800);
                 Analizador an = new Analizador(cadena, this.ProyectoPath, archivo);
-                if(an.analizar())
+                if(an.analizar())//SI SE ANALIZA LA CADENA...
                 {
-                    if(Estatico.NumeroErroes()> 0)
+                    // PROCEDE A INTENTAR CAPTURAR LA INFO...
+                    if(Estatico.NumeroErroes()> 0) //SO EXISTEN ERRORES ANTES DE CAPTURAR LA INFO...
                     {
+                        //REVISAR...
+                        Progreso.Value = 0;
+                        StatusControl.Text = "Proceso Interrumpido!";
+                        Estatico.consolaSalida.AppendText("\n>> Proceso detenido, Errores detectados...");
                         MessageBox.Show("Existen: "+Estatico.NumeroErroes()+" en La cadena! Revisalos en el reporte", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-                    else
+                    else//SINO PROCEDER A CAPTURA LA INFORMACION
                     {
-                        //AQUI DEBERIA DE TRAER LAS CLASES QUE SE LOGRARON CAPTURAR
-                        List<ClasePreAnalizada> c = an.clases;
-                        foreach (ClasePreAnalizada a in c)
-                        {
-                            if (!clasesPreanalizadas.Contains(a.id))
-                            {
-                                //a.metodoAuxiliar();
-                                //clasesPreanalizadas.Add(a.id, a);//METO LAS CLASES AL HASHTABLE PARA LUEGO LAS PREANALIZADAS LLEVARLAS A ANALIZARLAS 
-                                //CREAR SU TABLA DE SIMBOLOS CON SUS FUNCIONES CORRESPONDIENTES
-                            }
-                            else
-                            {
-                                Estatico.errores.Add(new TError("Advertencia", "Se encontro una nueva definicion de la clase: " + a.id + " En el archivo: " + a.archivoOringen + ", Por lo que Se descarto", 0, 0, true));
-                            }
-                        }
+                        CapturarInformacion(an, clasesPreanalizadas);
+                        ///////////////////////////////////////////////////////
+                        Progreso.Value = 100;
+                        StatusControl.Text = "Proceso Terminado!";
+                        System.Threading.Thread.Sleep(800);
+                        Progreso.Value = 0;
+                        ///////////////////////////////////////////////////////
                         //AQUI DEBO DE PREGUNTAR SI EN CASO HAY UN PROBLEMA CON LAS ADVERTENCIAS
                     }
                 }
-                else
+                else//SI NO SE PUEDE, ENTONCES EL ERROR ES FATAL... REVISAR
                 {
                     MessageBox.Show("No se logro Analizar la cadena de entrada", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -191,7 +191,38 @@ namespace XForms
         }
 
         #endregion
-        
+
+        #region PROCESO
+        private void CapturarInformacion(Analizador an, Hashtable clasesPreanalizadas)
+        {
+            List<ClasePreAnalizada> clases = an.clases;
+            Progreso.Value = 80;
+            System.Threading.Thread.Sleep(800);
+            foreach (ClasePreAnalizada a in clases)
+            {
+                if (!clasesPreanalizadas.Contains(a.id))
+                {
+                    Clase aux = a.obtenerClase();
+                    //aux.AmbitoLocal.ImprimeAmbito();
+                    //clasesPreanalizadas.Add(a.id, a);//METO LAS CLASES AL HASHTABLE PARA LUEGO LAS PREANALIZADAS LLEVARLAS A ANALIZARLAS 
+                    //CREAR SU TABLA DE SIMBOLOS CON SUS FUNCIONES CORRESPONDIENTES
+                }
+                else
+                {
+                    Estatico.errores.Add(new TError("Advertencia", "Se encontro una nueva definicion de la clase: " + a.id + " En el archivo: " + a.archivoOringen + ", Por lo que Se descarto", 0, 0, true));
+                }
+            }
+            if (Estatico.NumeroErroes() > 0)//SI HAY ERRORES REVISAR
+            {
+                MessageBox.Show("Existen: " + Estatico.NumeroErroes() + " en La cadena! Revisalos en el reporte", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                //ESPERANZADO COMIENZO LA EJECUCION
+            }
+        }
+        #endregion
+
         /*
          * CODIGO PARA PODER
          * GENERAR LAS PESTANIAS DE FORMA DINAMICA

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
-
+using System.Windows.Forms;
 namespace XForms.Simbolos
 {
     class TablaVariables
@@ -42,6 +42,17 @@ namespace XForms.Simbolos
             }
         }
 
+        public void imprimeTabla()
+        {
+            String mensaje = "----------- TABLA DE VARS -----------------\n";
+            foreach(var variable in this.variables)
+            {
+                Simbolo aux = (Simbolo)variable;
+                mensaje += aux.ToString();
+            }
+            mensaje += "-------------------------------------------------\n";
+            MessageBox.Show(mensaje);
+        }
 
     }
 }

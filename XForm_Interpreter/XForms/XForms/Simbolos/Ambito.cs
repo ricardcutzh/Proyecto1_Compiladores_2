@@ -11,12 +11,20 @@ namespace XForms.Simbolos
         public String idAmbito { get; } /*VA A SERVIR POR SI NECESITO REPORTAR UN ERROR EN UN AMBITO ESPECIFICO*/
         public Ambito Anterior { get; } /*VA A SERVIR PARA MOVERME DENTRO DE LOS AMBITOS BUSCANDO UNA VARIABLE*/
         TablaVariables tablaVars;
+        public String archivo { get; }
 
         public Ambito(Ambito anterior, String idAmbito)
         {
             this.Anterior = anterior;
             this.idAmbito = idAmbito;
             this.tablaVars = new TablaVariables();
+        }
+
+        public Ambito(Ambito anterior, String idAmbito, String archivo)
+        {
+            this.Anterior = anterior;
+            this.idAmbito = idAmbito;
+            this.archivo = archivo;
         }
 
         /*METODO PARA BUSCAR UNA VARIABLE DENTRO DEL AMBITO*/
@@ -36,6 +44,11 @@ namespace XForms.Simbolos
             }
 
             return null;//EN CASO DE NO ENCONTRAR LA VARIABLE MARCARIA UN ERROR
+        }
+
+        public void ImprimeAmbito()
+        {
+            this.tablaVars.imprimeTabla();
         }
 
         /*AQUI FALTA EL METODO PARA MANEJAR LAS FUNCIONES QUE EXISTEN EN UN AMBITO*/
