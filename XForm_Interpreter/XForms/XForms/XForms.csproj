@@ -85,7 +85,9 @@
     <Compile Include="Objs\ClaveFuncion.cs" />
     <Compile Include="Objs\Date.cs" />
     <Compile Include="Objs\Estatico.cs" />
+    <Compile Include="Objs\Este.cs" />
     <Compile Include="Objs\Hour.cs" />
+    <Compile Include="Objs\ListaClases.cs" />
     <Compile Include="Objs\NodoParametro.cs" />
     <Compile Include="Objs\Nulo.cs" />
     <Compile Include="Objs\XFormFile.cs" />
@@ -95,6 +97,7 @@
     <Compile Include="Simbolos\Arreglo.cs" />
     <Compile Include="Simbolos\Clase.cs" />
     <Compile Include="Simbolos\Funcion.cs" />
+    <Compile Include="Simbolos\Objeto.cs" />
     <Compile Include="Simbolos\Principal.cs" />
     <Compile Include="Simbolos\Simbolo.cs" />
     <Compile Include="Simbolos\TablaFunciones.cs" />

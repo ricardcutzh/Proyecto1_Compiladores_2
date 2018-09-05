@@ -16,6 +16,7 @@ namespace XForms.ASTTree.ASTConstructor
         ParseTreeNode raiz; /*RAIZ DEL CUERPO DE LA CLASE*/
         String clase; /*SOLO POR SI OCURRE UN ERROR DURANTE EL PARSER*/
         String archivo; /*SOLO SI OCURRE UN ERROR LO UTILIZARE*/
+        public Principal main { get; set; }
 
         /*YA QUE EL LENGUAJE ES CASE INSENSITIVE ENTONCES VOY A CONVERTIR TODO A MINUSCULAS*/
         public ASTTreeConstructor(ParseTreeNode raiz, String clase, String Archivo)
@@ -23,6 +24,7 @@ namespace XForms.ASTTree.ASTConstructor
             this.raiz = raiz;
             this.clase = clase;
             this.archivo = Archivo;
+            this.main = null;
         }
 
         public Object ConstruyerAST()
@@ -66,7 +68,16 @@ namespace XForms.ASTTree.ASTConstructor
                             Principal principal = new Principal(instrucciones, linea, col, clase);
                             DeclaracionMain main = new DeclaracionMain(principal, linea, col, clase);
                             main.SetArchivoOrigen(archivo);
-                            return main;
+                            if(this.main==null)
+                            {
+                                this.main = principal;
+                            }
+                            else
+                            {
+                                TError error = new TError("Semantico", "Se produjo una definicion multiple de metodo Principal en Clase: "+this.clase +" | Se produjo en: " + this.archivo , linea, col);
+                                Estatico.errores.Add(error);
+                            }
+                            break;
                         }
                         break;
                     }

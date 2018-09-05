@@ -9,11 +9,11 @@ namespace XForms.Simbolos
 {
     class Variable:Simbolo
     {
-        public Object valor { get; }//VALOR QUE TIENE LA VARIABLE
+        public Object valor { get; set; }//VALOR QUE TIENE LA VARIABLE
 
         public Variable(String idVariable, String Tipo, Estatico.Vibililidad Visibilidad, Object Valor):base(idVariable, false, Visibilidad, Tipo)
         {
-            this.valor = valor;
+            this.valor = Valor;
         }
 
     }

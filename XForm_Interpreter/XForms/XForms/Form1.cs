@@ -145,7 +145,7 @@ namespace XForms
             if(Editor.TabCount > 0)
             {
                 RichTextBox principal = (RichTextBox)Editor.TabPages[Editor.SelectedIndex].Controls[0].Controls[1];
-                String cadena = principal.Text;
+                String cadena = principal.Text.ToLower();//PARA QUE TODO ESTE EN MINUSCULAS Y NO TENGA CLAVOS CON LA COMPROBACION DE NOMBRES
                 Progreso.Value = 40;
                 StatusControl.Text = "Iniciando Proceso...";
                 System.Threading.Thread.Sleep(800);
@@ -185,9 +185,11 @@ namespace XForms
         //PERMITE VER LOS FORMULARIOS
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
-            String mihora = "12/10/96 12:34:00";
+            /*String mihora = "12/10/96 12:34:00";
             DateTime p = DateTime.ParseExact(mihora, "dd/MM/yy hh:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
-            MessageBox.Show(p.Day.ToString());
+            MessageBox.Show(p.Day.ToString());*/
+            TError errorp = new TError("Prueba", "Este es un error de prueba", 1, 1, false);
+            Estatico.ColocaError(errorp);
         }
 
         #endregion
@@ -203,9 +205,8 @@ namespace XForms
                 if (!clasesPreanalizadas.Contains(a.id))
                 {
                     Clase aux = a.obtenerClase();
-                    //aux.AmbitoLocal.ImprimeAmbito();
-                    //clasesPreanalizadas.Add(a.id, a);//METO LAS CLASES AL HASHTABLE PARA LUEGO LAS PREANALIZADAS LLEVARLAS A ANALIZARLAS 
-                    //CREAR SU TABLA DE SIMBOLOS CON SUS FUNCIONES CORRESPONDIENTES
+                    clasesPreanalizadas.Add(a.id, a);//METO LAS CLASES AL HASHTABLE PARA LUEGO LAS PREANALIZADAS LLEVARLAS A ANALIZARLAS
+                    Estatico.clasesDisponibles.addClass(aux);
                 }
                 else
                 {
@@ -218,10 +219,21 @@ namespace XForms
             }
             else
             {
-                //ESPERANZADO COMIENZO LA EJECUCION
+                //EN ESTE PUNTO YA TENGO LAS CLASES CON SU AST..... AHORA DEBERIA DE EMPEZAR LA EJECUCION DEL PROGRAMA
+                Clase inicio = Estatico.clasesDisponibles.getFirstClassWithMain();
+                if(inicio!=null)
+                {
+                    Ambito am = new Ambito(null, inicio.idClase, inicio.ArchivoOrigen);
+                    am = (Ambito)inicio.Ejecutar(am);
+                    //inicio.ejecutaMain(am);
+                }
             }
         }
         #endregion
+
+
+
+
 
         /*
          * CODIGO PARA PODER
@@ -354,6 +366,22 @@ namespace XForms
             {
                 MessageBox.Show("No Existen Errores o Advertencias", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void erroresSemanticosPermitidosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            String cantidadErrores = Microsoft.VisualBasic.Interaction.InputBox("Tolerancia de Errores Semanticos Permitidos: ", "Configuracion Errores Semanticos", "", 100, 100);
+            int cantidad = 1;
+            try
+            {
+                cantidad = Convert.ToInt32(cantidadErrores);
+            }
+            catch
+            {
+                cantidad = 5;
+            }
+
+            Estatico.tolerancia = cantidad;
         }
     }
 }

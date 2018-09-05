@@ -45,6 +45,8 @@
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.Progreso = new System.Windows.Forms.ToolStripProgressBar();
+            this.StatusControl = new System.Windows.Forms.ToolStripLabel();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -55,14 +57,14 @@
             this.warningsLabel = new System.Windows.Forms.ToolStripLabel();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.Editor = new System.Windows.Forms.TabControl();
             this.Consola = new System.Windows.Forms.RichTextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-            this.Progreso = new System.Windows.Forms.ToolStripProgressBar();
-            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
-            this.StatusControl = new System.Windows.Forms.ToolStripLabel();
+            this.configuracionesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.erroresSemanticosPermitidosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -72,7 +74,8 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.archivoToolStripMenuItem,
             this.formularioToolStripMenuItem,
-            this.manualToolStripMenuItem});
+            this.manualToolStripMenuItem,
+            this.configuracionesToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1044, 24);
@@ -122,14 +125,14 @@
             // nuevaPestanaToolStripMenuItem
             // 
             this.nuevaPestanaToolStripMenuItem.Name = "nuevaPestanaToolStripMenuItem";
-            this.nuevaPestanaToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.nuevaPestanaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.nuevaPestanaToolStripMenuItem.Text = "Nueva Pestana";
             this.nuevaPestanaToolStripMenuItem.Click += new System.EventHandler(this.nuevaPestanaToolStripMenuItem_Click);
             // 
             // cerrarPestanaToolStripMenuItem
             // 
             this.cerrarPestanaToolStripMenuItem.Name = "cerrarPestanaToolStripMenuItem";
-            this.cerrarPestanaToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.cerrarPestanaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.cerrarPestanaToolStripMenuItem.Text = "Cerrar Pestana";
             this.cerrarPestanaToolStripMenuItem.Click += new System.EventHandler(this.cerrarPestanaToolStripMenuItem_Click);
             // 
@@ -146,21 +149,21 @@
             // manualTecnicoToolStripMenuItem
             // 
             this.manualTecnicoToolStripMenuItem.Name = "manualTecnicoToolStripMenuItem";
-            this.manualTecnicoToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.manualTecnicoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.manualTecnicoToolStripMenuItem.Text = "Manual Tecnico";
             this.manualTecnicoToolStripMenuItem.Click += new System.EventHandler(this.manualTecnicoToolStripMenuItem_Click);
             // 
             // manualDeUsuarioToolStripMenuItem
             // 
             this.manualDeUsuarioToolStripMenuItem.Name = "manualDeUsuarioToolStripMenuItem";
-            this.manualDeUsuarioToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.manualDeUsuarioToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.manualDeUsuarioToolStripMenuItem.Text = "Manual de Usuario";
             this.manualDeUsuarioToolStripMenuItem.Click += new System.EventHandler(this.manualDeUsuarioToolStripMenuItem_Click);
             // 
             // gramaticaUtilizadaToolStripMenuItem
             // 
             this.gramaticaUtilizadaToolStripMenuItem.Name = "gramaticaUtilizadaToolStripMenuItem";
-            this.gramaticaUtilizadaToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.gramaticaUtilizadaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.gramaticaUtilizadaToolStripMenuItem.Text = "Gramatica Utilizada";
             this.gramaticaUtilizadaToolStripMenuItem.Click += new System.EventHandler(this.gramaticaUtilizadaToolStripMenuItem_Click);
             // 
@@ -212,6 +215,17 @@
             this.toolStripButton2.Size = new System.Drawing.Size(129, 22);
             this.toolStripButton2.Text = "Generar Formulario";
             this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
+            // 
+            // Progreso
+            // 
+            this.Progreso.Name = "Progreso";
+            this.Progreso.Size = new System.Drawing.Size(100, 22);
+            // 
+            // StatusControl
+            // 
+            this.StatusControl.Name = "StatusControl";
+            this.StatusControl.Size = new System.Drawing.Size(44, 22);
+            this.StatusControl.Text = "Estatus";
             // 
             // toolStripSeparator2
             // 
@@ -277,6 +291,16 @@
             this.toolStripButton4.Text = "Ver Reporte de Errores";
             this.toolStripButton4.Click += new System.EventHandler(this.toolStripButton4_Click);
             // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripSeparator7
+            // 
+            this.toolStripSeparator7.Name = "toolStripSeparator7";
+            this.toolStripSeparator7.Size = new System.Drawing.Size(6, 25);
+            // 
             // Editor
             // 
             this.Editor.Location = new System.Drawing.Point(12, 78);
@@ -293,7 +317,7 @@
             this.Consola.Location = new System.Drawing.Point(12, 650);
             this.Consola.Name = "Consola";
             this.Consola.ReadOnly = true;
-            this.Consola.Size = new System.Drawing.Size(1020, 149);
+            this.Consola.Size = new System.Drawing.Size(1020, 186);
             this.Consola.TabIndex = 3;
             this.Consola.Text = ">> XForm Console | Compiladores 2 | 2018";
             this.Consola.TextChanged += new System.EventHandler(this.Consola_TextChanged);
@@ -318,33 +342,27 @@
             this.label2.TabIndex = 5;
             this.label2.Text = "Editor de Texto:";
             // 
-            // toolStripSeparator6
+            // configuracionesToolStripMenuItem
             // 
-            this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 25);
+            this.configuracionesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.erroresSemanticosPermitidosToolStripMenuItem});
+            this.configuracionesToolStripMenuItem.Name = "configuracionesToolStripMenuItem";
+            this.configuracionesToolStripMenuItem.Size = new System.Drawing.Size(106, 20);
+            this.configuracionesToolStripMenuItem.Text = "Configuraciones";
             // 
-            // Progreso
+            // erroresSemanticosPermitidosToolStripMenuItem
             // 
-            this.Progreso.Name = "Progreso";
-            this.Progreso.Size = new System.Drawing.Size(100, 22);
-            // 
-            // toolStripSeparator7
-            // 
-            this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(6, 25);
-            // 
-            // StatusControl
-            // 
-            this.StatusControl.Name = "StatusControl";
-            this.StatusControl.Size = new System.Drawing.Size(44, 22);
-            this.StatusControl.Text = "Estatus";
+            this.erroresSemanticosPermitidosToolStripMenuItem.Name = "erroresSemanticosPermitidosToolStripMenuItem";
+            this.erroresSemanticosPermitidosToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
+            this.erroresSemanticosPermitidosToolStripMenuItem.Text = "Errores Semanticos Permitidos";
+            this.erroresSemanticosPermitidosToolStripMenuItem.Click += new System.EventHandler(this.erroresSemanticosPermitidosToolStripMenuItem_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.InactiveCaption;
-            this.ClientSize = new System.Drawing.Size(1044, 811);
+            this.ClientSize = new System.Drawing.Size(1044, 848);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.Consola);
@@ -401,6 +419,8 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripLabel StatusControl;
+        private System.Windows.Forms.ToolStripMenuItem configuracionesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem erroresSemanticosPermitidosToolStripMenuItem;
     }
 }
 

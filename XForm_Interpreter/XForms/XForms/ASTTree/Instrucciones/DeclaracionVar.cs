@@ -7,6 +7,7 @@ using XForms.ASTTree.Interfaces;
 using XForms.Objs;
 using XForms.Simbolos;
 using System.Windows.Forms;
+using XForms.GramaticaIrony;
 
 namespace XForms.ASTTree.Instrucciones
 {
@@ -45,18 +46,52 @@ namespace XForms.ASTTree.Instrucciones
                 {
                     //OBT EL VALOR
                     Object valor = this.expresion.getValor(ambito);//LLAMADA AL VALOR
-                    MessageBox.Show(valor.ToString());
-
-
+                    String tipoaux = this.expresion.getTipo(ambito);
+                    if(this.tipo.ToLower().Equals(tipoaux.ToLower())) //SON DEL MISMO TIPO?
+                    {
+                        //AQUI ASGINO LA VARIABLE
+                        if(!ambito.existeVariable(this.idVar.ToLower())) //YA EXISTE?
+                        {
+                            Variable variable = new Variable(this.idVar.ToLower(), this.tipo.ToLower(), this.visibilidad, valor);
+                            ambito.agregarVariableAlAmbito(this.idVar.ToLower(), variable);
+                            ambito.ImprimeAmbito();
+                        }
+                        else
+                        {
+                            TError error = new TError("Semantico", "Ya existe una declaracion de: \"" + this.idVar + "\" en este Ambito | Clase: "+this.clase+" | Archivo: "+ambito.archivo, this.linea, this.columna, false);
+                            Estatico.errores.Add(error);
+                            Estatico.ColocaError(error);
+                        }
+                    }
+                    else
+                    {
+                        //AQUI MUESTRO EL ERROR QUE SUCEDA
+                        TError error = new TError("Semantico", "El valor Asignado a \""+this.idVar+"\" no concuerda, Esperado: \""+this.tipo+"\", encontrado: \""+tipoaux+"\" | Clase: "+this.clase+" | Archivo: "+ambito.archivo, this.linea, this.columna, false);
+                        Estatico.errores.Add(error);
+                        Estatico.ColocaError(error);
+                    }
                 }
                 else
                 {
-
+                    if(!ambito.existeVariable(this.idVar.ToLower()))// EXISTE YA UNA DEFINICION DE LA VARIABLE?
+                    {
+                        Variable variable = new Variable(this.idVar.ToLower(), this.tipo, this.visibilidad, new Nulo());
+                        ambito.agregarVariableAlAmbito(this.idVar.ToLower(), variable);
+                        ambito.ImprimeAmbito();
+                    }
+                    else//SI SI EXISTE... ERROR..
+                    {
+                        TError error = new TError("Semantico", "Ya existe una declaracion de: \"" + this.idVar + "\" en este Ambito | Clase: " + this.clase + " | Archivo: " + ambito.archivo, this.linea, this.columna, false);
+                        Estatico.errores.Add(error);
+                        Estatico.ColocaError(error);
+                    }
                 }
             }
-            catch
+            catch(Exception e)
             {
-                MessageBox.Show("Error en La Ejecucion de una declaracion de Variable: \""+this.idVar+"\" en: Linea: "+this.linea+" y Columna: "+this.columna+" | En Clase: "+this.clase+" | Archivo: "+this.archivoOrigen, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                TError error = new TError("Ejecucion", "Error en la declaracion de variable: \"" + this.idVar + "\" en este Ambito | Clase: " + this.clase + " | Archivo: " + ambito.archivo, this.linea, this.columna, false);
+                Estatico.errores.Add(error);
+                Estatico.ColocaError(error);
             }
             return null;
         }

@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using XForms.ASTTree.Interfaces;
 using XForms.Simbolos;
+using XForms.Objs;
+using XForms.GramaticaIrony;
 
 namespace XForms.ASTTree.Valores
 {
@@ -17,14 +19,82 @@ namespace XForms.ASTTree.Valores
             this.identificador = id;
         }
 
+        private object ValorAux = null;
         public string getTipo(Ambito ambito)
         {
-            throw new NotImplementedException();
+            Object val = null;
+            if(ValorAux==null)
+            {
+                val = getValor(ambito);
+            }
+            else
+            {
+                val = this.ValorAux;
+            }
+            if (val is bool)
+            {
+                return "Booleano";
+            }
+            else if (val is string)
+            {
+                return "Cadena";
+            }
+            else if (val is int)
+            {
+                return "Entero";
+            }
+            else if (val is double)
+            {
+                return "Decimal";
+            }
+            else if (val is System.DateTime)
+            {
+                return "FechaHora";
+            }
+            else if (val is Date)
+            {
+                return "Fecha";
+            }
+            else if (val is Hour)
+            {
+                return "Hora";
+            }
+            else if (val is Nulo)
+            {
+                return "Nulo";
+            }
+            //AQUI FALTA EL TIPO OBJETO
+            return "Objeto";
+
         }
 
         public object getValor(Ambito ambito)
         {
-            throw new NotImplementedException();
+            if(this.identificador.ToLower().Equals("eset"))
+            {
+                return new Este();
+            }
+            Simbolo aux = ambito.getSimbolo(this.identificador.ToLower());
+            if(aux!=null)
+            {
+                if(aux is Variable)
+                {
+                    Variable v = (Variable)aux;
+                    this.ValorAux = v.valor;
+                    return v.valor;
+                }
+                else
+                {
+                    //RETORNO SI ES OTRO TIPO
+                }
+            }
+            else
+            {
+                TError erro = new TError("Semantico", "Se hacer referencia a: " + this.identificador + ", La cual no Existe en este Contexto: Clase: " + this.clase + " | Archivo: " + ambito.archivo, this.linea, this.columna, false);
+                Estatico.errores.Add(erro);
+                Estatico.ColocaError(erro);
+            }
+            return new Nulo(); 
         }
     }
 }

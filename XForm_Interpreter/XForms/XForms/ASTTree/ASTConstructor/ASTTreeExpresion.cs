@@ -184,6 +184,7 @@ namespace XForms.ASTTree.ASTConstructor
                         int linea = raiz.Token.Location.Line;
                         int col = raiz.Token.Location.Column;
                         String val = raiz.Token.Text;
+                        val = val.Replace("\"", "");
                         ValorPrimitivo valor = new ValorPrimitivo(val, linea, col, this.clase);
                         valor.SetArchivoOrigen(archivo);
                         return valor;

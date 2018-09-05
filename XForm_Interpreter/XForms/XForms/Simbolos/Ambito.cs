@@ -25,6 +25,7 @@ namespace XForms.Simbolos
             this.Anterior = anterior;
             this.idAmbito = idAmbito;
             this.archivo = archivo;
+            this.tablaVars = new TablaVariables();
         }
 
         /*METODO PARA BUSCAR UNA VARIABLE DENTRO DEL AMBITO*/
@@ -49,6 +50,17 @@ namespace XForms.Simbolos
         public void ImprimeAmbito()
         {
             this.tablaVars.imprimeTabla();
+        }
+
+        public Boolean existeVariable(String id)
+        {
+            id = id.ToLower();
+            return this.tablaVars.ExisteVariable(id);
+        }
+
+        public void agregarVariableAlAmbito(String id, Simbolo vari)
+        {
+            this.tablaVars.agregaVariable(id, vari);
         }
 
         /*AQUI FALTA EL METODO PARA MANEJAR LAS FUNCIONES QUE EXISTEN EN UN AMBITO*/

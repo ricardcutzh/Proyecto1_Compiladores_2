@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,6 +38,11 @@ namespace XForms.Simbolos
             cad += " | TIPO: " + this.Tipo;
             cad += " | Visibilidad: " + this.Visibilidad.ToString()+"\n";
             return cad;
+        }
+
+        public static implicit operator Simbolo(DictionaryEntry v)
+        {
+            throw new NotImplementedException();
         }
     }
 }

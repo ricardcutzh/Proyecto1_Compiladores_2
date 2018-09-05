@@ -57,29 +57,16 @@ namespace XForms.Objs
         /*
          * EL METODO SIGUIENTE ME VA  A SERVIR PARA CONSTRUIR EL AST PERSONALIZADO Y DEVOLVERME UNA CLASE EN SI
          */
-        public void metodoAuxiliar()
-        {
-            this.constructor = new ASTTreeConstructor(this.cuerpoClase, id, archivoOringen);
-            arbolClase = (CuerpoClase)constructor.ConstruyerAST();
-            MessageBox.Show(Convert.ToString(arbolClase.numeroInstrucciones()));
-        }
-
         public Clase obtenerClase()
         {
             ///ESTE SE ECARGA DE CONSTRUIR EL AST PARA EJECUTAR
             this.constructor = new ASTTreeConstructor(this.cuerpoClase, id, archivoOringen);
             arbolClase = (CuerpoClase)constructor.ConstruyerAST();
+            Principal p = constructor.main;//SETEO EL MAIN
 
-            /// CREO UN NUEVO AMBITO
-            Ambito ambito = new Ambito(null, this.id, this.archivoOringen);
-
-            ///MANDO A EJECUTAR LAS INSTRUCCIONES DEL ARBOL PARA COLOCAR TODO
-            ///
-            arbolClase.Ejecutar(ambito);
-
-            ///CREO LA NUEVA CLASE PARA RETORNARLA
-            Clase cls = new Clase(id, this.padre, this.Hereda, ambito, this.archivoOringen);
-            return cls;
+            Clase clase = new Clase(this.id, this.padre, this.Hereda, arbolClase, p, this.archivoOringen);
+            
+            return clase;
         }
         
         public String toString()

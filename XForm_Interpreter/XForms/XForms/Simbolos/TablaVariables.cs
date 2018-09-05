@@ -45,10 +45,15 @@ namespace XForms.Simbolos
         public void imprimeTabla()
         {
             String mensaje = "----------- TABLA DE VARS -----------------\n";
-            foreach(var variable in this.variables)
+            foreach(DictionaryEntry d in this.variables)
             {
-                Simbolo aux = (Simbolo)variable;
+                Simbolo aux = (Simbolo)d.Value;
                 mensaje += aux.ToString();
+                if(aux is Variable)
+                {
+                    Variable v = (Variable)aux;
+                    mensaje += " | "+v.valor.ToString()+"\n";
+                }
             }
             mensaje += "-------------------------------------------------\n";
             MessageBox.Show(mensaje);

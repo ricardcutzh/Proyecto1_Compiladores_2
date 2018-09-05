@@ -8,7 +8,6 @@ namespace XForms.ASTTree.Valores
     {
 
         object valor;
-
         public ValorPrimitivo(object valor, int linea, int columna, string clase):base(linea, columna, clase)
         {
             this.valor = valor;
@@ -44,7 +43,10 @@ namespace XForms.ASTTree.Valores
             {
                 return "Hora";
             }
-
+            else if(this.valor is Nulo)
+            {
+                return "Nulo";
+            }
             //AQUI FALTA EL TIPO OBJETO
             return "Objeto";
         }
