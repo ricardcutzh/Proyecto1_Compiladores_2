@@ -99,7 +99,9 @@ namespace XForms.GramaticaIrony
             SENTENCIAS = new NonTerminal("SENTENCIAS"),
             SENTENCIAS_CONS = new NonTerminal("SENTENCIAS_CONS"),
             L_DIMPARAM = new NonTerminal("L_DIMPARAM"),
-            DIM_DEF = new NonTerminal("DIM_DEF");
+            DIM_DEF = new NonTerminal("DIM_DEF"),
+            IMPRIMIR = new NonTerminal("IMPRIMIR"),
+            ASIGNACION = new NonTerminal("ASIGNACION");
             #endregion
 
             #region Reglas
@@ -288,10 +290,29 @@ namespace XForms.GramaticaIrony
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------
-            SENTENCIAS.Rule = MakeStarRule(SENTENCIAS, DECLARACION_LOCAL);
+            SENTENCIAS.Rule = MakeStarRule(SENTENCIAS, DECLARACION_LOCAL)
+                            | MakeStarRule(SENTENCIAS, IMPRIMIR)
+                            | MakeStarRule(SENTENCIAS, ASIGNACION);
 
-            SENTENCIAS_CONS.Rule = MakeStarRule(SENTENCIAS_CONS, DECLARACION_LOCAL);
+            SENTENCIAS_CONS.Rule = MakeStarRule(SENTENCIAS_CONS, DECLARACION_LOCAL)
+                                 | MakeStarRule(SENTENCIAS_CONS, IMPRIMIR)
+                                 | MakeStarRule(SENTENCIAS_CONS, ASIGNACION);
             //-------------------------------------------------------------------------------------------
+
+
+            #region SENTENCIAS
+            //-------------------------------------------------------------------------------------------
+            IMPRIMIR.Rule = ToTerm("imprimir") + "(" + EXP + ")" + ";";
+            IMPRIMIR.ErrorRule = SyntaxError + ";";
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            ASIGNACION.Rule = LLAMADAID_OBJ + "." + identificador + "=" + EXP + ";"
+                            | identificador + "=" + EXP + ";";
+            //-------------------------------------------------------------------------------------------
+            #endregion
+
+
             #endregion
 
             #region Preferencias
@@ -305,7 +326,7 @@ namespace XForms.GramaticaIrony
             RegisterOperators(9, Associativity.Right, inc, dec, not);
             RegisterOperators(10, Associativity.Neutral, ToTerm("("), ToTerm(")"));
 
-            this.MarkPunctuation("{", "}", "(", ")", ";",".xform","{","}", "=", "[", "]");
+            this.MarkPunctuation("{", "}", "(", ")", ";",".xform","{","}", "=", "[", "]",".");
             NonGrammarTerminals.Add(LineComment);
             NonGrammarTerminals.Add(MultiLineComment);
             this.Root = INICIO;

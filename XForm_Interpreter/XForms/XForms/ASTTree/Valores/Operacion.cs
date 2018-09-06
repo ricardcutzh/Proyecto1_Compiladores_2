@@ -625,7 +625,7 @@ namespace XForms.ASTTree.Valores
                             {
                                 return valor1 / 1;
                             }
-                            else;
+                            else
                             {
                                 return 0.0;
                             }

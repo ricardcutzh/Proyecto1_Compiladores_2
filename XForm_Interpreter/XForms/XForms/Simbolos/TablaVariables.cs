@@ -42,7 +42,7 @@ namespace XForms.Simbolos
             }
         }
 
-        public void imprimeTabla()
+        public String imprimeTabla()
         {
             String mensaje = "----------- TABLA DE VARS -----------------\n";
             foreach(DictionaryEntry d in this.variables)
@@ -56,7 +56,7 @@ namespace XForms.Simbolos
                 }
             }
             mensaje += "-------------------------------------------------\n";
-            MessageBox.Show(mensaje);
+            return mensaje;
         }
 
     }

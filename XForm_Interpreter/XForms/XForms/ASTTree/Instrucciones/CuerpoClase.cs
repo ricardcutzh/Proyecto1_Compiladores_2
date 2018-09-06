@@ -32,13 +32,28 @@ namespace XForms.ASTTree.Instrucciones
 
         public object Ejecutar(Ambito ambito)
         {
-            foreach(Instruccion instruccion in this.instrucciones)
+            foreach(Instruccion instruccion in this.instrucciones)//PRIMERO EJECUTO EL GUARDADO DE FUNCIONES
             {
-                instruccion.Ejecutar(ambito);
-                if(Estatico.paraEjecucionPorCantidadErrores())
+                if(instruccion is DeclaracionConstructor || instruccion is DeclaracionFuncion)
                 {
-                    MessageBox.Show("Se han encontrado demasiados errores Semanticos, Revisa el reporte para Corregirlos! Se Pauso en: "+this.clase, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    break;
+                    instruccion.Ejecutar(ambito);
+                }
+                if (Estatico.paraEjecucionPorCantidadErrores())
+                {
+                    MessageBox.Show("Se han encontrado demasiados errores Semanticos, Revisa el reporte para Corregirlos! Se Pauso en: " + this.clase, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return null;
+                }
+            }
+            foreach(Instruccion instruccion in this.instrucciones)//DESPUES LA DECLARACION DE ATRIBUTOS
+            {
+                if(instruccion is DeclaracionVar || instruccion is DeclaracionArr)
+                {
+                    instruccion.Ejecutar(ambito);
+                }
+                if (Estatico.paraEjecucionPorCantidadErrores())
+                {
+                    MessageBox.Show("Se han encontrado demasiados errores Semanticos, Revisa el reporte para Corregirlos! Se Pauso en: " + this.clase, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return null;
                 }
             }
             return null;

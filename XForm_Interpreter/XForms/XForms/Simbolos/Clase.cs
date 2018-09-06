@@ -75,5 +75,10 @@ namespace XForms.Simbolos
             return clase != null &&
                    idClase == clase.idClase;
         }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

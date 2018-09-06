@@ -18,9 +18,9 @@ namespace XForms.Simbolos
         public String idFuncion { get; }
         public String Tipo { get; }
         public Estatico.Vibililidad Vibililidad { get; }
-        List<Expresion> parametros;
+        List<NodoParametro> parametros;
 
-        public Funcion(List<Expresion> parametros, String idFuncion, String Tipo, Estatico.Vibililidad Visibilidad, int linea, int col, String clase) : base(linea, col, clase)
+        public Funcion(List<NodoParametro> parametros, String idFuncion, String Tipo, Estatico.Vibililidad Visibilidad, int linea, int col, String clase) : base(linea, col, clase)
         {
             this.idFuncion = idFuncion;
             this.Tipo = Tipo;
@@ -28,9 +28,21 @@ namespace XForms.Simbolos
             this.parametros = parametros;
         }
 
+        public void agregarParametrosFuncion(List<Expresion> parametrosReales)
+        {
+
+        }
+
         public object Ejecutar(Ambito ambito)
         {
             throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            String cad = "";
+            cad += "| Funcion: " + this.idFuncion + " | Tipo: " + this.Tipo + " | Visibilidad: " + this.Vibililidad + " | Params: " + this.parametros.Count;
+            return cad;
         }
     }
 }

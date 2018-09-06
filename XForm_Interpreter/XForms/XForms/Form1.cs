@@ -12,6 +12,7 @@ using XForms.GramaticaIrony;
 using XForms.Objs;
 using System.Collections;
 using XForms.Simbolos;
+
 namespace XForms
 {
     public partial class Form1 : Form
@@ -224,7 +225,16 @@ namespace XForms
                 if(inicio!=null)
                 {
                     Ambito am = new Ambito(null, inicio.idClase, inicio.ArchivoOrigen);
+                    
                     am = (Ambito)inicio.Ejecutar(am);
+                    inicio.ejecutaMain(am);
+                    
+                    /*List<NodoParametro> parametros = new List<NodoParametro>();
+                    NodoParametro m = new NodoParametro("m", "booleano", false);
+                    parametros.Add(m);
+                    ClaveFuncion n = new ClaveFuncion("funcion1", "vacio", parametros);
+                    Funcion ej = am.GetFuncion(n);*/
+                    //MessageBox.Show("FUNCION RECUPERADA: " + ej.ToString());
                     //inicio.ejecutaMain(am);
                 }
             }

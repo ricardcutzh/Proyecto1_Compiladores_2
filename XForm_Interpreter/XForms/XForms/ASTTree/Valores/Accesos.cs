@@ -71,6 +71,12 @@ namespace XForms.ASTTree.Valores
             return "Objeto";
         }
 
+        int type;
+        public void setTipo(int tipo)
+        {
+            this.type = tipo;
+        }
+
         public object getValor(Ambito ambito)
         {
             try
@@ -86,19 +92,24 @@ namespace XForms.ASTTree.Valores
                 }
                 else if(this.expresiones.Count > 1)//AQUI ES DONDE YA SE VA A HACER REFERENCIA A OBJETOS
                 {
-                    //AQUI SI ES ACCESO A OBJETO
+                    
                 }
             }
             catch(Exception e)
             {
-                TError error = new TError("Ejecucion", "Ocurrio un Error al acceder a Objeto en Clase: " + this.clase + " | Archivo: " + this.archivoOrigen, this.linea, this.columna, false);
+                TError error = new TError("Ejecucion", "Ocurrio un Error al acceder a Objeto en Clase: " + this.clase + " | Archivo: " +ambito.archivo+" | Error: "+e.Message, this.linea, this.columna, false);
                 Estatico.errores.Add(error);
                 Estatico.ColocaError(error);
             }
             return new Nulo();
         }
 
-        
+        private Object iteraEnPropiedades(Ambito ambitoInicio, Object actual)
+        {
+            
+           
+            return actual;
+        }
 
         private object buscaAtributoDeClase(Ambito am)
         {
@@ -108,7 +119,7 @@ namespace XForms.ASTTree.Valores
                 aux = aux.Anterior;
             }
 
-            return new Nulo();
+            return aux;
         }
 
     }

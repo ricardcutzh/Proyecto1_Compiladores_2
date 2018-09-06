@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using XForms.ASTTree.Interfaces;
+using XForms.GramaticaIrony;
+using XForms.Objs;
 
 namespace XForms.Simbolos
 {
@@ -18,7 +20,21 @@ namespace XForms.Simbolos
 
         public object Ejecutar(Ambito ambito)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Ambito am = new Ambito(ambito, "Clase: " + this.clase, ambito.archivo);
+                foreach(Instruccion i in this.instrucciones)
+                {
+                    i.Ejecutar(am);
+                }
+            }
+            catch(Exception e)
+            {
+                TError error = new TError("Ejecucion", "Ejecutando Constructor: " + this.clase + " | Archivo: " + ambito.archivo+" | Error: "+e.Message, this.linea, this.columna, false);
+                Estatico.errores.Add(error);
+                Estatico.ColocaError(error);
+            }
+            return null;
         }
     }
 }

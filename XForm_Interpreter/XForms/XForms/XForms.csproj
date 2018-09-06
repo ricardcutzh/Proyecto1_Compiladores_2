@@ -60,6 +60,9 @@
     <Compile Include="ASTTree\Interfaces\Expresion.cs" />
     <Compile Include="ASTTree\Interfaces\Instruccion.cs" />
     <Compile Include="ASTTree\Interfaces\NodoAST.cs" />
+    <Compile Include="ASTTree\Sentencias\AsignacionPropiedad.cs" />
+    <Compile Include="ASTTree\Sentencias\AsignacionSimple.cs" />
+    <Compile Include="ASTTree\Sentencias\Imprimir.cs" />
     <Compile Include="ASTTree\Valores\Accesos.cs" />
     <Compile Include="ASTTree\Valores\Dimensiones.cs" />
     <Compile Include="ASTTree\Valores\Identificador.cs" />
@@ -96,10 +99,12 @@
     <Compile Include="Simbolos\Ambito.cs" />
     <Compile Include="Simbolos\Arreglo.cs" />
     <Compile Include="Simbolos\Clase.cs" />
+    <Compile Include="Simbolos\Constructor.cs" />
     <Compile Include="Simbolos\Funcion.cs" />
     <Compile Include="Simbolos\Objeto.cs" />
     <Compile Include="Simbolos\Principal.cs" />
     <Compile Include="Simbolos\Simbolo.cs" />
+    <Compile Include="Simbolos\TablaConstructores.cs" />
     <Compile Include="Simbolos\TablaFunciones.cs" />
     <Compile Include="Simbolos\TablaVariables.cs" />
     <Compile Include="Simbolos\Variable.cs" />

@@ -12,7 +12,7 @@ namespace XForms.ASTTree.Valores
 {
     class Identificador : NodoAST, Expresion
     {
-        String identificador;
+        public String identificador;
 
         public Identificador(String id, int col, int linea, String clase):base(linea, col, clase)
         {
@@ -70,7 +70,7 @@ namespace XForms.ASTTree.Valores
 
         public object getValor(Ambito ambito)
         {
-            if(this.identificador.ToLower().Equals("eset"))
+            if(this.identificador.ToLower().Equals("este"))
             {
                 return new Este();
             }

@@ -54,7 +54,7 @@ namespace XForms.ASTTree.Instrucciones
                         {
                             Variable variable = new Variable(this.idVar.ToLower(), this.tipo.ToLower(), this.visibilidad, valor);
                             ambito.agregarVariableAlAmbito(this.idVar.ToLower(), variable);
-                            ambito.ImprimeAmbito();
+                            //ambito.ImprimeAmbito();
                         }
                         else
                         {
@@ -77,7 +77,6 @@ namespace XForms.ASTTree.Instrucciones
                     {
                         Variable variable = new Variable(this.idVar.ToLower(), this.tipo, this.visibilidad, new Nulo());
                         ambito.agregarVariableAlAmbito(this.idVar.ToLower(), variable);
-                        ambito.ImprimeAmbito();
                     }
                     else//SI SI EXISTE... ERROR..
                     {
@@ -89,7 +88,7 @@ namespace XForms.ASTTree.Instrucciones
             }
             catch(Exception e)
             {
-                TError error = new TError("Ejecucion", "Error en la declaracion de variable: \"" + this.idVar + "\" en este Ambito | Clase: " + this.clase + " | Archivo: " + ambito.archivo, this.linea, this.columna, false);
+                TError error = new TError("Ejecucion", "Error en la declaracion de variable: \"" + this.idVar + "\" en este Ambito | Clase: " + this.clase + " | Archivo: " + ambito.archivo+" | "+e.Message, this.linea, this.columna, false);
                 Estatico.errores.Add(error);
                 Estatico.ColocaError(error);
             }

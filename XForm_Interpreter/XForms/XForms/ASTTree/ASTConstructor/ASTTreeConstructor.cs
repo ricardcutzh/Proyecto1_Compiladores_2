@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using XForms.ASTTree.Valores;
 using XForms.Simbolos;
 using XForms.GramaticaIrony;
+using XForms.ASTTree.Sentencias;
 
 namespace XForms.ASTTree.ASTConstructor
 {
@@ -65,6 +66,15 @@ namespace XForms.ASTTree.ASTConstructor
                             int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
                             List<Instruccion> instrucciones = new List<Instruccion>();
                             /// FALTA TOMAR LAS INSTRUCCIONES DEL HIJO EN 1
+                                foreach(ParseTreeNode nodo in raiz.ChildNodes.ElementAt(1).ChildNodes)
+                                {
+                                    Instruccion ins = (Instruccion)construyeSentencias(nodo);
+                                    if(ins!=null)
+                                    {
+                                        instrucciones.Add(ins);
+                                    }
+                                }
+                            /// 
                             Principal principal = new Principal(instrucciones, linea, col, clase);
                             DeclaracionMain main = new DeclaracionMain(principal, linea, col, clase);
                             main.SetArchivoOrigen(archivo);
@@ -94,6 +104,13 @@ namespace XForms.ASTTree.ASTConstructor
                                 List<NodoParametro> parametros = (List<NodoParametro>)getParametros(raiz.ChildNodes.ElementAt(1));
                                 //FALTA TOMAR LAS INSTRUCCIONES
                                 List<Instruccion> instrucciones = new List<Instruccion>();//ESTA LAS TOMO DEL HIJO EN 2
+                                ///
+                                    foreach(ParseTreeNode nodo in raiz.ChildNodes.ElementAt(2).ChildNodes)
+                                    {
+                                        Instruccion ins = (Instruccion)construyeSentencias(nodo);
+                                        if (ins != null) { instrucciones.Add(ins); }
+                                    }
+                                ///
                                 DeclaracionConstructor cons = new DeclaracionConstructor(instrucciones, parametros, linea, col, this.clase);
                                 cons.SetArchivoOrigen(archivo);
                                 return cons;
@@ -117,9 +134,19 @@ namespace XForms.ASTTree.ASTConstructor
                             String idfun = raiz.ChildNodes.ElementAt(2).Token.Text.ToLower();
                             List<NodoParametro> parametros = (List<NodoParametro>)getParametros(raiz.ChildNodes.ElementAt(3));
                             List<Instruccion> instrucciones = new List<Instruccion>();//AQUI DEBO TRAER LAS INTRUCCIONES HIJO EN 4
+                            ///
+                                foreach(ParseTreeNode nodo in raiz.ChildNodes.ElementAt(4).ChildNodes)
+                                {
+                                    Instruccion ins = (Instruccion)construyeSentencias(nodo);
+                                    if(ins!=null)
+                                    {
+                                        instrucciones.Add(ins);
+                                    }
+                                }
+                            ///
                             if(tipo!=null)
                             {
-                                DeclaracionFuncion declaracion = new DeclaracionFuncion(instrucciones, parametros, visibilidad, idfun, linea, col, this.clase);
+                                DeclaracionFuncion declaracion = new DeclaracionFuncion(instrucciones, tipo.ToLower(), parametros, visibilidad, idfun, linea, col, this.clase);
                                 declaracion.SetArchivoOrigen(archivo);
                                 return declaracion;
                             }
@@ -132,9 +159,19 @@ namespace XForms.ASTTree.ASTConstructor
                             String idfun = raiz.ChildNodes.ElementAt(1).Token.Text.ToLower();
                             List<NodoParametro> parametros = (List<NodoParametro>)getParametros(raiz.ChildNodes.ElementAt(2));
                             List<Instruccion> instrucciones = new List<Instruccion>();//AQUI DEBO DE TRAER LAS INSTRUCCIONES EN HIJO 3
-                            if(tipo!=null)
+                            ///
+                                foreach (ParseTreeNode nodo in raiz.ChildNodes.ElementAt(3).ChildNodes)
+                                {
+                                    Instruccion ins = (Instruccion)construyeSentencias(nodo);
+                                    if (ins != null)
+                                    {
+                                        instrucciones.Add(ins);
+                                    }
+                                }
+                            ///
+                            if (tipo!=null)
                             {
-                                DeclaracionFuncion declaracion = new DeclaracionFuncion(instrucciones, parametros, Estatico.Vibililidad.PRIVADO, idfun, linea, col, this.clase);
+                                DeclaracionFuncion declaracion = new DeclaracionFuncion(instrucciones, tipo, parametros, Estatico.Vibililidad.PRIVADO, idfun, linea, col, this.clase);
                                 declaracion.SetArchivoOrigen(archivo);
                                 return declaracion;
                             }
@@ -448,6 +485,62 @@ namespace XForms.ASTTree.ASTConstructor
                     }
             }
             return new List<NodoParametro>();
+        }
+        #endregion
+
+        #region SENTENCIAS
+        private Object construyeSentencias(ParseTreeNode raiz)
+        {
+            String etiqueta = raiz.ToString();
+            switch(etiqueta)
+            {
+                case "DECLARACION_LOCAL":
+                    {
+                        return recorreDeclaraciones(raiz);
+                    }
+                case "IMPRIMIR":
+                    {
+                        if(raiz.ChildNodes.Count == 2)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+                            ASTTreeExpresion exp = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(1), this.clase, this.archivo);
+                            Expresion res = (Expresion)exp.ConstruyeASTExpresion();
+                            if(res!=null)
+                            {
+                                Imprimir imp = new Imprimir(this.clase, linea, col, res);
+                                return imp;
+                            }
+                        }
+                        break;
+                    }
+                case "ASIGNACION":
+                    {
+                        if(raiz.ChildNodes.Count == 2)
+                        {
+                            /// DEL HIJO EN 0 OBTENGO ID A QUIEN VOY A ASIGNAR
+                                String id = raiz.ChildNodes.ElementAt(0).Token.Text.ToLower();
+                                int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                                int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+                            /// DEL HIJO EN 1 OBTENGO EL VALOR A ASIGNAR
+                                ASTTreeExpresion arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(1), this.clase, this.archivo);
+                                Expresion exp = (Expresion)arbol.ConstruyeASTExpresion();
+                            if(exp!=null)
+                            {
+                                AsignacionSimple asignar = new AsignacionSimple(exp, id, linea, col, this.clase);
+                                return asignar;
+                            }
+                        }
+                        if(raiz.ChildNodes.Count == 3)
+                        {
+                            /// DEL HIJO 0 TENGO EL VALOR DE TIPO OBJETO QUE ESPERO SIEMPRE
+                            /// DEL HIJO 1 OBTENGO LA PROPIEDAD A LA QUE SE LE VA ASIGNAR EL VALOR
+                            /// DEL HIJO 2 OBTENGO EL VALOR A ASIGNAR EN LA PROPIEDAD
+                        }
+                        break;
+                    }
+            }
+            return null;
         }
         #endregion
     }
