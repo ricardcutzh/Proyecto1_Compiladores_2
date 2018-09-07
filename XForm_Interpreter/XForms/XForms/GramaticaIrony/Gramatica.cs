@@ -101,7 +101,8 @@ namespace XForms.GramaticaIrony
             L_DIMPARAM = new NonTerminal("L_DIMPARAM"),
             DIM_DEF = new NonTerminal("DIM_DEF"),
             IMPRIMIR = new NonTerminal("IMPRIMIR"),
-            ASIGNACION = new NonTerminal("ASIGNACION");
+            ASIGNACION = new NonTerminal("ASIGNACION"),
+            RETORNO = new NonTerminal("RETORNO");
             #endregion
 
             #region Reglas
@@ -183,7 +184,7 @@ namespace XForms.GramaticaIrony
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------
-            PRINCIPAL.Rule = ToTerm("principal") + "(" + ")" + "{" + SENTENCIAS + "}";
+            PRINCIPAL.Rule = ToTerm("principal") + "(" + ")" + "{" + SENTENCIAS_CONS + "}";
             PRINCIPAL.ErrorRule = SyntaxError + "}";
             //-------------------------------------------------------------------------------------------
 
@@ -292,7 +293,8 @@ namespace XForms.GramaticaIrony
             //-------------------------------------------------------------------------------------------
             SENTENCIAS.Rule = MakeStarRule(SENTENCIAS, DECLARACION_LOCAL)
                             | MakeStarRule(SENTENCIAS, IMPRIMIR)
-                            | MakeStarRule(SENTENCIAS, ASIGNACION);
+                            | MakeStarRule(SENTENCIAS, ASIGNACION)
+                            | MakeStarRule(SENTENCIAS, RETORNO);
 
             SENTENCIAS_CONS.Rule = MakeStarRule(SENTENCIAS_CONS, DECLARACION_LOCAL)
                                  | MakeStarRule(SENTENCIAS_CONS, IMPRIMIR)
@@ -309,6 +311,11 @@ namespace XForms.GramaticaIrony
             //-------------------------------------------------------------------------------------------
             ASIGNACION.Rule = LLAMADAID_OBJ + "." + identificador + "=" + EXP + ";"
                             | identificador + "=" + EXP + ";";
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            RETORNO.Rule = ToTerm("retorno") + EXP + ";"
+                        | ToTerm("retorno") + ";";
             //-------------------------------------------------------------------------------------------
             #endregion
 

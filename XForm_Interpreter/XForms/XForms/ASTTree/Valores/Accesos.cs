@@ -67,16 +67,15 @@ namespace XForms.ASTTree.Valores
             {
                 return "Nulo";
             }
+            else if (val is Objeto)
+            {
+                return ((Objeto)val).idClase.ToLower();
+            }
             //AQUI FALTA EL TIPO OBJETO
             return "Objeto";
         }
 
-        int type;
-        public void setTipo(int tipo)
-        {
-            this.type = tipo;
-        }
-
+        
         public object getValor(Ambito ambito)
         {
             try
@@ -86,13 +85,27 @@ namespace XForms.ASTTree.Valores
                     this.valorAux = expresiones.ElementAt(0).getValor(ambito);
                     if(valorAux is Este)
                     {
-                        return new Nulo();
+                        //return new Nulo();
+                        return new Este();
                     }
                     return valorAux;
                 }
                 else if(this.expresiones.Count > 1)//AQUI ES DONDE YA SE VA A HACER REFERENCIA A OBJETOS
                 {
-                    
+                    Ambito ambitoAux = null;
+                    Object auxiliar = this.expresiones.ElementAt(0).getValor(ambito);
+                    if(auxiliar is Este)
+                    {
+                        ambitoAux = (Ambito)buscaAtributoDeClase(ambito);
+                        return recorreExpresiones(ambitoAux, auxiliar);
+                    }
+                    else if(auxiliar is Objeto)
+                    {
+                        Objeto ob = (Objeto)auxiliar;
+                        ambitoAux = ob.ambito;
+                        return recorreExpresiones(ambitoAux, ob);
+                    }
+                    return new Nulo();
                 }
             }
             catch(Exception e)
@@ -104,11 +117,68 @@ namespace XForms.ASTTree.Valores
             return new Nulo();
         }
 
-        private Object iteraEnPropiedades(Ambito ambitoInicio, Object actual)
+        private Object recorreExpresiones(Ambito ambito, Object Actual)
         {
-            
-           
-            return actual;
+            for(int x = 1; x < this.expresiones.Count; x++)
+            {
+                if(ambito.idAmbito.ToLower().Contains(this.clase.ToLower()))
+                {
+                    //TOMA SIN VISIBILIDAD //AQUI MANDA VERDADERO
+                    Actual = tomaConVisibilidad(ambito, this.expresiones.ElementAt(x), true);
+                }
+                else
+                {
+                    //TOMA CON VISIBILIDAD // AQUI MANDA FALSO
+                    Actual = tomaConVisibilidad(ambito, this.expresiones.ElementAt(x), false);
+                }
+
+                if(Actual is Objeto)
+                {
+                    Objeto aux = (Objeto)Actual;
+                    ambito = aux.ambito;
+                    this.valorAux = aux;
+                }
+                else
+                {
+                    valorAux = Actual;
+                    return Actual;
+                }
+            }
+            return Actual;
+        }
+
+
+        private object tomaConVisibilidad(Ambito ambito, Expresion iterador, bool ignoraVisibilidad)
+        {
+            if(iterador is Identificador)
+            {
+                String idaux = ((Identificador)iterador).identificador.ToLower();
+                Simbolo s = (Simbolo)ambito.getSimbolo(idaux);
+                if(s!=null)
+                {
+                    if (s.Visibilidad == Estatico.Vibililidad.PUBLICO || ignoraVisibilidad)
+                    {
+                        Object val = iterador.getValor(ambito);//OBTENGO EL VALOR SI ES PUBLICO
+                        return val;
+                    }
+                    else
+                    {
+                        //ERROR PORQUE SE INTENTA ACCEDER A UNA PROPIEDAD QUE NO ES PUBLICA
+                        return null;
+                    }
+                }
+                else
+                {
+                    //ERROR LA PROPIEDAD A BUSCAR NO EXISTE Y MUESTRO IDAUX
+                    return null;
+                }
+            }
+            else if(iterador is Llamada)
+            {
+                String idaux = ((Llamada)iterador).id.ToLower();
+                //AQUI PREGUNTO SI EXISTE LA FUNCION A LA QUE VOY A HACER REFERENCIA
+            }
+            return null;
         }
 
         private object buscaAtributoDeClase(Ambito am)

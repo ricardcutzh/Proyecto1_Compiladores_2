@@ -80,7 +80,7 @@ namespace XForms.Simbolos
 
         #region MANEJOFUNCIONES
 
-        public Funcion GetFuncion(ClaveFuncion clave)
+        public Funcion GetFuncion(Clave clave)
         {
             if (this.tablaFuns.existeFuncion(clave))
             {
@@ -89,12 +89,12 @@ namespace XForms.Simbolos
             return null;
         }
 
-        public Boolean existeFuncion(ClaveFuncion clave)
+        public Boolean existeFuncion(Clave clave)
         {
             return this.tablaFuns.existeFuncion(clave);
         }
 
-        public void agregarFuncionAlAmbito(ClaveFuncion clave, Funcion fun)
+        public void agregarFuncionAlAmbito(Clave clave, Funcion fun)
         {
             this.tablaFuns.agregarFuncion(clave, fun);
         }

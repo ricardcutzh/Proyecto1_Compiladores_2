@@ -133,11 +133,11 @@ namespace XForms.ASTTree.ASTConstructor
                             int col = raiz.ChildNodes.ElementAt(2).Token.Location.Column;
                             String idfun = raiz.ChildNodes.ElementAt(2).Token.Text.ToLower();
                             List<NodoParametro> parametros = (List<NodoParametro>)getParametros(raiz.ChildNodes.ElementAt(3));
-                            List<Instruccion> instrucciones = new List<Instruccion>();//AQUI DEBO TRAER LAS INTRUCCIONES HIJO EN 4
+                            List<Object> instrucciones = new List<Object>();//AQUI DEBO TRAER LAS INTRUCCIONES HIJO EN 4
                             ///
                                 foreach(ParseTreeNode nodo in raiz.ChildNodes.ElementAt(4).ChildNodes)
                                 {
-                                    Instruccion ins = (Instruccion)construyeSentencias(nodo);
+                                    Object ins = (Object)construyeSentencias(nodo);
                                     if(ins!=null)
                                     {
                                         instrucciones.Add(ins);
@@ -158,11 +158,11 @@ namespace XForms.ASTTree.ASTConstructor
                             int col = raiz.ChildNodes.ElementAt(1).Token.Location.Column;
                             String idfun = raiz.ChildNodes.ElementAt(1).Token.Text.ToLower();
                             List<NodoParametro> parametros = (List<NodoParametro>)getParametros(raiz.ChildNodes.ElementAt(2));
-                            List<Instruccion> instrucciones = new List<Instruccion>();//AQUI DEBO DE TRAER LAS INSTRUCCIONES EN HIJO 3
+                            List<Object> instrucciones = new List<Object>();//AQUI DEBO DE TRAER LAS INSTRUCCIONES EN HIJO 3
                             ///
                                 foreach (ParseTreeNode nodo in raiz.ChildNodes.ElementAt(3).ChildNodes)
                                 {
-                                    Instruccion ins = (Instruccion)construyeSentencias(nodo);
+                                    Object ins = (Object)construyeSentencias(nodo);
                                     if (ins != null)
                                     {
                                         instrucciones.Add(ins);
@@ -534,8 +534,44 @@ namespace XForms.ASTTree.ASTConstructor
                         if(raiz.ChildNodes.Count == 3)
                         {
                             /// DEL HIJO 0 TENGO EL VALOR DE TIPO OBJETO QUE ESPERO SIEMPRE
+                            ASTTreeExpresion arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(0), this.clase, this.archivo);
+                            Expresion exp1 = (Expresion)arbol.traeLlamadas(raiz.ChildNodes.ElementAt(0));
                             /// DEL HIJO 1 OBTENGO LA PROPIEDAD A LA QUE SE LE VA ASIGNAR EL VALOR
+                            String propiedad = raiz.ChildNodes.ElementAt(1).Token.Text.ToLower();
+                            int linea = raiz.ChildNodes.ElementAt(1).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(1).Token.Location.Column;
                             /// DEL HIJO 2 OBTENGO EL VALOR A ASIGNAR EN LA PROPIEDAD
+                            ASTTreeExpresion arbol2 = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(2), this.clase, this.archivo);
+                            Expresion exp2 = (Expresion)arbol2.ConstruyeASTExpresion();
+
+                            if(exp1!=null && exp2!=null)
+                            {
+                                AsignacionPropiedad asig = new AsignacionPropiedad(exp1, propiedad, exp2, linea, col, this.clase);
+                                return asig;
+                            }
+                        }
+                        break;
+                    }
+                case "RETORNO":
+                    {
+                        if(raiz.ChildNodes.Count == 2)
+                        {
+                            //RETORNO VACIO
+                            ASTTreeExpresion arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(1), this.clase, this.archivo);
+                            Expresion exp = (Expresion)arbol.ConstruyeASTExpresion();
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+                            if(exp!=null)
+                            {
+                                Retorno r = new Retorno(exp,linea, col, this.clase);
+                                return r;
+                            }
+                        }
+                        else if(raiz.ChildNodes.Count == 1)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+                            return new Retorno(linea, col, this.clase);
                         }
                         break;
                     }

@@ -224,7 +224,7 @@ namespace XForms
                 Clase inicio = Estatico.clasesDisponibles.getFirstClassWithMain();
                 if(inicio!=null)
                 {
-                    Ambito am = new Ambito(null, inicio.idClase, inicio.ArchivoOrigen);
+                    Ambito am = new Ambito(null, inicio.idClase.ToLower(), inicio.ArchivoOrigen);
                     
                     am = (Ambito)inicio.Ejecutar(am);
                     inicio.ejecutaMain(am);

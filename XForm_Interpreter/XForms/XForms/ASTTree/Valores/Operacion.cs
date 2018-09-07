@@ -86,6 +86,10 @@ namespace XForms.ASTTree.Valores
             {
                 return "Nulo";
             }
+            else if(val is Objeto)
+            {
+                return ((Objeto)val).idClase.ToLower();
+            }
             //AQUI FALTA EL TIPO OBJETO
             return "Objeto";
         }

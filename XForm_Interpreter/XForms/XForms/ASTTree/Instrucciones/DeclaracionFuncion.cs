@@ -12,13 +12,13 @@ namespace XForms.ASTTree.Instrucciones
 {
     class DeclaracionFuncion : NodoAST, Instruccion
     {
-        List<Instruccion> instrucciones;
+        List<object> instrucciones;
         List<NodoParametro> parametros;
         String tipo;
         String idfuncion;
         Estatico.Vibililidad visibilidad;
 
-        public DeclaracionFuncion(List<Instruccion> instrucciones, String tipo, List<NodoParametro>parametros, Estatico.Vibililidad vibililidad, String idfuncion, int linea, int col, String clase):base(linea, col, clase)
+        public DeclaracionFuncion(List<object> instrucciones, String tipo, List<NodoParametro>parametros, Estatico.Vibililidad vibililidad, String idfuncion, int linea, int col, String clase):base(linea, col, clase)
         {
             this.instrucciones = instrucciones;
             this.parametros = parametros;
@@ -31,12 +31,11 @@ namespace XForms.ASTTree.Instrucciones
         {
             try
             {
-                ClaveFuncion clave = new ClaveFuncion(this.idfuncion, this.tipo, this.parametros);
+                Clave clave = new Clave(this.idfuncion.ToLower(), this.parametros, "");
                 if(!ambito.existeFuncion(clave))
                 {
-                    Funcion f = new Funcion(this.parametros, this.idfuncion.ToLower(), this.tipo, this.visibilidad, this.linea, this.columna, this.clase);
+                    Funcion f = new Funcion(this.instrucciones, this.parametros, this.idfuncion.ToLower(), this.tipo, this.visibilidad, this.linea, this.columna, this.clase);
                     ambito.agregarFuncionAlAmbito(clave, f);
-                    ambito.ImprimeAmbito();
                 }
                 else
                 {

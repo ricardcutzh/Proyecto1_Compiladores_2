@@ -27,7 +27,89 @@ namespace XForms.ASTTree.Sentencias
         {
             try
             {
-                
+                Object ObjetoAsignar = this.objetoAsignar.getValor(ambito);
+
+                Object valor = valorAsignar.getValor(ambito);
+                String tipoAsignado = valorAsignar.getTipo(ambito).ToLower();
+
+                if(ObjetoAsignar is Este)
+                {
+                    Ambito aux = ambito;
+                    while(aux.Anterior!=null)
+                    {
+                        aux = aux.Anterior;
+                    }
+                    Simbolo s = (Simbolo)aux.getSimbolo(this.propiedad.ToLower());
+                    
+                    if(s!=null)
+                    {
+                        if (s is Variable)
+                        {
+                            Variable vari = (Variable)s;
+                            String tipoEsperado = vari.Tipo.ToLower();
+                            if (tipoEsperado.Equals(tipoAsignado))
+                            {
+                                vari.valor = valor;//ASIGNO EL VALOR AL FIN....
+                            }
+                            else
+                            {
+                                TError error = new TError("Semantico", "Tipos Incompatibles No se puede asignar: \"" + tipoAsignado + "\", a una Variable de tipo: \"" + tipoEsperado + "\" | Clase: " + this.clase + " | Archivo: " + ambito.archivo, linea, columna, false);
+                                Estatico.errores.Add(error);
+                                Estatico.ColocaError(error);
+                            }
+                        }
+                        else
+                        {
+                            //SI NO ES VARIABLE
+                        }
+                    }
+                    else
+                    {
+                        TError error = new TError("Semantico", "Objeto: \""+this.clase+"\" no tiene Propiedad: \"" + this.propiedad + "\", Error Al acceder | Clase: " + this.clase + " | Archivo: " + ambito.archivo, linea, columna, false);
+                        Estatico.errores.Add(error);
+                        Estatico.ColocaError(error);
+                    }
+                }
+                /// ES LO QUE BUSCABA UN OBJETO?
+                else if(ObjetoAsignar is Objeto)
+                {
+                    Ambito auxiliar = ((Objeto)ObjetoAsignar).ambito;
+                    Simbolo s = (Simbolo)auxiliar.getSimbolo(this.propiedad.ToLower());
+                    if(s!=null)
+                    {
+                        if(s is Variable)
+                        {
+                            Variable vari = (Variable)s;
+                            String tipoEsperado = vari.Tipo.ToLower();
+                            if(tipoEsperado.Equals(tipoAsignado))
+                            {
+                                vari.valor = valor;//ASIGNO EL VALOR AL FIN....
+                            }
+                            else
+                            {
+                                TError error = new TError("Semantico", "Tipos Incompatibles No se puede asignar: \"" + tipoAsignado + "\", a una Variable de tipo: \""+tipoEsperado+"\" | Clase: " + this.clase + " | Archivo: " + ambito.archivo, linea, columna, false);
+                                Estatico.errores.Add(error);
+                                Estatico.ColocaError(error);
+                            }
+                        }
+                        else
+                        {
+                            //SI NO ES VARIABLE....
+                        }
+                    }
+                    else
+                    {
+                        TError error = new TError("Semantico", "Objeto no tiene Propiedad: \"" + this.propiedad + "\", Error Al acceder | Clase: " + this.clase + " | Archivo: " + ambito.archivo, linea, columna, false);
+                        Estatico.errores.Add(error);
+                        Estatico.ColocaError(error);
+                    }
+                }
+                else
+                {
+                    TError error = new TError("Semantico", "Se esperaba un Objeto para Asignar La propiedad: \"" + this.propiedad + "\" al Mismo | Clase: " + this.clase + " | Archivo: " + ambito.archivo, linea, columna, false);
+                    Estatico.errores.Add(error);
+                    Estatico.ColocaError(error);
+                }
             }
             catch(Exception e)
             {

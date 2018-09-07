@@ -24,5 +24,8 @@ namespace XForms.Simbolos
             String c = "Objeto: " + this.idClase;
             return c;
         }
+
+
+
     }
 }

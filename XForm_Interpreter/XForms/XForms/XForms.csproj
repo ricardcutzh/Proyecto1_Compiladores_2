@@ -70,6 +70,7 @@
     <Compile Include="ASTTree\Valores\NuevoArreglo.cs" />
     <Compile Include="ASTTree\Valores\NuevoObjeto.cs" />
     <Compile Include="ASTTree\Valores\Operacion.cs" />
+    <Compile Include="ASTTree\Valores\Retorno.cs" />
     <Compile Include="ASTTree\Valores\ValorArreglo.cs" />
     <Compile Include="ASTTree\Valores\ValorPrimitivo.cs" />
     <Compile Include="Form1.cs">
@@ -85,6 +86,7 @@
     <Compile Include="GramaticaIrony\Recorrido.cs" />
     <Compile Include="GramaticaIrony\TError.cs" />
     <Compile Include="Objs\ClasePreAnalizada.cs" />
+    <Compile Include="Objs\Clave.cs" />
     <Compile Include="Objs\ClaveFuncion.cs" />
     <Compile Include="Objs\Date.cs" />
     <Compile Include="Objs\Estatico.cs" />
@@ -92,7 +94,9 @@
     <Compile Include="Objs\Hour.cs" />
     <Compile Include="Objs\ListaClases.cs" />
     <Compile Include="Objs\NodoParametro.cs" />
+    <Compile Include="Objs\NodoReturn.cs" />
     <Compile Include="Objs\Nulo.cs" />
+    <Compile Include="Objs\Vacio.cs" />
     <Compile Include="Objs\XFormFile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

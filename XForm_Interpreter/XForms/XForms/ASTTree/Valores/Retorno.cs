@@ -4,26 +4,33 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using XForms.ASTTree.Interfaces;
+using XForms.GramaticaIrony;
 using XForms.Simbolos;
 using XForms.Objs;
-using XForms.GramaticaIrony;
-
 namespace XForms.ASTTree.Valores
 {
-    class Identificador : NodoAST, Expresion
+    class Retorno : NodoAST, Expresion
     {
-        public String identificador;
+        Expresion expresion;
+        Boolean retornaVacio;
 
-        public Identificador(String id, int col, int linea, String clase):base(linea, col, clase)
+        public Retorno(Expresion exp, int linea, int col, String clase):base(linea, col, clase)
         {
-            this.identificador = id;
+            this.expresion = exp;
+            this.retornaVacio = false;
         }
 
-        private object ValorAux = null;
+        public Retorno(int linea, int col, String clase):base(linea, col, clase)
+        {
+            this.expresion = null;
+            retornaVacio = true;
+        }
+
+        Object ValorAux = null;
         public string getTipo(Ambito ambito)
         {
             Object val = null;
-            if(ValorAux==null)
+            if (ValorAux == null)
             {
                 val = getValor(ambito);
             }
@@ -67,38 +74,38 @@ namespace XForms.ASTTree.Valores
             {
                 return ((Objeto)val).idClase.ToLower();
             }
+            else if (val is Vacio)
+            {
+                return "vacio";
+            }
             //AQUI FALTA EL TIPO OBJETO
-            return "Objeto";
-
+            return "vacio";
         }
 
         public object getValor(Ambito ambito)
         {
-            if(this.identificador.ToLower().Equals("este"))
+            try
             {
-                return new Este();
-            }
-            Simbolo aux = ambito.getSimbolo(this.identificador.ToLower());
-            if(aux!=null)
-            {
-                if(aux is Variable)
+                if(retornaVacio)
                 {
-                    Variable v = (Variable)aux;
-                    this.ValorAux = v.valor;
-                    return v.valor;
+                    this.ValorAux = new Vacio();
+                    NodoReturn n = new NodoReturn(this.ValorAux, "vacio");
+                    return n;
                 }
                 else
                 {
-                    //RETORNO SI ES OTRO TIPO
+                    this.ValorAux = this.expresion.getValor(ambito);
+                    NodoReturn n = new NodoReturn(this.ValorAux, getTipo(ambito).ToLower());
+                    return n;
                 }
             }
-            else
+            catch(Exception e)
             {
-                TError erro = new TError("Semantico", "Se hacer referencia a: " + this.identificador + ", La cual no Existe en este Contexto: Clase: " + this.clase + " | Archivo: " + ambito.archivo, this.linea, this.columna, false);
-                Estatico.errores.Add(erro);
-                Estatico.ColocaError(erro);
+                TError error = new TError("Ejecucion", "No se ejecuto de buena forma el retorno: Clase: " + this.clase + " | Archivo: " + ambito.archivo, this.linea, this.columna, false);
+                Estatico.errores.Add(error);
+                Estatico.ColocaError(error);
             }
-            return new Nulo(); 
+            return new Vacio();
         }
     }
 }

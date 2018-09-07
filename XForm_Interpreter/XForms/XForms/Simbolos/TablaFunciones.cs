@@ -18,17 +18,17 @@ namespace XForms.Simbolos
             this.funciones = new Hashtable();
         }
 
-        public Boolean existeFuncion(ClaveFuncion clave)
+        public Boolean existeFuncion(Clave clave)
         {
             return this.funciones.ContainsKey(clave);
         }
 
-        public void agregarFuncion(ClaveFuncion clave, Funcion fun)
+        public void agregarFuncion(Clave clave, Funcion fun)
         {
             this.funciones.Add(clave, fun);
         }
 
-        public Funcion getFuncion(ClaveFuncion clave)
+        public Funcion getFuncion(Clave clave)
         {
             if(existeFuncion(clave))
             {

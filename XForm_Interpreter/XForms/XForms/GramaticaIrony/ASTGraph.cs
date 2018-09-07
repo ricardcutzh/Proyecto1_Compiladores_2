@@ -42,7 +42,7 @@ namespace XForms.GramaticaIrony
         {
             if (nodo != null)
             {
-                contenido += "node" + index.ToString() + "[label = \"" + nodo.Term.Name + "\", style = filled, color = lightblue];";
+                contenido += "node" + index.ToString() + "[label = \"" + nodo.Term.Name + "\", style = filled, color = lightblue];\n";
                 index++;
 
                 foreach (ParseTreeNode hijo in nodo.ChildNodes)
@@ -59,7 +59,7 @@ namespace XForms.GramaticaIrony
                 foreach (ParseTreeNode hijo in nodo.ChildNodes)
                 {
                     index++;
-                    contenido += "\"node" + actual.ToString() + "\"--" + "\"node" + index.ToString() + "\"";
+                    contenido += "\"node" + actual.ToString() + "\"--" + "\"node" + index.ToString() + "\"\n";
                     enlazarNodos(hijo, index, ref contenido);
                 }
             }

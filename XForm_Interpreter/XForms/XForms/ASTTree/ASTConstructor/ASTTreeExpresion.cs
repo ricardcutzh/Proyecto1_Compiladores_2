@@ -251,7 +251,7 @@ namespace XForms.ASTTree.ASTConstructor
         }
 
 
-        private Object traeLlamadas(ParseTreeNode raiz)
+        public Object traeLlamadas(ParseTreeNode raiz)
         {
             String eti = raiz.Term.Name;
             switch(eti)

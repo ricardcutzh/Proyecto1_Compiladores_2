@@ -42,7 +42,9 @@ namespace XForms.ASTTree.Valores
                 if(obj!=null)
                 {
                     //TENGO QUE COMPILAR LA CLASE PRIMERO
-
+                    ///
+                    List<Object> valores = getValoresParams(ambito);
+                    ///
                     Ambito auxiliar = new Ambito(null, obj.idClase, obj.ArchivoOrigen);
                     auxiliar = (Ambito)obj.Ejecutar(auxiliar);
                     /////////////////////////////////////
@@ -55,9 +57,10 @@ namespace XForms.ASTTree.Valores
                     {
                         /// SETEANDO LOS PARAMETROS
                         /// 1) CREO EL CONSTRUCTOR LOCAL
-                            Ambito local = new Ambito(auxiliar, "Constructor: " + this.clase, ambito.archivo);
+                            Ambito local = new Ambito(auxiliar, this.clase.ToLower(), ambito.archivo);
                         /// 2) SETEO SUS PARAMETROS
-                            local = c.seteaParametrosLocales(local, getValoresParams(ambito));
+                        //local = c.seteaParametrosLocales(local, getValoresParams(ambito));
+                            local = c.seteaParametrosLocales(local, valores);
                         /// EJECUCION DEL CONSTRUCTOR EN SI
                             c.Ejecutar(local);
                         /// 3) LE PASO EL AMBITO AUXILIAR DE LA CLASE AL OBJETO
