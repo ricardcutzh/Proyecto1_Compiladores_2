@@ -14,6 +14,7 @@ namespace XForms.ASTTree.Valores
     {
         public String id;
         List<Expresion> expresiones;
+        public Estatico.Vibililidad vibililidad;
 
         public Llamada(String id,int linea, int col, String clase):base(linea, col, clase)
         {
@@ -94,9 +95,10 @@ namespace XForms.ASTTree.Valores
                     Funcion f = aux.GetFuncion(clave);
                 if(f!=null)
                 {
+                    this.vibililidad = f.Vibililidad;
                     ///CREO EL AMBITO DE LA FUNCION
                     Ambito auxliar = new Ambito(aux, this.clase.ToLower(), ambito.archivo);
-
+                    this.vibililidad = f.Vibililidad;
                     ///SETEO LOS PARAMETROS QUE RECIBE
                     auxliar = f.seteaParametrosLocales(auxliar, valores);
 
@@ -108,6 +110,7 @@ namespace XForms.ASTTree.Valores
                         String tipoEsperado = f.Tipo.ToLower();
                         if(tipoEsperado.Equals(((NodoReturn)valor).tipo.ToLower()))
                         {
+                            
                             this.ValorAux = valorReal;
                             return valorReal;
                         }

@@ -176,7 +176,18 @@ namespace XForms.ASTTree.Valores
             else if(iterador is Llamada)
             {
                 String idaux = ((Llamada)iterador).id.ToLower();
+                Object valor = ((Llamada)iterador).getValor(ambito);
+                if(((Llamada)iterador).vibililidad == Estatico.Vibililidad.PUBLICO || ignoraVisibilidad)
+                {
+                    return valor;
+                }
+                else
+                {
+                    //ERROR PORQUE SE INTENCA ACCEDER A UNA PROPIEDAD QUE NO ES PUBLICA
+                    return new Nulo();
+                }
                 //AQUI PREGUNTO SI EXISTE LA FUNCION A LA QUE VOY A HACER REFERENCIA
+                
             }
             return null;
         }
