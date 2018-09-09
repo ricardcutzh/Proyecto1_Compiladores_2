@@ -12,6 +12,8 @@ using XForms.GramaticaIrony;
 using XForms.Objs;
 using System.Collections;
 using XForms.Simbolos;
+using FastColoredTextBoxNS;
+using System.Text.RegularExpressions;
 
 namespace XForms
 {
@@ -46,7 +48,8 @@ namespace XForms
             if(nombre != "")
             {
                 //AGREGO LA PESTANIA NUEVA!
-                crearNuevaPestania(nombre, "// NUEVA PESTANIA");
+                //crearNuevaPestania(nombre, "// NUEVA PESTANIA");
+                crearNuevaPestaniaColor(nombre, "$$NUEVO XFORM");
             }
         }
 
@@ -132,7 +135,8 @@ namespace XForms
                     this.archivo = archivo;
                     ////////////////////////////////
                     String texto = File.ReadAllText(archivo);
-                    crearNuevaPestania(abrir.SafeFileName.Replace(".xform", ""), texto);
+                    //crearNuevaPestania(abrir.SafeFileName.Replace(".xform", ""), texto);
+                    crearNuevaPestaniaColor(abrir.SafeFileName.Replace(".xform", ""), texto);
                 }
             }
         }
@@ -145,11 +149,12 @@ namespace XForms
             Hashtable clasesPreanalizadas = new Hashtable();
             if(Editor.TabCount > 0)
             {
-                RichTextBox principal = (RichTextBox)Editor.TabPages[Editor.SelectedIndex].Controls[0].Controls[1];
+                //RichTextBox principal = (RichTextBox)Editor.TabPages[Editor.SelectedIndex].Controls[0].Controls[1];
+                FastColoredTextBox principal = (FastColoredTextBox)Editor.TabPages[Editor.SelectedIndex].Controls[0].Controls[0];
                 String cadena = principal.Text.ToLower();//PARA QUE TODO ESTE EN MINUSCULAS Y NO TENGA CLAVOS CON LA COMPROBACION DE NOMBRES
                 Progreso.Value = 40;
                 StatusControl.Text = "Iniciando Proceso...";
-                System.Threading.Thread.Sleep(800);
+                System.Threading.Thread.Sleep(200);
                 Analizador an = new Analizador(cadena, this.ProyectoPath, archivo);
                 if(an.analizar())//SI SE ANALIZA LA CADENA...
                 {
@@ -168,7 +173,7 @@ namespace XForms
                         ///////////////////////////////////////////////////////
                         Progreso.Value = 100;
                         StatusControl.Text = "Proceso Terminado!";
-                        System.Threading.Thread.Sleep(800);
+                        System.Threading.Thread.Sleep(200);
                         Progreso.Value = 0;
                         ///////////////////////////////////////////////////////
                         //AQUI DEBO DE PREGUNTAR SI EN CASO HAY UN PROBLEMA CON LAS ADVERTENCIAS
@@ -188,9 +193,10 @@ namespace XForms
         {
             /*String mihora = "12/10/96 12:34:00";
             DateTime p = DateTime.ParseExact(mihora, "dd/MM/yy hh:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
-            MessageBox.Show(p.Day.ToString());*/
+            MessageBox.Show(p.Day.ToString());
             TError errorp = new TError("Prueba", "Este es un error de prueba", 1, 1, false);
-            Estatico.ColocaError(errorp);
+            Estatico.ColocaError(errorp);*/
+            crearNuevaPestaniaColor("prueba", "hola mundo");
         }
 
         #endregion
@@ -200,7 +206,7 @@ namespace XForms
         {
             List<ClasePreAnalizada> clases = an.clases;
             Progreso.Value = 80;
-            System.Threading.Thread.Sleep(800);
+            System.Threading.Thread.Sleep(200);
             foreach (ClasePreAnalizada a in clases)
             {
                 if (!clasesPreanalizadas.Contains(a.id))
@@ -228,6 +234,8 @@ namespace XForms
                     
                     am = (Ambito)inicio.Ejecutar(am);
                     inicio.ejecutaMain(am);
+
+                    //am.ImprimeAmbito();
                     
                     /*List<NodoParametro> parametros = new List<NodoParametro>();
                     NodoParametro m = new NodoParametro("m", "booleano", false);
@@ -301,6 +309,69 @@ namespace XForms
             
             //AGREGANDO AL TAB CONTROL
             Editor.TabPages.Add(nueva);
+        }
+
+        private void crearNuevaPestaniaColor(String nombre, String contenido)
+        {
+            //CREANDO UNA NUEVA TAB
+            TabPage nueva = new TabPage(nombre + ".xform");
+
+            //CREANDO EL PANEL
+            Panel pan = new Panel();
+            pan.AutoScroll = false;
+            pan.HorizontalScroll.Enabled = false;
+            pan.HorizontalScroll.Visible = false;
+            pan.HorizontalScroll.Maximum = 0;
+            pan.AutoScroll = true;
+            pan.SetBounds(0, 0, Editor.Width - 10, Editor.Height - 10);
+
+            //AGREGANDO EL PANEL A LA TAB
+            nueva.Controls.Add(pan);
+
+            //CREANDO LOS RICHTEXTBOX
+            //RichTextBox textEditor = new RichTextBox(); //EDITOR DE TEXTO
+            //RichTextBox numl = new RichTextBox(); //CONTADOR DE LINEAS
+
+            FastColoredTextBox editor = new FastColoredTextBox();
+
+            editor.SetBounds(10, 0, Editor.Width - 10, Editor.Height - 30);
+            editor.AcceptsTab = true;
+            editor.Font = new Font("Consolas", 9);
+            editor.WordWrap = false;
+            editor.TextChanged += new EventHandler<TextChangedEventArgs>(fastColoredTextBox1_TextChanged);
+            editor.Text = contenido.ToLower();
+
+
+            pan.Controls.Add(editor);
+            nueva.Controls.Add(pan);// posicion 0 del tabpage
+
+            //AGREGANDO AL TAB CONTROL
+            Editor.TabPages.Add(nueva);
+        }
+
+
+        Style GreenStyle = new TextStyle(Brushes.Green, null, FontStyle.Italic);
+        Style BlueStyle = new TextStyle(Brushes.Blue, null, FontStyle.Italic);
+        Style LightBlue = new TextStyle(Brushes.DarkViolet, null, FontStyle.Italic);
+        Style StringStyle = new TextStyle(Brushes.Brown, null, FontStyle.Regular);
+        private void fastColoredTextBox1_TextChanged(Object sender, TextChangedEventArgs e)
+        {
+            /*Range range = (sender as FastColoredTextBox).VisibleRange;
+            range.ClearStyle(GreenStyle);
+            //comment highlighting
+            range.SetStyle(GreenStyle, @"\$\$.*$", RegexOptions.Multiline);*/
+
+            e.ChangedRange.ClearFoldingMarkers();
+            //set folding markers
+            e.ChangedRange.SetFoldingMarkers("{", "}");
+            e.ChangedRange.SetStyle(StringStyle, "\"((\\.)|[^\\\\\"])*\"");
+
+            e.ChangedRange.SetStyle(BlueStyle, @"\b(publico|privado|protegido|clase|padre|principal|imprimir|nuevo|este|retorno|romper|nulo|importar|sino|si)");
+            e.ChangedRange.SetStyle(BlueStyle, @"\b(Publico|Privado|Protegido|Clase|Padre|Principal|Imprimir|Nuevo|Este|Retorno|Romper|Nulo|Importar|SiNo|Si)");
+
+            e.ChangedRange.SetStyle(LightBlue, @"\b(cadena|entero|decimal|booleano|fecha|hora|fechahora|vacio)");
+
+            
         }
 
         //ACTUALIZA EL NUMERO DE LINEAS
@@ -393,5 +464,8 @@ namespace XForms
 
             Estatico.tolerancia = cantidad;
         }
+
+
+
     }
 }

@@ -278,26 +278,45 @@ namespace XForms.ASTTree.ASTConstructor
                     {
                         if(raiz.ChildNodes.Count == 2)
                         {
-                            String id = raiz.ChildNodes.ElementAt(0).Token.Text.ToLower();//MINUSCULAS
-                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
-                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
-                            Llamada llam = new Llamada(id, linea, col, this.clase);
-                            llam.SetArchivoOrigen(archivo);
-                            if(raiz.ChildNodes.ElementAt(1).ChildNodes.Count > 0)//SI EL HIJO DERECHO TIENE MAS DE UN HIJO ENTONCES LO RECORRO COMO EXP
+                            if(raiz.ChildNodes.ElementAt(1).ToString().Equals("L_EXPRE"))
                             {
-                                foreach(ParseTreeNode n in raiz.ChildNodes.ElementAt(1).ChildNodes)
+                                String id = raiz.ChildNodes.ElementAt(0).Token.Text.ToLower();//MINUSCULAS
+                                int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                                int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+                                Llamada llam = new Llamada(id, linea, col, this.clase);
+                                llam.SetArchivoOrigen(archivo);
+                                if (raiz.ChildNodes.ElementAt(1).ChildNodes.Count > 0)//SI EL HIJO DERECHO TIENE MAS DE UN HIJO ENTONCES LO RECORRO COMO EXP
                                 {
-                                    Expresion aux = (Expresion)recorreExpresion(n);//LOS TOMO...
-                                    if(aux!=null)//SI NO ES NULL...
+                                    foreach (ParseTreeNode n in raiz.ChildNodes.ElementAt(1).ChildNodes)
                                     {
-                                        llam.AddExpresion(aux);//LO ANADO
+                                        Expresion aux = (Expresion)recorreExpresion(n);//LOS TOMO...
+                                        if (aux != null)//SI NO ES NULL...
+                                        {
+                                            llam.AddExpresion(aux);//LO ANADO
+                                        }
                                     }
                                 }
+                                return llam;
                             }
-                            return llam;
+                            else if(raiz.ChildNodes.ElementAt(1).ToString().Equals("DIMS"))
+                            {
+                                //NECESITO HACER LA EXPRESION PARA ACCESO A ARREGLO
+                                // id + DIMS
+                                String id = raiz.ChildNodes.ElementAt(0).Token.Text.ToLower();
+                                int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                                int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                                List<Expresion> expresiones = (List<Expresion>)getDimensiones(raiz.ChildNodes.ElementAt(1));
+
+                                if(expresiones!=null)
+                                {
+                                    ValorArreglo val = new ValorArreglo(id, expresiones, linea, col, clase);
+                                    return val;
+                                }
+                            }    
                         }
                         break;
-                    }
+                    }   
                 case "identificador":
                     {
                         int linea = raiz.Token.Location.Line;
@@ -306,41 +325,6 @@ namespace XForms.ASTTree.ASTConstructor
                         Identificador ide = new Identificador(id, col, linea, this.clase);
                         ide.SetArchivoOrigen(archivo);
                         return ide;
-                    }
-                case "ARRAY":
-                    {
-                        if(raiz.ChildNodes.Count ==1)
-                        {
-                            List<Expresion> expresionesArr = new List<Expresion>();
-                            foreach(ParseTreeNode nodo in raiz.ChildNodes.ElementAt(0).ChildNodes)
-                            {
-                                Expresion exp = (Expresion)recorreExpresion(nodo);
-                                if(exp!=null)
-                                {
-                                    expresionesArr.Add(exp);
-                                }
-                            }
-                            ValorArreglo val = new ValorArreglo(expresionesArr, 0, 0, this.clase);
-                            val.SetArchivoOrigen(archivo);
-                            return val;
-                        }
-                        if(raiz.ChildNodes.Count == 3)
-                        {
-                            String tipo = (String)dameTipo(raiz.ChildNodes.ElementAt(1));
-                            Dimensiones dim = (Dimensiones)getDimensiones(raiz.ChildNodes.ElementAt(2));
-                            dim.SetArchivoOrigen(archivo);
-                            ///AQUI CREO EL NODO NUEVOARREGLO QUE ME DEVOLVERA UN ARREGLO CON LAS CARACTERISTICAS INDICADAS
-                            ///
-                            if(tipo!=null & dim!=null)
-                            {
-                                int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
-                                int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
-                                NuevoArreglo nuevo = new NuevoArreglo(dim, tipo, linea, col, clase);
-                                nuevo.SetArchivoOrigen(archivo);
-                                return nuevo;
-                            }
-                        }
-                        break;
                     }
                 case "DECLARACION_OBJ":
                     {
@@ -363,6 +347,23 @@ namespace XForms.ASTTree.ASTConstructor
                                 NuevoObjeto ob = new NuevoObjeto(parametros, tipo, linea, col, this.clase);
                                 ob.SetArchivoOrigen(archivo);
                                 return ob;
+                            }
+                        }
+                        break;
+                    }
+                case "DECLARACION_ARR":
+                    {
+                        if(raiz.ChildNodes.Count == 3)
+                        {
+                            String tipo = (String)dameTipo(raiz.ChildNodes.ElementAt(1));//OBTENGO EL TIPO DEL ARREGLO
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+                            List<Expresion> dimensiones = (List<Expresion>)getDimensiones(raiz.ChildNodes.ElementAt(2));//OBTENGO LAS DIMENSIONES
+
+                            if(tipo!=null)
+                            {
+                                NuevoArreglo nuev = new NuevoArreglo(tipo, dimensiones, linea, col, clase);
+                                return nuev;
                             }
                         }
                         break;
@@ -442,27 +443,26 @@ namespace XForms.ASTTree.ASTConstructor
             String etiqueta = raiz.ToString();
             switch (etiqueta)
             {
-                case "DIMENSIONES":
+                case "DIMS":
                     {
-                        List<Expresion> expr = new List<Expresion>();
-                        foreach (ParseTreeNode nodo in raiz.ChildNodes)
+                        List<Expresion> dimensiones = new List<Expresion>();
+                        foreach(ParseTreeNode nodo in raiz.ChildNodes)
                         {
-                            Expresion aux = (Expresion)getDimensiones(nodo);
-                            if (aux != null)
+                            Expresion exp = (Expresion)getDimensiones(nodo);
+                            if(exp!=null)
                             {
-                                expr.Add(aux);
+                                dimensiones.Add(exp);
                             }
                         }
-                        Dimensiones dim = new Dimensiones(expr, 0, 0, this.clase);
-                        dim.SetArchivoOrigen(this.archivo);
-                        return dim;
+                        return dimensiones;
                     }
-                case "DIMENSION":
+                case "REALDIM":
                     {
-                        if (raiz.ChildNodes.Count == 1)
+                        if(raiz.ChildNodes.Count == 1)
                         {
-                            ASTTreeExpresion arbolExpre = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(0), this.clase, this.archivo);
-                            return arbolExpre.ConstruyeASTExpresion();
+                            ASTTreeExpresion arbolExp = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(0), this.clase, this.archivo);
+                            Expresion exp = (Expresion)arbolExp.ConstruyeASTExpresion();
+                            return exp;
                         }
                         break;
                     }

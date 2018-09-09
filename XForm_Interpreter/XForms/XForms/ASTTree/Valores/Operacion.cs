@@ -90,6 +90,10 @@ namespace XForms.ASTTree.Valores
             {
                 return ((Objeto)val).idClase.ToLower();
             }
+            else if(val is Arreglo)
+            {
+                return "Arreglo";
+            }
             //AQUI FALTA EL TIPO OBJETO
             return "Objeto";
         }
@@ -239,8 +243,15 @@ namespace XForms.ASTTree.Valores
                     {
                         return "7";
                     }
+                case "nulo":
+                    {
+                        return "8";
+                    }
+                default:
+                    {
+                        return "9";
+                    }
             }
-            return "0";
         }
 
 
@@ -927,6 +938,21 @@ namespace XForms.ASTTree.Valores
                             DateTime valor2 = (DateTime)val2;
                             return valor1.Equals(valor2);
                         }
+                    case "89":
+                        {
+                            // NULO == OBJETO?
+                            return false;
+                        }
+                    case "98":
+                        {
+                            // OBJETO == NULO?
+                            return false;
+                        }
+                    case "88":
+                        {
+                            /// NULO == NULO?
+                            return true;
+                        }
                 }
                 TError error = new TError("Semantico", "Error Al Ejecutar Igual en Clase: " + this.clase + " Archivo: " + this.archivoOrigen + ", Tipos Incompatibles: " + tipo1 + " con " + tipo2, this.linea, this.columna, false);
                 Estatico.errores.Add(error);
@@ -1023,6 +1049,18 @@ namespace XForms.ASTTree.Valores
                             DateTime valor1 = (DateTime)val1;
                             DateTime valor2 = (DateTime)val2;
                             return !valor1.Equals(valor2);
+                        }
+                    case "88":
+                        {
+                            return false;
+                        }
+                    case "89":
+                        {
+                            return true;
+                        }
+                    case "98":
+                        {
+                            return true;
                         }
                 }
                 TError error = new TError("Semantico", "Error Al Ejecutar Diferente en Clase: " + this.clase + " Archivo: " + this.archivoOrigen + ", Tipos Incompatibles: " + tipo1 + " con " + tipo2, this.linea, this.columna, false);

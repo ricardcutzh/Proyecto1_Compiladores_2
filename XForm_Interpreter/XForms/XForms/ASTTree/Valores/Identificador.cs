@@ -67,6 +67,10 @@ namespace XForms.ASTTree.Valores
             {
                 return ((Objeto)val).idClase.ToLower();
             }
+            else if(val is Arreglo)
+            {
+                return "Arreglo";
+            }
             //AQUI FALTA EL TIPO OBJETO
             return "Objeto";
 
@@ -87,9 +91,12 @@ namespace XForms.ASTTree.Valores
                     this.ValorAux = v.valor;
                     return v.valor;
                 }
-                else
+                else if(aux is Arreglo)
                 {
                     //RETORNO SI ES OTRO TIPO
+                    Arreglo arr = (Arreglo)aux;
+                    this.ValorAux = arr;
+                    return arr;
                 }
             }
             else

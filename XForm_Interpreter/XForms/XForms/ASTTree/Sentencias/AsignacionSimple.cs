@@ -34,13 +34,42 @@ namespace XForms.ASTTree.Sentencias
                         String tipoEsperado = vari.Tipo;
                         Object val = this.valor.getValor(ambito);
                         String tipoEncontrado = this.valor.getTipo(ambito);
-                        if(tipoEncontrado.ToLower().Equals(tipoEsperado.ToLower()))
+                        if(tipoEncontrado.ToLower().Equals(tipoEsperado.ToLower()) || tipoEncontrado.ToLower().Equals("nulo"))
                         {
                             vari.valor = val;//ASIGNO EL NUEVO VALOR
                         }
                         else
                         {
                             TError error = new TError("Semantico", "Tipos no Coinciden al Asignar, Esperado: \"" + tipoEsperado + "\", Encontrado: " + tipoEncontrado + "\" | Clase: " + this.clase + " | Archivo: " + ambito.archivo, linea, columna, false);
+                            Estatico.errores.Add(error);
+                            Estatico.ColocaError(error);
+                        }
+                    }
+                    else if(s is Arreglo)
+                    {
+                        Arreglo a = (Arreglo)s;
+                        Object v = this.valor.getValor(ambito);
+                        String tipoEncontrado = this.valor.getTipo(ambito);
+                        if (v is Arreglo)
+                        {
+                            Arreglo asig = (Arreglo)v;
+
+                            if(a.numDimensiones == asig.numDimensiones && a.Tipo.ToLower().Equals(asig.Tipo.ToLower()))
+                            {
+                                Ambito aux = buscarAmbitoDondeEsta(this.identificador.ToLower(), ambito);
+                                aux.removerArreglo(this.identificador.ToLower());
+                                aux.agregarVariableAlAmbito(this.identificador.ToLower(), new Arreglo(asig.linealizacion, asig.dimensiones, asig.numDimensiones, a.idSimbolo, true, a.Visibilidad, a.Tipo));
+                            }
+                            else
+                            {
+                                TError error = new TError("Semantico", " Arreglos no tienen la misma caracteristicas, Se esperaba arreglo: Dimensiones: "+a.numDimensiones+" y Tipo: "+a.Tipo+", Se econtro: Dimensiones: "+asig.numDimensiones+" y Tipo: "+asig.Tipo+"| Clase: " + this.clase + " | Archivo: " + ambito.archivo, linea, columna, false);
+                                Estatico.errores.Add(error);
+                                Estatico.ColocaError(error);
+                            }
+                        }
+                        else
+                        {
+                            TError error = new TError("Semantico", "Tipos no Coinciden al Asignar, Esperado: \"" + "Arreglo" + "\", Encontrado: " + tipoEncontrado + "\" | Clase: " + this.clase + " | Archivo: " + ambito.archivo, linea, columna, false);
                             Estatico.errores.Add(error);
                             Estatico.ColocaError(error);
                         }
@@ -64,6 +93,21 @@ namespace XForms.ASTTree.Sentencias
                 Estatico.ColocaError(error);
             }
             return null;
+        }
+
+
+        private Ambito buscarAmbitoDondeEsta(String id, Ambito ambito)
+        {
+            Ambito aux = ambito;
+            while(aux.Anterior!=null)
+            {
+                if(aux.existeVariable(id.ToLower()))
+                {
+                    return aux;
+                }
+                aux = aux.Anterior; 
+            }
+            return aux;
         }
     }
 }

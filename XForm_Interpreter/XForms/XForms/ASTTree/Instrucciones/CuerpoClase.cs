@@ -46,7 +46,7 @@ namespace XForms.ASTTree.Instrucciones
             }
             foreach(Instruccion instruccion in this.instrucciones)//DESPUES LA DECLARACION DE ATRIBUTOS
             {
-                if(instruccion is DeclaracionVar || instruccion is DeclaracionArr)
+                if(instruccion is DeclaracionVar || instruccion is DeclaracionArreglo)
                 {
                     instruccion.Ejecutar(ambito);
                 }

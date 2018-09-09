@@ -69,6 +69,14 @@ namespace XForms.ASTTree.Valores
                         /// 4) LO RETORNO
                         return objeto;
                     }
+                    else if(c==null && this.parametros.Count == 0)//CLASE SIN CONSTRUCTOR
+                    {
+                        /// 1) CREO EL AMBITO LOCAL
+                        Ambito local = new Ambito(auxiliar, this.clase.ToLower(), ambito.archivo);
+                        Objeto objeto = new Objeto(obj.idClase.ToLower(), auxiliar);
+                        this.valorAux = obj.idClase.ToLower();
+                        return objeto;
+                    }
                     else
                     {
                         TError error = new TError("Semantico","Error Constructor: "+clave.mensajeError+" | Clase: "+this.clase+" | Archivo: "+ambito.archivo, this.linea, this.columna, false);

@@ -92,9 +92,6 @@ namespace XForms.GramaticaIrony
             LLAMADAID_OBJ = new NonTerminal("LLAMADAID_OBJ"),
             LLAMADA = new NonTerminal("LLAMADA"),
             L_EXPRE = new NonTerminal("L_EXPRE"),
-            DIMENSIONES = new NonTerminal("DIMENSIONES"),
-            DIMENSION = new NonTerminal("DIMENSION"),
-            ARRAY = new NonTerminal("ARRAY"),
             DECLARACION_OBJ = new NonTerminal("DECLARACION_OBJ"),
             SENTENCIAS = new NonTerminal("SENTENCIAS"),
             SENTENCIAS_CONS = new NonTerminal("SENTENCIAS_CONS"),
@@ -102,7 +99,18 @@ namespace XForms.GramaticaIrony
             DIM_DEF = new NonTerminal("DIM_DEF"),
             IMPRIMIR = new NonTerminal("IMPRIMIR"),
             ASIGNACION = new NonTerminal("ASIGNACION"),
-            RETORNO = new NonTerminal("RETORNO");
+            RETORNO = new NonTerminal("RETORNO"),
+            EMPTYDIM = new NonTerminal("EMPTYDIM"),
+            REALDIM = new NonTerminal("REALDIM"),
+            DIMS = new NonTerminal("DIMS"),
+            ARRAYDEF = new NonTerminal("ARRAYDEF"),
+            ARRELEMENTS = new NonTerminal("ARRELEMENTS"),
+            AUXDIMS = new NonTerminal("AUXDIMS"),
+            DECLARACION_ARR = new NonTerminal("DECLARACION_ARR"),
+            ACCESOARRAY = new NonTerminal("ACCESOARRAY"),
+            CONDICIONAL_SI = new NonTerminal("CONDICIONAL_SI"),
+            SINO = new NonTerminal("SINO"),
+            LISTA_SINO = new NonTerminal("LISTA_SINO");
             #endregion
 
             #region Reglas
@@ -110,6 +118,7 @@ namespace XForms.GramaticaIrony
 
             //-----> INICIO DE GRAMATICA
 
+            #region INIT
             //-------------------------------------------------------------------------------------------
             INICIO.Rule = IMPORTACIONES + CLASES
                         | CLASES;
@@ -165,7 +174,9 @@ namespace XForms.GramaticaIrony
                              | MakeStarRule(CUERPOCLASE, GRUPO)
                              | MakeStarRule(CUERPOCLASE, FORMULARIO);
             //-------------------------------------------------------------------------------------------
+            #endregion
 
+            #region FUNCTIONS
             //-------------------------------------------------------------------------------------------
             FUNCIONES.Rule = VISIBILIDAD + TIPO + identificador + "(" + PARAMETROS + ")" + "{" + SENTENCIAS + "}"
                             | TIPO + identificador + "(" + PARAMETROS + ")" + "{" + SENTENCIAS + "}";
@@ -182,7 +193,9 @@ namespace XForms.GramaticaIrony
             DIM_DEF.Rule = "[" + entero + "]";
 
             //-------------------------------------------------------------------------------------------
+            #endregion
 
+            #region PRIN_CONS
             //-------------------------------------------------------------------------------------------
             PRINCIPAL.Rule = ToTerm("principal") + "(" + ")" + "{" + SENTENCIAS_CONS + "}";
             PRINCIPAL.ErrorRule = SyntaxError + "}";
@@ -193,7 +206,9 @@ namespace XForms.GramaticaIrony
 
             CONSTRUCTOR.ErrorRule = SyntaxError + "}";
             //-------------------------------------------------------------------------------------------
+            #endregion
 
+            #region FORMULARIOS
             //-------------------------------------------------------------------------------------------
             PREGUNTA.Rule = ToTerm("pregunta") + identificador + "(" + PARAMETROS + ")" + "{" + "}";
             PREGUNTA.ErrorRule = SyntaxError + "}";
@@ -208,23 +223,29 @@ namespace XForms.GramaticaIrony
             FORMULARIO.Rule = ToTerm("formulario") + identificador + "{" + "}";
             FORMULARIO.ErrorRule = SyntaxError + "}";
             //-------------------------------------------------------------------------------------------
+            #endregion
 
+            #region DECLARACIONES
             //-------------------------------------------------------------------------------------------
             DECLARACION_GLOBAL.Rule = TIPO + VISIBILIDAD + identificador + "=" + EXP + ";"
                                    | TIPO + VISIBILIDAD + identificador + ";"
-                                   | TIPO + VISIBILIDAD + identificador + DIMENSIONES + ";"
-                                   | TIPO + VISIBILIDAD + identificador + DIMENSIONES + "=" + EXP + ";";//POR SI UNA FUNCION O ALGUN OBJETO DEVELVE UN ARREGLO
-                                  
+                                   | TIPO + VISIBILIDAD + identificador + EMPTYDIM + ";" //INICIANDO UN ARREGLO VACIO
+                                   | TIPO + VISIBILIDAD + identificador + EMPTYDIM + "=" + EXP + ";" //EN CASO QUE VENGA UN NUEVO ARREGLO
+                                   | TIPO + VISIBILIDAD + identificador + EMPTYDIM + "=" + ARRAYDEF + ";"; // EN CASO QUE EL ARREGLO SE DEFINA DE UNA VEZ
+
             DECLARACION_GLOBAL.ErrorRule = SyntaxError + ";";
 
             DECLARACION_LOCAL.Rule = TIPO + identificador + "=" + EXP + ";"
                                    | TIPO + identificador + ";"
-                                   | TIPO + identificador + DIMENSIONES + ";"
-                                   | TIPO + identificador + DIMENSIONES + "=" + EXP + ";"; //POR SI UNA FUNCION O ALGUN OBJETO DEVELVE UN ARREGLO
+                                   | TIPO + identificador + EMPTYDIM + ";"
+                                   | TIPO + identificador + EMPTYDIM + "=" + EXP + ";" //EN CASO QUE VENGA UN NUEVO ARREGLO
+                                   | TIPO + identificador + EMPTYDIM + "=" + ARRAYDEF + ";"; // EN CASO QUE EL ARREGLO SE DEFINA DE UNA
 
             DECLARACION_LOCAL.ErrorRule = SyntaxError + ";";
             //-------------------------------------------------------------------------------------------
+            #endregion
 
+            #region EXPRESIONES
             //-------------------------------------------------------------------------------------------
             EXP.Rule = E;
             E.Rule = E + and + E
@@ -254,36 +275,47 @@ namespace XForms.GramaticaIrony
                      | falso
                      | LLAMADAID_OBJ
                      | DECLARACION_OBJ
-                     | ARRAY
+                     | DECLARACION_ARR
                      | nulo
                      ;
             //-------------------------------------------------------------------------------------------
+            #endregion
 
+            #region OBJETOS_ARRS
             //-------------------------------------------------------------------------------------------
             LLAMADAID_OBJ.Rule = MakePlusRule(LLAMADAID_OBJ, ToTerm("."), identificador)
                                | MakePlusRule(LLAMADAID_OBJ, ToTerm("."), LLAMADA);
 
-            LLAMADA.Rule = identificador + "(" + L_EXPRE + ")";
+            LLAMADA.Rule = identificador + "(" + L_EXPRE + ")"
+                         | identificador + DIMS;
 
             L_EXPRE.Rule = MakeStarRule(L_EXPRE, ToTerm(","), EXP);
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------
-            DIMENSIONES.Rule = MakePlusRule(DIMENSIONES, DIMENSION);
+            EMPTYDIM.Rule = MakePlusRule(EMPTYDIM, AUXDIMS);
 
-            DIMENSION.Rule = "[" + EXP + "]"
-                            | "[" + Empty + "]";
+            AUXDIMS.Rule = "[" + Empty + "]";
 
-            DIMENSION.ErrorRule = SyntaxError + "]";
+            DIMS.Rule = MakePlusRule(DIMS, REALDIM);
+
+            REALDIM.Rule = "[" + EXP + "]";
+            REALDIM.ErrorRule = SyntaxError + ";";
+
+            ARRAYDEF.Rule = "{" + ARRELEMENTS + "}";
+            ARRAYDEF.ErrorRule = SyntaxError + ";";
+
+            ARRELEMENTS.Rule = MakePlusRule(ARRELEMENTS, ToTerm(","),  EXP)
+                            | MakePlusRule(ARRELEMENTS, ToTerm(","), ARRAYDEF);
+
+            DECLARACION_ARR.Rule = "nuevo" + TIPO + DIMS;
+
+            ACCESOARRAY.Rule = identificador + DIMS;
+
             //-------------------------------------------------------------------------------------------
+            #endregion
 
-            //-------------------------------------------------------------------------------------------
-            ARRAY.Rule = "{" + L_EXPRE + "}"
-                       | "nuevo" + TIPO + DIMENSIONES;
-
-            ARRAY.ErrorRule = SyntaxError + ";";
-            //-------------------------------------------------------------------------------------------
-
+            #region OTROS
             //-------------------------------------------------------------------------------------------
             DECLARACION_OBJ.Rule = "nuevo" + TIPO + "(" + L_EXPRE + ")";
 
@@ -294,12 +326,15 @@ namespace XForms.GramaticaIrony
             SENTENCIAS.Rule = MakeStarRule(SENTENCIAS, DECLARACION_LOCAL)
                             | MakeStarRule(SENTENCIAS, IMPRIMIR)
                             | MakeStarRule(SENTENCIAS, ASIGNACION)
-                            | MakeStarRule(SENTENCIAS, RETORNO);
+                            | MakeStarRule(SENTENCIAS, RETORNO)
+                            | MakeStarRule(SENTENCIAS, CONDICIONAL_SI);
 
             SENTENCIAS_CONS.Rule = MakeStarRule(SENTENCIAS_CONS, DECLARACION_LOCAL)
                                  | MakeStarRule(SENTENCIAS_CONS, IMPRIMIR)
-                                 | MakeStarRule(SENTENCIAS_CONS, ASIGNACION);
+                                 | MakeStarRule(SENTENCIAS_CONS, ASIGNACION)
+                                 | MakeStarRule(SENTENCIAS_CONS, CONDICIONAL_SI);
             //-------------------------------------------------------------------------------------------
+            #endregion
 
 
             #region SENTENCIAS
@@ -309,13 +344,23 @@ namespace XForms.GramaticaIrony
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------
-            ASIGNACION.Rule = LLAMADAID_OBJ + "." + identificador + "=" + EXP + ";"
-                            | identificador + "=" + EXP + ";";
+            ASIGNACION.Rule = LLAMADAID_OBJ + "." + identificador + "=" + EXP + ";" // 3
+                            | identificador + "=" + EXP + ";" //2
+                            | LLAMADAID_OBJ + "." + identificador + DIMS + "=" + EXP + ";" //4
+                            | identificador + DIMS + "=" + EXP + ";"; //3
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------
             RETORNO.Rule = ToTerm("retorno") + EXP + ";"
                         | ToTerm("retorno") + ";";
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            CONDICIONAL_SI.Rule = ToTerm("Si") + "(" + EXP + ")" + "{" + SENTENCIAS + "}"
+                                | ToTerm("Si") + "(" + EXP + ")" + "{" + SENTENCIAS + "}" + SINO;
+
+            SINO.Rule = ToTerm("SiNo") + "{" + SENTENCIAS + "}"
+                      | ToTerm("SiNo") + CONDICIONAL_SI;
             //-------------------------------------------------------------------------------------------
             #endregion
 

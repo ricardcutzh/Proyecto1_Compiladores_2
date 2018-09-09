@@ -75,6 +75,10 @@ namespace XForms.Simbolos
             this.tablaVars.agregaVariable(id, vari);
         }
 
+        public void removerArreglo(String id)
+        {
+            this.tablaVars.removerArreglo(id);
+        }
         /*AQUI FALTA EL METODO PARA MANEJAR LAS FUNCIONES QUE EXISTEN EN UN AMBITO*/
         #endregion
 

@@ -79,6 +79,10 @@ namespace XForms.ASTTree.Valores
             {
                 return "vacio";
             }
+            else if(val is Arreglo)
+            {
+                return "Arreglo";
+            }
             //AQUI FALTA EL TIPO OBJETO
             return "vacio";
         }

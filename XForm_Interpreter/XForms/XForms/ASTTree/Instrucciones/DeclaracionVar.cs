@@ -47,7 +47,7 @@ namespace XForms.ASTTree.Instrucciones
                     //OBT EL VALOR
                     Object valor = this.expresion.getValor(ambito);//LLAMADA AL VALOR
                     String tipoaux = this.expresion.getTipo(ambito);
-                    if(this.tipo.ToLower().Equals(tipoaux.ToLower())) //SON DEL MISMO TIPO?
+                    if(this.tipo.ToLower().Equals(tipoaux.ToLower()) || tipoaux.ToLower().Equals("nulo")) //SON DEL MISMO TIPO? ESTO ME PERMITE ASIGNARLE NULO COMO TIPO VALIDO
                     {
                         //AQUI ASGINO LA VARIABLE
                         if(!ambito.existeVariable(this.idVar.ToLower())) //YA EXISTE?

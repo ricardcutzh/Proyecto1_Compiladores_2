@@ -78,6 +78,10 @@ namespace XForms.ASTTree.Valores
             {
                 return "vacio";
             }
+            else if(val is Arreglo)
+            {
+                return "Arreglo";
+            }
             //AQUI FALTA EL TIPO OBJETO
             return "vacio";
         }
@@ -101,7 +105,7 @@ namespace XForms.ASTTree.Valores
             }
             catch(Exception e)
             {
-                TError error = new TError("Ejecucion", "No se ejecuto de buena forma el retorno: Clase: " + this.clase + " | Archivo: " + ambito.archivo, this.linea, this.columna, false);
+                TError error = new TError("Ejecucion", "No se ejecuto de buena forma el retorno: Clase: " + this.clase + " | Archivo: " + ambito.archivo+" | "+e.Message, this.linea, this.columna, false);
                 Estatico.errores.Add(error);
                 Estatico.ColocaError(error);
             }

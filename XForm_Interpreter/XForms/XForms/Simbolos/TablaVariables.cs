@@ -42,17 +42,28 @@ namespace XForms.Simbolos
             }
         }
 
+        public void removerArreglo(String id)
+        {
+            this.variables.Remove(id);
+        }
+
         public String imprimeTabla()
         {
             String mensaje = "----------- TABLA DE VARS -----------------\n";
             foreach(DictionaryEntry d in this.variables)
             {
                 Simbolo aux = (Simbolo)d.Value;
-                mensaje += aux.ToString();
                 if(aux is Variable)
                 {
+                    mensaje += aux.ToString();
                     Variable v = (Variable)aux;
                     mensaje += " | "+v.valor.ToString()+"\n";
+                }
+                else if(aux is Arreglo)
+                {
+                    Arreglo a = (Arreglo)aux;
+                    mensaje += "Arreglo: " + a.idSimbolo + " | ";
+                    mensaje += a.ToString()+"\n";
                 }
             }
             mensaje += "-------------------------------------------------\n";

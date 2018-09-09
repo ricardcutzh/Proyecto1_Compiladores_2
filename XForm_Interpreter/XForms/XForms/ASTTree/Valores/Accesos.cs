@@ -164,12 +164,18 @@ namespace XForms.ASTTree.Valores
                     else
                     {
                         //ERROR PORQUE SE INTENTA ACCEDER A UNA PROPIEDAD QUE NO ES PUBLICA
+                        TError error = new TError("Semantico", "No es posible Acceder a la propiedad: \"" + s.idSimbolo + "\" ya que no es PUBLICO | Clase: " + this.clase + " | Archivo: " + ambito.archivo, this.linea, this.columna, false);
+                        Estatico.errores.Add(error);
+                        Estatico.ColocaError(error);
                         return null;
                     }
                 }
                 else
                 {
                     //ERROR LA PROPIEDAD A BUSCAR NO EXISTE Y MUESTRO IDAUX
+                    TError error = new TError("Semantico", "No existe la propiedad: "+idaux+" | Clase: "+this.clase+" | "+ambito.archivo, this.linea, this.columna, false);
+                    Estatico.errores.Add(error);
+                    Estatico.ColocaError(error);
                     return null;
                 }
             }
@@ -184,10 +190,12 @@ namespace XForms.ASTTree.Valores
                 else
                 {
                     //ERROR PORQUE SE INTENCA ACCEDER A UNA PROPIEDAD QUE NO ES PUBLICA
+                    TError error = new TError("Semantico", "No es posible Acceder a la propiedad: \"" + idaux + "\" ya que no es PUBLICO | Clase: " + this.clase + " | Archivo: " + ambito.archivo, this.linea, this.columna, false);
+                    Estatico.errores.Add(error);
+                    Estatico.ColocaError(error);
                     return new Nulo();
                 }
-                //AQUI PREGUNTO SI EXISTE LA FUNCION A LA QUE VOY A HACER REFERENCIA
-                
+                //AQUI PREGUNTO SI EXISTE LA FUNCION A LA QUE VOY A HACER REFERENCIA 
             }
             return null;
         }

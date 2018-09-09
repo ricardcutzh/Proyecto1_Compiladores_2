@@ -32,6 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FastColoredTextBox, Version=2.7.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\FastColoredTextBox.dll</HintPath>
+    </Reference>
     <Reference Include="irony">
       <HintPath>Resources\irony.dll</HintPath>
     </Reference>
@@ -52,7 +56,7 @@
     <Compile Include="ASTTree\ASTConstructor\ASTTreeConstructor.cs" />
     <Compile Include="ASTTree\ASTConstructor\ASTTreeExpresion.cs" />
     <Compile Include="ASTTree\Instrucciones\CuerpoClase.cs" />
-    <Compile Include="ASTTree\Instrucciones\DeclaracionArr.cs" />
+    <Compile Include="ASTTree\Instrucciones\DeclaracionArreglo.cs" />
     <Compile Include="ASTTree\Instrucciones\DeclaracionConstructor.cs" />
     <Compile Include="ASTTree\Instrucciones\DeclaracionFuncion.cs" />
     <Compile Include="ASTTree\Instrucciones\DeclaracionMain.cs" />
@@ -60,11 +64,13 @@
     <Compile Include="ASTTree\Interfaces\Expresion.cs" />
     <Compile Include="ASTTree\Interfaces\Instruccion.cs" />
     <Compile Include="ASTTree\Interfaces\NodoAST.cs" />
+    <Compile Include="ASTTree\Sentencias\AsignacionArregloComp.cs" />
     <Compile Include="ASTTree\Sentencias\AsignacionPropiedad.cs" />
     <Compile Include="ASTTree\Sentencias\AsignacionSimple.cs" />
+    <Compile Include="ASTTree\Sentencias\AsignacionSimpleArreglo.cs" />
     <Compile Include="ASTTree\Sentencias\Imprimir.cs" />
+    <Compile Include="ASTTree\Sentencias\SentenciaSi.cs" />
     <Compile Include="ASTTree\Valores\Accesos.cs" />
-    <Compile Include="ASTTree\Valores\Dimensiones.cs" />
     <Compile Include="ASTTree\Valores\Identificador.cs" />
     <Compile Include="ASTTree\Valores\Llamada.cs" />
     <Compile Include="ASTTree\Valores\NuevoArreglo.cs" />
@@ -91,6 +97,7 @@
     <Compile Include="Objs\Date.cs" />
     <Compile Include="Objs\Estatico.cs" />
     <Compile Include="Objs\Este.cs" />
+    <Compile Include="Objs\GeneradorArreglo.cs" />
     <Compile Include="Objs\Hour.cs" />
     <Compile Include="Objs\ListaClases.cs" />
     <Compile Include="Objs\NodoParametro.cs" />
@@ -144,7 +151,9 @@
   <ItemGroup>
     <None Include="Resources\if_document-open_118911.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\if_Warning_34248.ico" />
   </ItemGroup>

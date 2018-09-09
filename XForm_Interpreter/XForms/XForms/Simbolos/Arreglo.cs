@@ -9,44 +9,69 @@ namespace XForms.Simbolos
 {
     class Arreglo : Simbolo
     {
-        List<int> dimensiones;
-        List<Object> elementos;
+        public List<Object> arbolArreglo;
 
-        public Arreglo(List<int> dimensiones, string idSimbolo, bool esVector, Estatico.Vibililidad visibilidad, string Tipo) : base(idSimbolo, esVector, visibilidad, Tipo)
+        public List<Object> linealizacion;
+
+        public List<int> dimensiones;
+
+        public int numDimensiones;
+
+        public Boolean tienaArbol;
+
+        public Arreglo(List<Object>arbol, List<Object> linealizacion, List<int> dimensiones, int dimen, string idSimbolo, bool esVector, Estatico.Vibililidad visibilidad, string Tipo) : base(idSimbolo, esVector, visibilidad, Tipo)
         {
+            this.arbolArreglo = arbol;
+            this.linealizacion = linealizacion;
             this.dimensiones = dimensiones;
-            elementos = new List<object>();
+            this.numDimensiones = dimen;
+            tienaArbol = true;
         }
 
-        public bool tieneDimensiones()
+        public Arreglo(List<Object> linealizacion, List<int> dimensiones, int dimen, String idSimbolo, bool esVector, Estatico.Vibililidad visibilidad, String tipo):base(idSimbolo, esVector, visibilidad, tipo)
         {
-            foreach(int dim in this.dimensiones)
+            this.arbolArreglo = null;
+            this.linealizacion = linealizacion;
+            this.dimensiones = dimensiones;
+            this.numDimensiones = dimen;
+            tienaArbol = false;
+        }
+
+        public void setVisibilidad(Estatico.Vibililidad visibilidad)
+        {
+            this.Visibilidad = visibilidad;
+        }
+
+        public void setID(String id)
+        {
+            this.idSimbolo = id;
+        }
+
+        public void setTipo(String tipo)
+        {
+            this.Tipo = tipo;
+        }
+
+        public override string ToString()
+        {
+            String cad = "| Dimensiones " + this.numDimensiones + "Linealizado: "+this.linealizacion.Count+" | DefincionDim: ";
+            String aux = "";
+            foreach(int i in this.dimensiones)
             {
-                if(dim==0)
-                {
-                    return false;
-                }
+                aux += "[" + i + "]";
             }
-            return true;
+            cad += aux;
+            return cad;
         }
 
-        public Arreglo(List<Object> elementos, List<int> dimensiones, string idSimbolo, bool esVector, Estatico.Vibililidad visibilidad, String Tipo): base(idSimbolo, esVector, visibilidad, Tipo)
-        {
-            this.elementos = elementos;
-            this.dimensiones = dimensiones;
-        }
-
-        public void AddElemento(Object elemento)
-        {
-            this.elementos.Add(elemento);
-        }
-
-        public int calcularIndiceReal(List<int> coordenada)
+        public int calcularPosicion(List<int>coordenada)
         {
             int aux = 0;
-            for(int x = 0; x < coordenada.Count; x++)
+            int index = 0;
+            foreach(int i in coordenada)
             {
-                aux = calcularAuxiliar(x, aux, coordenada.ElementAt(x));
+                aux = calcularAuxiliar(index, aux, i);
+                index++;
             }
             return aux;
         }
@@ -65,10 +90,10 @@ namespace XForms.Simbolos
 
         public Boolean esCoordenadaValida(List<int> coordenada)
         {
-            if(coordenada.Count != this.dimensiones.Count) { return false; }
-            for(int x = 0; x < this.dimensiones.Count; x++)
+            if (coordenada.Count != dimensiones.Count) { return false; }
+            for(int x = 0; x< dimensiones.Count; x++)
             {
-                if(coordenada.ElementAt(x)>= this.dimensiones.ElementAt(x))
+                if(coordenada.ElementAt(x)>=dimensiones.ElementAt(x))
                 {
                     return false;
                 }
@@ -76,6 +101,15 @@ namespace XForms.Simbolos
             return true;
         }
 
+        public object getElementFromArray(int index)
+        {
+            return this.linealizacion.ElementAt(index);
+        }
 
+        public void setValueAtPosition(int index, Object elemento)
+        {
+            this.linealizacion.RemoveAt(index);
+            this.linealizacion.Insert(index, elemento);
+        }
     }
 }

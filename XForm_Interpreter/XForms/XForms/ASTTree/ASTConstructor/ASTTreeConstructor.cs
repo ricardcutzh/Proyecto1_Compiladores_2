@@ -211,26 +211,25 @@ namespace XForms.ASTTree.ASTConstructor
                                     return declaracion;
                                 }
                             }
-                            else if(raiz.ChildNodes.ElementAt(3).ToString().Equals("DIMENSIONES"))
+                            else /// PARA ARREGLOS VACIOS
                             {
-                                //AQUI MANEJO LAS DIMENSIONES DEL ARRAY
-                                String tipo = (String)dameTipo(raiz.ChildNodes.ElementAt(0));//1
-                                Estatico.Vibililidad vibililidad = (Estatico.Vibililidad)dameVisibilidad(raiz.ChildNodes.ElementAt(1));//2
-                                String idva = raiz.ChildNodes.ElementAt(2).Token.Text.ToLower();//3
-                                /////////////////////////////////////////////////////////////////
-                                // AQUI PIDO LAS DIMENSIONES DEL ARREGLO
-                                Dimensiones dim = (Dimensiones)getDimensiones(raiz.ChildNodes.ElementAt(3));//4
-                                if(tipo!=null && dim!=null)
+                                /// TIPO + VISIBILIDAD + identificador + EMPTYDIM + ";"
+                                String tipo = (String)dameTipo(raiz.ChildNodes.ElementAt(0));//OBTENGO EL TIPO
+
+                                Estatico.Vibililidad visibilidad = (Estatico.Vibililidad)dameVisibilidad(raiz.ChildNodes.ElementAt(1)); //OBTENGO LA VISIBILIDAD
+
+                                String idArr = raiz.ChildNodes.ElementAt(2).Token.Text.ToLower();//OBTENGO EL ID DEL ARREGLO
+                                int linea = raiz.ChildNodes.ElementAt(2).Token.Location.Line;
+                                int col = raiz.ChildNodes.ElementAt(2).Token.Location.Column;
+
+                                int numDim = (int)dameNumeroDimensiones(raiz.ChildNodes.ElementAt(3));//OBTENGO EL NUMERO DE DIMENSIONES
+
+                                if(tipo!=null)
                                 {
-                                    int linea = raiz.ChildNodes.ElementAt(2).Token.Location.Line;
-                                    int col = raiz.ChildNodes.ElementAt(2).Token.Location.Column;
-                                    DeclaracionArr declaracion = new DeclaracionArr(dim,tipo, linea, col, this.clase);
-                                    declaracion.SetArchivoOrigen(archivo);
+                                    DeclaracionArreglo declaracion = new DeclaracionArreglo(tipo, visibilidad, idArr, numDim, linea, col, this.clase);
                                     return declaracion;
                                 }
-                                /////////////////////////////////////////////////////////////////
                             }
-
                         }   
                         if(raiz.ChildNodes.Count == 3)
                         {
@@ -248,20 +247,50 @@ namespace XForms.ASTTree.ASTConstructor
                         }
                         if(raiz.ChildNodes.Count == 5)
                         {
-                            //TIPO + VISIBILIDAD + identificador + DIMENSIONES + "=" + EXP + ";";
-                            String tipo = (String)dameTipo(raiz.ChildNodes.ElementAt(0));//1
-                            Estatico.Vibililidad vibililidad = (Estatico.Vibililidad)dameVisibilidad(raiz.ChildNodes.ElementAt(1));//2
-                            String idva = raiz.ChildNodes.ElementAt(2).Token.Text.ToLower();//3
-                            Dimensiones dim = (Dimensiones)getDimensiones(raiz.ChildNodes.ElementAt(3));//4
-                            ASTTreeExpresion arbolExpre = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(4), this.clase, this.archivo);
-                            Expresion exp = (Expresion)arbolExpre.ConstruyeASTExpresion();
-                            if(tipo!=null && dim!=null && exp!=null)
+                            ///PARA LOS ARRAYS                          
+                            if(raiz.ChildNodes.ElementAt(4).ToString().Equals("EXP"))
                             {
+                                ///TIPO + VISIBILIDAD + identificador + EMPTYDIM + "=" + EXP + ";"
+                                String tipo = (String)dameTipo(raiz.ChildNodes.ElementAt(0));//OBTENGO EL TIPO
+
+                                Estatico.Vibililidad visibilidad = (Estatico.Vibililidad)dameVisibilidad(raiz.ChildNodes.ElementAt(1));//OBTENGO LA VISIBILIDAD
+
+                                String idArr = raiz.ChildNodes.ElementAt(2).Token.Text.ToLower();//OBTENGO EL ID DEL ARREGLO
                                 int linea = raiz.ChildNodes.ElementAt(2).Token.Location.Line;
                                 int col = raiz.ChildNodes.ElementAt(2).Token.Location.Column;
-                                DeclaracionArr declaracion = new DeclaracionArr(dim, tipo, exp, linea, col, clase);
-                                declaracion.SetArchivoOrigen(archivo);
-                                return declaracion;
+
+                                int numDim = (int)dameNumeroDimensiones(raiz.ChildNodes.ElementAt(3));//OBTENGO EL NUMERO DE DIMENSIONES
+
+                                ASTTreeExpresion arbolExp = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(4), this.clase, this.archivo);
+                                Expresion exp = (Expresion)arbolExp.ConstruyeASTExpresion();
+
+                                if (tipo!=null && exp!=null)
+                                {
+
+                                    DeclaracionArreglo decla = new DeclaracionArreglo(tipo, visibilidad, idArr, numDim, exp, linea, col, this.clase);
+                                    return decla;
+                                }
+                            }
+                            else
+                            {
+                                ///TIPO + VISIBILIDAD + identificador + EMPTYDIM + "=" + ARRAYDEF + ";"
+                                String tipo = (String)dameTipo(raiz.ChildNodes.ElementAt(0));//OBTENGO EL TIPO
+
+                                Estatico.Vibililidad visibilidad = (Estatico.Vibililidad)dameVisibilidad(raiz.ChildNodes.ElementAt(1));//OBTENGO LA VISIBILIDAD
+
+                                String idArr = raiz.ChildNodes.ElementAt(2).Token.Text.ToLower();//OBTENGO EL ID DEL ARREGLO
+                                int linea = raiz.ChildNodes.ElementAt(2).Token.Location.Line;
+                                int col = raiz.ChildNodes.ElementAt(2).Token.Location.Column;
+
+                                int numDim = (int)dameNumeroDimensiones(raiz.ChildNodes.ElementAt(3));//OBTENGO EL NUMERO DE DIMENSIONES
+
+                                List<Object> arbolArreglo = (List<Object>)obtenerArbolArreglo(raiz.ChildNodes.ElementAt(4));// OBTENGO EL ARBOL QUE DESCRIBE EL ARREGLO
+
+                                if(tipo!=null && arbolArreglo!=null)
+                                {
+                                    DeclaracionArreglo declaracion = new DeclaracionArreglo(tipo, visibilidad, idArr, numDim, arbolArreglo, linea, col, clase);
+                                    return declaracion;
+                                }
                             }
                         }
                         break;
@@ -286,23 +315,22 @@ namespace XForms.ASTTree.ASTConstructor
                                     return declaracion;
                                 }
                             }
-                            else if(raiz.ChildNodes.ElementAt(2).ToString().Equals("DIMENSIONES"))
+                            else /// ARREGLOS SIN INICIALIZAR
                             {
-                                //MANEJO LAS DIMENSIONES
-                                String tipo = (String)dameTipo(raiz.ChildNodes.ElementAt(0));
-                                String idvar = raiz.ChildNodes.ElementAt(1).Token.Text.ToLower();
-                                /////////////////////////////////////////////////////////////////
-                                // AQUI PIDO LAS DIMENSIONES DEL ARREGLO
-                                Dimensiones dim = (Dimensiones)getDimensiones(raiz.ChildNodes.ElementAt(2));
-                                if(tipo!=null && dim!=null)
+                                /// TIPO  identificador + EMPTYDIM + ";"
+                                String tipo = (String)dameTipo(raiz.ChildNodes.ElementAt(0)); //OBTENGO EL TIPO
+
+                                String idArr = raiz.ChildNodes.ElementAt(1).Token.Text.ToLower();//OBTENGO EL ID DEL ARREGLO
+                                int linea = raiz.ChildNodes.ElementAt(1).Token.Location.Line;
+                                int col = raiz.ChildNodes.ElementAt(1).Token.Location.Column;
+
+                                int numDim = (int)dameNumeroDimensiones(raiz.ChildNodes.ElementAt(2));//OBTENGO EL NUMERO DE DIMENSIONES
+
+                                if(tipo!=null)
                                 {
-                                    int linea = raiz.ChildNodes.ElementAt(1).Token.Location.Line;
-                                    int col = raiz.ChildNodes.ElementAt(1).Token.Location.Column;
-                                    DeclaracionArr arr = new DeclaracionArr(dim, tipo,  linea, col, clase);
-                                    arr.SetArchivoOrigen(archivo);
-                                    return arr;
+                                    DeclaracionArreglo decla = new DeclaracionArreglo(tipo, Estatico.Vibililidad.LOCAL, idArr, numDim, linea, col, clase);
+                                    return decla;
                                 }
-                                /////////////////////////////////////////////////////////////////
                             }
                         }
                         if(raiz.ChildNodes.Count == 2)
@@ -320,23 +348,46 @@ namespace XForms.ASTTree.ASTConstructor
                         }
                         if(raiz.ChildNodes.Count == 4)
                         {
-                            //TIPO + identificador + DIMENSIONES + "=" + EXP + ";";
-                            String tipo = (String)dameTipo(raiz.ChildNodes.ElementAt(0));
-                            String idvar = raiz.ChildNodes.ElementAt(1).Token.Text.ToLower();
-                            ///////////////////////////////////////////////////////////////////////////////////////////////////
-                            /// DIMENSIONES
-                            Dimensiones dim = (Dimensiones)getDimensiones(raiz.ChildNodes.ElementAt(2));
-                            ///////////////////////////////////////////////////////////////////////////////////////////////////
-                            ASTTreeExpresion aux = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(3), this.clase, this.archivo);
-                            Expresion exp = (Expresion)aux.ConstruyeASTExpresion();
-                            ///////////////////////////////////////////////////////////////////////////////////////////////////
-                            if(tipo!=null && dim!=null && exp!=null)
+                            ///ESTE ES PARA LOS ARRAYS
+                            if(raiz.ChildNodes.ElementAt(3).ToString().Equals("EXP"))
                             {
+                                ///TIPO + identificador + EMPTYDIM + "=" + EXP + ";"
+                                String tipo = (String)dameTipo(raiz.ChildNodes.ElementAt(0)); //OBTENGO EL TIPO
+
+                                String idArr = raiz.ChildNodes.ElementAt(1).Token.Text.ToLower();//OBTENGO EL ID DEL ARREGLO
                                 int linea = raiz.ChildNodes.ElementAt(1).Token.Location.Line;
                                 int col = raiz.ChildNodes.ElementAt(1).Token.Location.Column;
-                                DeclaracionArr declaracion = new DeclaracionArr(dim, tipo,  exp, linea, col, clase);
-                                declaracion.SetArchivoOrigen(archivo);
-                                return declaracion;
+
+                                int numDim = (int)dameNumeroDimensiones(raiz.ChildNodes.ElementAt(2));//OBTENGO EL NUMERO DE DIMENSIONES
+
+                                ASTTreeExpresion arbolExp = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(3), this.clase, this.archivo);
+                                Expresion exp = (Expresion)arbolExp.ConstruyeASTExpresion();
+
+                                if (tipo!=null && exp!=null)
+                                {
+                                    DeclaracionArreglo de = new DeclaracionArreglo(tipo, Estatico.Vibililidad.LOCAL, idArr, numDim, exp, linea, col, clase);
+                                    return de;
+                                }
+                            }
+                            else
+                            {
+                                ///TIPO + identificador + EMPTYDIM + "=" + ARRAYDEF + ";"
+                                String tipo = (String)dameTipo(raiz.ChildNodes.ElementAt(0)); //OBTENGO EL TIPO
+
+                                String idArr = raiz.ChildNodes.ElementAt(1).Token.Text.ToLower();//OBTENGO EL ID DEL ARREGLO
+                                int linea = raiz.ChildNodes.ElementAt(1).Token.Location.Line;
+                                int col = raiz.ChildNodes.ElementAt(1).Token.Location.Column;
+
+                                int numDim = (int)dameNumeroDimensiones(raiz.ChildNodes.ElementAt(2));//OBTENGO EL NUMERO DE DIMENSIONES
+
+                                List<Object> arbolArreglo = (List<Object>)obtenerArbolArreglo(raiz.ChildNodes.ElementAt(3));//OBTENGO LA DEFINICION DEL ARREGLO
+
+                                if(tipo!=null && arbolArreglo!=null)
+                                {
+                                    DeclaracionArreglo de = new DeclaracionArreglo(tipo, Estatico.Vibililidad.LOCAL, idArr, numDim, arbolArreglo, linea, col, clase);
+                                    return de;
+                                }
+                                
                             }
                         }
                         break;
@@ -405,26 +456,26 @@ namespace XForms.ASTTree.ASTConstructor
             String etiqueta = raiz.ToString();
             switch(etiqueta)
             {
-                case "DIMENSIONES":
+                case "DIMS":
                     {
-                        List<Expresion> expr = new List<Expresion>();
-                        foreach(ParseTreeNode nodo in raiz.ChildNodes)
+                        List<Expresion> dimensiones = new List<Expresion>();
+                        foreach (ParseTreeNode nodo in raiz.ChildNodes)
                         {
-                            Expresion aux = (Expresion)getDimensiones(nodo);
-                            if(aux!=null)
+                            Expresion exp = (Expresion)getDimensiones(nodo);
+                            if (exp != null)
                             {
-                                expr.Add(aux);
+                                dimensiones.Add(exp);
                             }
                         }
-                        Dimensiones dim = new Dimensiones(expr, 0, 0, this.clase);
-                        return dim;
+                        return dimensiones;
                     }
-                case "DIMENSION":
+                case "REALDIM":
                     {
-                        if(raiz.ChildNodes.Count==1)
+                        if (raiz.ChildNodes.Count == 1)
                         {
-                            ASTTreeExpresion arbolExpre = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(0), this.clase, this.archivo);
-                            return arbolExpre.ConstruyeASTExpresion();
+                            ASTTreeExpresion arbolExp = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(0), this.clase, this.archivo);
+                            Expresion exp = (Expresion)arbolExp.ConstruyeASTExpresion();
+                            return exp;
                         }
                         break;
                     }
@@ -516,8 +567,10 @@ namespace XForms.ASTTree.ASTConstructor
                     }
                 case "ASIGNACION":
                     {
-                        if(raiz.ChildNodes.Count == 2)
+                        if(raiz.ChildNodes.Count == 2) 
                         {
+                            /// identificador + "=" + EXP + ";" //2
+                            
                             /// DEL HIJO EN 0 OBTENGO ID A QUIEN VOY A ASIGNAR
                                 String id = raiz.ChildNodes.ElementAt(0).Token.Text.ToLower();
                                 int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
@@ -533,20 +586,66 @@ namespace XForms.ASTTree.ASTConstructor
                         }
                         if(raiz.ChildNodes.Count == 3)
                         {
-                            /// DEL HIJO 0 TENGO EL VALOR DE TIPO OBJETO QUE ESPERO SIEMPRE
+                            if(raiz.ChildNodes.ElementAt(1).ToString().Contains("identificador"))
+                            {
+                                /// LLAMADAID_OBJ + "." + identificador + "=" + EXP + ";"
+                                
+                                /// DEL HIJO 0 TENGO EL VALOR DE TIPO OBJETO QUE ESPERO SIEMPRE
+                                ASTTreeExpresion arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(0), this.clase, this.archivo);
+                                Expresion exp1 = (Expresion)arbol.traeLlamadas(raiz.ChildNodes.ElementAt(0));
+                                /// DEL HIJO 1 OBTENGO LA PROPIEDAD A LA QUE SE LE VA ASIGNAR EL VALOR
+                                String propiedad = raiz.ChildNodes.ElementAt(1).Token.Text.ToLower();
+                                int linea = raiz.ChildNodes.ElementAt(1).Token.Location.Line;
+                                int col = raiz.ChildNodes.ElementAt(1).Token.Location.Column;
+                                /// DEL HIJO 2 OBTENGO EL VALOR A ASIGNAR EN LA PROPIEDAD
+                                ASTTreeExpresion arbol2 = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(2), this.clase, this.archivo);
+                                Expresion exp2 = (Expresion)arbol2.ConstruyeASTExpresion();
+
+                                if (exp1 != null && exp2 != null)
+                                {
+                                    AsignacionPropiedad asig = new AsignacionPropiedad(exp1, propiedad, exp2, linea, col, this.clase);
+                                    return asig;
+                                }
+                            }
+                            else if(raiz.ChildNodes.ElementAt(1).ToString().Contains("DIMS"))
+                            {
+                                /// identificador + DIMS + "=" + EXP + ";";
+                                /// 
+                                String identificadorArr = raiz.ChildNodes.ElementAt(0).Token.Text.ToLower();/// obtengo el id
+                                int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                                int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                                List<Expresion> dimensiones = (List<Expresion>)getDimensiones(raiz.ChildNodes.ElementAt(1)); //OBTENGO LAS DIMENSIONES
+
+                                ASTTreeExpresion arbolExp = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(2), this.clase, this.archivo); //OBTENTO LA EXPRESION QUE SE ASIGNA
+                                Expresion exp = (Expresion)arbolExp.ConstruyeASTExpresion();
+
+                                if(exp!=null && exp!=null)
+                                {
+                                    AsignacionSimpleArreglo asig = new AsignacionSimpleArreglo(identificadorArr, dimensiones, exp, linea, col, clase);
+                                    return asig;
+                                }
+                                
+                            }
+                        }
+                        if(raiz.ChildNodes.Count == 4)
+                        {
+                            /// LLAMADAID_OBJ + "." + identificador + DIMS + "=" + EXP + ";"
                             ASTTreeExpresion arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(0), this.clase, this.archivo);
                             Expresion exp1 = (Expresion)arbol.traeLlamadas(raiz.ChildNodes.ElementAt(0));
-                            /// DEL HIJO 1 OBTENGO LA PROPIEDAD A LA QUE SE LE VA ASIGNAR EL VALOR
-                            String propiedad = raiz.ChildNodes.ElementAt(1).Token.Text.ToLower();
+
+                            String identificadorArr = raiz.ChildNodes.ElementAt(1).Token.Text.ToLower();/// obtengo el id
                             int linea = raiz.ChildNodes.ElementAt(1).Token.Location.Line;
                             int col = raiz.ChildNodes.ElementAt(1).Token.Location.Column;
-                            /// DEL HIJO 2 OBTENGO EL VALOR A ASIGNAR EN LA PROPIEDAD
-                            ASTTreeExpresion arbol2 = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(2), this.clase, this.archivo);
-                            Expresion exp2 = (Expresion)arbol2.ConstruyeASTExpresion();
 
-                            if(exp1!=null && exp2!=null)
+                            List<Expresion> dimensiones = (List<Expresion>)getDimensiones(raiz.ChildNodes.ElementAt(2)); //OBTENGO LAS DIMENSIONES
+
+                            ASTTreeExpresion arbolExp = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(3), this.clase, this.archivo); //OBTENTO LA EXPRESION QUE SE ASIGNA
+                            Expresion exp = (Expresion)arbolExp.ConstruyeASTExpresion();
+
+                            if(exp!=null && dimensiones!=null)
                             {
-                                AsignacionPropiedad asig = new AsignacionPropiedad(exp1, propiedad, exp2, linea, col, this.clase);
+                                AsignacionArregloComp asig = new AsignacionArregloComp(exp1, new AsignacionSimpleArreglo(identificadorArr, dimensiones, exp, linea,col, clase), linea, col, clase);
                                 return asig;
                             }
                         }
@@ -572,6 +671,163 @@ namespace XForms.ASTTree.ASTConstructor
                             int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
                             int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
                             return new Retorno(linea, col, this.clase);
+                        }
+                        break;
+                    }
+                case "CONDICIONAL_SI":
+                    {
+                        if(raiz.ChildNodes.Count == 4)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            ASTTreeExpresion expr = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(1), this.clase, this.archivo);
+                            Expresion exp = (Expresion)expr.ConstruyeASTExpresion();
+
+                            List<object> instruccionesVerd = new List<object>();
+
+                            foreach (ParseTreeNode nodo in raiz.ChildNodes.ElementAt(2).ChildNodes)
+                            {
+                                Object instruccion = (Object)construyeSentencias(nodo);
+                                if (instruccion != null)
+                                {
+                                    instruccionesVerd.Add(instruccion);
+                                }
+                            }
+
+                            List<object> instrucFalsas = (List<object>)construyeSentencias(raiz.ChildNodes.ElementAt(3));
+
+                            if(instruccionesVerd!=null && instrucFalsas!=null && exp!=null)
+                            {
+                                SentenciaSi s = new SentenciaSi(exp, instruccionesVerd, instrucFalsas, linea, col, this.clase);
+                                return s;
+                            }
+                        }
+                        if(raiz.ChildNodes.Count == 3)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            ASTTreeExpresion expr = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(1), this.clase, this.archivo);
+                            Expresion exp = (Expresion)expr.ConstruyeASTExpresion();
+
+                            List<object> instruccionesVerd = new List<object>();
+
+                            foreach(ParseTreeNode nodo in raiz.ChildNodes.ElementAt(2).ChildNodes)
+                            {
+                                Object instruccion = (Object)construyeSentencias(nodo);
+                                if(instruccion!=null)
+                                {
+                                    instruccionesVerd.Add(instruccion);
+                                }
+                            }
+
+                            if(exp!=null)
+                            {
+                                SentenciaSi si = new SentenciaSi(exp, instruccionesVerd, this.clase, linea, col);
+                                return si;
+                            }
+
+                        }
+                        break;
+                    }
+                case "SINO":
+                    {
+                        if(raiz.ChildNodes.Count == 2)
+                        {
+
+                            List<Object> sentFalsa = new List<object>();
+                            if(raiz.ChildNodes.ElementAt(1).ToString().Equals("SENTENCIAS"))
+                            {
+                                foreach(ParseTreeNode nodo in raiz.ChildNodes.ElementAt(1).ChildNodes)
+                                {
+                                    Object ins = construyeSentencias(nodo);
+                                    if(ins!=null)
+                                    {
+                                        sentFalsa.Add(ins);
+                                    }
+                                }
+                            }
+                            else if(raiz.ChildNodes.ElementAt(1).ToString().Equals("CONDICIONAL_SI"))
+                            {
+                                Instruccion ins = (Instruccion)construyeSentencias(raiz.ChildNodes.ElementAt(1));
+                                if(ins!=null)
+                                {
+                                    sentFalsa.Add(ins);
+                                }
+                            }
+
+                            return sentFalsa;
+                        }
+                        break;
+                    }
+            }
+            return null;
+        }
+        #endregion
+
+        #region DIMVACIAS
+        private object dameNumeroDimensiones(ParseTreeNode raiz)
+        {
+            String etiqueta = raiz.ToString();
+            switch(etiqueta)
+            {
+                case "EMPTYDIM":
+                    {
+                        if(raiz.ChildNodes.Count > 0)
+                        {
+                            int d = 0;
+                            foreach(ParseTreeNode n in raiz.ChildNodes)
+                            {
+                                d++;
+                            }
+                            return d;
+                        }
+                        break;
+                    }
+            }
+            return 1;
+        }
+        #endregion
+
+        #region DEFINICIONARRAY
+        private Object obtenerArbolArreglo(ParseTreeNode raiz)
+        {
+            String etiqueta = raiz.ToString();
+            switch(etiqueta)
+            {
+                case "ARRAYDEF":
+                    {
+                        if(raiz.ChildNodes.Count == 1)
+                        {
+                            return obtenerArbolArreglo(raiz.ChildNodes.ElementAt(0));
+                        }
+                        break;
+                    }
+                case "ARRELEMENTS":
+                    {
+                        if(raiz.ChildNodes.Count > 0)
+                        {
+                            List<Object> elementos = new List<object>();
+                            foreach(ParseTreeNode n in raiz.ChildNodes)
+                            {
+                                Object elem = obtenerArbolArreglo(n);
+                                if(elem!=null)
+                                {
+                                    elementos.Add(elem);
+                                }
+                            }
+                            return elementos;
+                        }
+                        break;
+                    }
+                case "EXP":
+                    {
+                        if(raiz.ChildNodes.Count == 1)
+                        {
+                            ASTTreeExpresion exp = new ASTTreeExpresion(raiz, this.clase, this.archivo);
+                            Expresion expre = (Expresion)exp.ConstruyeASTExpresion();
+                            return expre;
                         }
                         break;
                     }

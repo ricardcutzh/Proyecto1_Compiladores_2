@@ -10,10 +10,10 @@ namespace XForms.Simbolos
 {
     class Simbolo
     {
-        public String idSimbolo { get; } //ID DEL SIMBOLO
+        public String idSimbolo { get; set; } //ID DEL SIMBOLO
         public Boolean esVector { get; } //ES VECTOR?
-        public Estatico.Vibililidad Visibilidad { get; } //VISIBILIDAD
-        public String Tipo { get; } //TIPO DE EL SIMBOLO
+        public Estatico.Vibililidad Visibilidad { get; set; } //VISIBILIDAD
+        public String Tipo { get; set; } //TIPO DE EL SIMBOLO
 
         public Simbolo(String idSimbolo, Boolean esVector, Estatico.Vibililidad visibilidad, String Tipo)//CONSTRUCTOR
         {
