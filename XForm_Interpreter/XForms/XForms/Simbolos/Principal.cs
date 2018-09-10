@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using XForms.ASTTree.Interfaces;
 using XForms.GramaticaIrony;
 using XForms.Objs;
-
+using XForms.ASTTree.Sentencias;
 namespace XForms.Simbolos
 {
     class Principal:NodoAST, Instruccion
@@ -25,7 +25,7 @@ namespace XForms.Simbolos
                 Ambito am = new Ambito(ambito, "Clase: " + this.clase, ambito.archivo);
                 foreach(Instruccion i in this.instrucciones)
                 {
-                    i.Ejecutar(am);
+                    i.Ejecutar(ambito);
                 }
             }
             catch(Exception e)

@@ -59,13 +59,21 @@ namespace XForms.ASTTree.Sentencias
                         {
                             foreach(Object o in this.sentenciasVerdaderas)
                             {
-                                if(o is Instruccion)
+                                if (o is Instruccion)
                                 {
                                     Instruccion aux = (Instruccion)o;
                                     Object s = aux.Ejecutar(ambito);
                                     if (s is NodoReturn)
                                     {
                                         return s;
+                                    }
+                                    else if (s is Romper)
+                                    {
+                                        return new Romper();
+                                    }
+                                    else if (s is Continuar)
+                                    {
+                                        return new Continuar();
                                     }
                                 }
                                 else if(o is Expresion)
@@ -75,6 +83,14 @@ namespace XForms.ASTTree.Sentencias
                                     if (s is NodoReturn)
                                     {
                                         return s;
+                                    }
+                                    else if (s is Romper)
+                                    {
+                                        return new Romper();
+                                    }
+                                    else if (s is Continuar)
+                                    {
+                                        return new Continuar();
                                     }
                                 }
                             }
@@ -95,6 +111,14 @@ namespace XForms.ASTTree.Sentencias
                                     {
                                         return s;
                                     }
+                                    else if(s is Romper)
+                                    {
+                                        return new Romper();
+                                    }
+                                    else if(s is Continuar)
+                                    {
+                                        return new Continuar();
+                                    }
                                 }
                                 else if (o is Expresion)
                                 {
@@ -103,6 +127,14 @@ namespace XForms.ASTTree.Sentencias
                                     if (s is NodoReturn)
                                     {
                                         return s;
+                                    }
+                                    else if (s is Romper)
+                                    {
+                                        return new Romper();
+                                    }
+                                    else if (s is Continuar)
+                                    {
+                                        return new Continuar();
                                     }
                                 }
                             }
@@ -112,13 +144,21 @@ namespace XForms.ASTTree.Sentencias
                         {
                             foreach(Object o in this.sentenciasFalso)
                             {
-                                if(o is Instruccion)
+                                if (o is Instruccion)
                                 {
                                     Instruccion aux = (Instruccion)o;
                                     Object s = aux.Ejecutar(ambito);
                                     if (s is NodoReturn)
                                     {
                                         return s;
+                                    }
+                                    else if (s is Romper)
+                                    {
+                                        return new Romper();
+                                    }
+                                    else if (s is Continuar)
+                                    {
+                                        return new Continuar();
                                     }
                                 }
                                 else if (o is Expresion)
@@ -128,6 +168,14 @@ namespace XForms.ASTTree.Sentencias
                                     if (s is NodoReturn)
                                     {
                                         return s;
+                                    }
+                                    else if (s is Romper)
+                                    {
+                                        return new Romper();
+                                    }
+                                    else if (s is Continuar)
+                                    {
+                                        return new Continuar();
                                     }
                                 }
                             }
@@ -138,6 +186,8 @@ namespace XForms.ASTTree.Sentencias
                 else
                 {
                     TError error = new TError("Semantico", "La condicional se espera un valor Booleano y se encontro: \""+tipoaux+"\" | Clase: " + this.clase + " | Archivo: " + ambito.archivo , linea, columna, false);
+                    Estatico.errores.Add(error);
+                    Estatico.ColocaError(error);
                 }
             }
             catch(Exception e)

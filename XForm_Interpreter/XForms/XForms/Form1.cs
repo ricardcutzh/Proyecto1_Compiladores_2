@@ -351,8 +351,8 @@ namespace XForms
 
 
         Style GreenStyle = new TextStyle(Brushes.Green, null, FontStyle.Italic);
-        Style BlueStyle = new TextStyle(Brushes.Blue, null, FontStyle.Italic);
-        Style LightBlue = new TextStyle(Brushes.DarkViolet, null, FontStyle.Italic);
+        Style BlueStyle = new TextStyle(Brushes.Blue, null, FontStyle.Bold);
+        Style LightBlue = new TextStyle(Brushes.DarkViolet, null, FontStyle.Bold);
         Style StringStyle = new TextStyle(Brushes.Brown, null, FontStyle.Regular);
         private void fastColoredTextBox1_TextChanged(Object sender, TextChangedEventArgs e)
         {
@@ -366,8 +366,10 @@ namespace XForms
             e.ChangedRange.SetFoldingMarkers("{", "}");
             e.ChangedRange.SetStyle(StringStyle, "\"((\\.)|[^\\\\\"])*\"");
 
-            e.ChangedRange.SetStyle(BlueStyle, @"\b(publico|privado|protegido|clase|padre|principal|imprimir|nuevo|este|retorno|romper|nulo|importar|sino|si)");
-            e.ChangedRange.SetStyle(BlueStyle, @"\b(Publico|Privado|Protegido|Clase|Padre|Principal|Imprimir|Nuevo|Este|Retorno|Romper|Nulo|Importar|SiNo|Si)");
+            e.ChangedRange.SetStyle(BlueStyle, @"\b(publico|privado|protegido|clase|padre|principal|imprimir|nuevo|este|retorno|romper|nulo|importar|sino|si|verdadero|falso)");
+            e.ChangedRange.SetStyle(BlueStyle, @"\b(Publico|Privado|Protegido|Clase|Padre|Principal|Imprimir|Nuevo|Este|Retorno|Romper|Nulo|Importar|SiNo|Si|Verdadero|Falso)");
+
+            e.ChangedRange.SetStyle(BlueStyle, @"\b(Mientras|mientras|continuar|Continuar|hacer|Hacer|Repetir|repetir|Hasta|hasta)");
 
             e.ChangedRange.SetStyle(LightBlue, @"\b(cadena|entero|decimal|booleano|fecha|hora|fechahora|vacio)");
 

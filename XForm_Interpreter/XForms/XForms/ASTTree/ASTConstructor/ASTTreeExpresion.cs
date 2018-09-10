@@ -91,6 +91,29 @@ namespace XForms.ASTTree.ASTConstructor
                         }
                         break;
                     }
+                case "IF_SIMPLE":
+                    {
+                        if (raiz.ChildNodes.Count == 5)
+                        {
+                            ASTTreeExpresion arbolExpresion = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(0), this.clase, this.archivo);
+                            Expresion condicion = (Expresion)arbolExpresion.ConstruyeASTExpresion();
+
+                            arbolExpresion = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(2), this.clase, this.archivo);
+                            Expresion verdadero = (Expresion)arbolExpresion.ConstruyeASTExpresion();
+
+                            arbolExpresion = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(4), this.clase, this.archivo);
+                            Expresion falso = (Expresion)arbolExpresion.ConstruyeASTExpresion();
+
+                            if (condicion != null && verdadero != null && falso != null)
+                            {
+                                int linea = raiz.ChildNodes.ElementAt(1).Token.Location.Line;
+                                int col = raiz.ChildNodes.ElementAt(1).Token.Location.Column;
+                                IfSimple simple = new IfSimple(condicion, verdadero, falso, this.clase, linea, col);
+                                return simple;
+                            }
+                        }
+                        break;
+                    }
             }
             return null;
         }

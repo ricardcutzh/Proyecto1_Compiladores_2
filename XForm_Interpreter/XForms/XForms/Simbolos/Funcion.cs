@@ -7,6 +7,7 @@ using XForms.Objs;
 using XForms.ASTTree.Interfaces;
 using XForms.ASTTree.Valores;
 using XForms.GramaticaIrony;
+using XForms.ASTTree.Sentencias;
 namespace XForms.Simbolos
 {
     class Funcion : NodoAST, Instruccion
@@ -60,7 +61,7 @@ namespace XForms.Simbolos
             {
                 foreach(Object ob in this.instrucciones)
                 {
-                    if(ob is Instruccion)
+                    if (ob is Instruccion)
                     {
                         Instruccion aux = (Instruccion)ob;
                         Object res = aux.Ejecutar(ambito);

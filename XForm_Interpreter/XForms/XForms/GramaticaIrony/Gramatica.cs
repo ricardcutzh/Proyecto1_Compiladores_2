@@ -110,7 +110,19 @@ namespace XForms.GramaticaIrony
             ACCESOARRAY = new NonTerminal("ACCESOARRAY"),
             CONDICIONAL_SI = new NonTerminal("CONDICIONAL_SI"),
             SINO = new NonTerminal("SINO"),
-            LISTA_SINO = new NonTerminal("LISTA_SINO");
+            LISTA_SINO = new NonTerminal("LISTA_SINO"),
+            IF_SIMPLE = new NonTerminal("IF_SIMPLE"),
+            MIENTRAS = new NonTerminal("MIENTRAS"),
+            ROMPER = new NonTerminal("ROMPER"),
+            CONTINUAR = new NonTerminal("CONTINUAR"),
+            LLAMADAFUNCION = new NonTerminal("LLAMADAFUN"),
+            HACERMIENTRAS = new NonTerminal("HACERMIENTRAS"),
+            REPETIRHASTA = new NonTerminal("REPETIRHASTA"),
+            INCREMENTO = new NonTerminal("INCREMENTO"),
+            DECREMENTO = new NonTerminal("DECREMENTO"),
+            FOR = new NonTerminal("FOR"),
+            VARCONTROL = new NonTerminal("VARCONTROL"),
+            OPERACION = new NonTerminal("OPERACION");
             #endregion
 
             #region Reglas
@@ -247,7 +259,9 @@ namespace XForms.GramaticaIrony
 
             #region EXPRESIONES
             //-------------------------------------------------------------------------------------------
-            EXP.Rule = E;
+            EXP.Rule = E
+                    | IF_SIMPLE;
+
             E.Rule = E + and + E
                      | E + or + E
                      | not + E
@@ -293,6 +307,10 @@ namespace XForms.GramaticaIrony
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------
+            LLAMADAFUNCION.Rule = LLAMADAID_OBJ + ";";
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
             EMPTYDIM.Rule = MakePlusRule(EMPTYDIM, AUXDIMS);
 
             AUXDIMS.Rule = "[" + Empty + "]";
@@ -327,12 +345,30 @@ namespace XForms.GramaticaIrony
                             | MakeStarRule(SENTENCIAS, IMPRIMIR)
                             | MakeStarRule(SENTENCIAS, ASIGNACION)
                             | MakeStarRule(SENTENCIAS, RETORNO)
-                            | MakeStarRule(SENTENCIAS, CONDICIONAL_SI);
+                            | MakeStarRule(SENTENCIAS, CONDICIONAL_SI)
+                            | MakeStarRule(SENTENCIAS, MIENTRAS)
+                            | MakeStarRule(SENTENCIAS, ROMPER)
+                            | MakeStarRule(SENTENCIAS, CONTINUAR)
+                            | MakeStarRule(SENTENCIAS, LLAMADAFUNCION)
+                            | MakeStarRule(SENTENCIAS, HACERMIENTRAS)
+                            | MakeStarRule(SENTENCIAS, REPETIRHASTA)
+                            | MakeStarRule(SENTENCIAS, INCREMENTO)
+                            | MakeStarRule(SENTENCIAS, DECREMENTO)
+                            | MakeStarRule(SENTENCIAS, FOR);
 
             SENTENCIAS_CONS.Rule = MakeStarRule(SENTENCIAS_CONS, DECLARACION_LOCAL)
                                  | MakeStarRule(SENTENCIAS_CONS, IMPRIMIR)
                                  | MakeStarRule(SENTENCIAS_CONS, ASIGNACION)
-                                 | MakeStarRule(SENTENCIAS_CONS, CONDICIONAL_SI);
+                                 | MakeStarRule(SENTENCIAS_CONS, CONDICIONAL_SI)
+                                 | MakeStarRule(SENTENCIAS_CONS, MIENTRAS)
+                                 | MakeStarRule(SENTENCIAS_CONS, ROMPER)
+                                 | MakeStarRule(SENTENCIAS_CONS, CONTINUAR)
+                                 | MakeStarRule(SENTENCIAS_CONS, LLAMADAFUNCION)
+                                 | MakeStarRule(SENTENCIAS_CONS, HACERMIENTRAS)
+                                 | MakeStarRule(SENTENCIAS_CONS, REPETIRHASTA)
+                                 | MakeStarRule(SENTENCIAS_CONS, INCREMENTO)
+                                 | MakeStarRule(SENTENCIAS_CONS, DECREMENTO)
+                                 | MakeStarRule(SENTENCIAS_CONS, FOR);
             //-------------------------------------------------------------------------------------------
             #endregion
 
@@ -361,6 +397,49 @@ namespace XForms.GramaticaIrony
 
             SINO.Rule = ToTerm("SiNo") + "{" + SENTENCIAS + "}"
                       | ToTerm("SiNo") + CONDICIONAL_SI;
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            IF_SIMPLE.Rule = E + ToTerm("?") + EXP + ToTerm(":") + EXP;
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            MIENTRAS.Rule = ToTerm("Mientras") + "(" + EXP + ")" + "{" + SENTENCIAS + "}";
+            MIENTRAS.ErrorRule = SyntaxError + "}";
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            HACERMIENTRAS.Rule = ToTerm("Hacer") + "{" + SENTENCIAS + "}" + ToTerm("Mientras") + "(" + EXP + ")" + ";";
+            HACERMIENTRAS.ErrorRule = SyntaxError + "}";
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            REPETIRHASTA.Rule = ToTerm("Repetir") + "{" + SENTENCIAS + "}" + ToTerm("Hasta") + "(" + EXP + ")" + ";";
+            REPETIRHASTA.ErrorRule = SyntaxError + "}";
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            ROMPER.Rule = ToTerm("Romper") + ";";
+            CONTINUAR.Rule = ToTerm("Continuar") + ";";
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            INCREMENTO.Rule = identificador + inc + ";";
+            INCREMENTO.ErrorRule = SyntaxError + ";";
+
+            DECREMENTO.Rule = identificador + dec + ";";
+            DECREMENTO.ErrorRule = SyntaxError + ";";
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            FOR.Rule = ToTerm("Para") + "(" + VARCONTROL + ";"  + EXP + ";" + OPERACION + ")" + "{" + SENTENCIAS + "}";
+
+            VARCONTROL.Rule = TIPO + identificador + "=" + EXP
+                          | identificador + "=" + EXP;
+
+            OPERACION.Rule = identificador + inc
+                           | identificador + dec
+                           | identificador + "=" + EXP;
             //-------------------------------------------------------------------------------------------
             #endregion
 

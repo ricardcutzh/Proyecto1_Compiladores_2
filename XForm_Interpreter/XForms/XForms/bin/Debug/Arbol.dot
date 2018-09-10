@@ -7,71 +7,57 @@ node5[label = "CUERPOCLASE", style = filled, color = lightblue];
 node6[label = "PRINCIPAL", style = filled, color = lightblue];
 node7[label = "principal", style = filled, color = lightblue];
 node8[label = "SENTENCIAS_CONS", style = filled, color = lightblue];
-node9[label = "CONDICIONAL_SI", style = filled, color = lightblue];
-node10[label = "Si", style = filled, color = lightblue];
-node11[label = "EXP", style = filled, color = lightblue];
-node12[label = "E", style = filled, color = lightblue];
-node13[label = "E", style = filled, color = lightblue];
-node14[label = "entero", style = filled, color = lightblue];
-node15[label = "<", style = filled, color = lightblue];
-node16[label = "E", style = filled, color = lightblue];
-node17[label = "entero", style = filled, color = lightblue];
-node18[label = "SENTENCIAS", style = filled, color = lightblue];
-node19[label = "CONDICIONAL_SI", style = filled, color = lightblue];
-node20[label = "Si", style = filled, color = lightblue];
-node21[label = "EXP", style = filled, color = lightblue];
+node9[label = "DECLARACION_LOCAL", style = filled, color = lightblue];
+node10[label = "TIPO", style = filled, color = lightblue];
+node11[label = "entero", style = filled, color = lightblue];
+node12[label = "identificador", style = filled, color = lightblue];
+node13[label = "FOR", style = filled, color = lightblue];
+node14[label = "Para", style = filled, color = lightblue];
+node15[label = "VARCONTROL", style = filled, color = lightblue];
+node16[label = "identificador", style = filled, color = lightblue];
+node17[label = "EXP", style = filled, color = lightblue];
+node18[label = "E", style = filled, color = lightblue];
+node19[label = "entero", style = filled, color = lightblue];
+node20[label = "EXP", style = filled, color = lightblue];
+node21[label = "E", style = filled, color = lightblue];
 node22[label = "E", style = filled, color = lightblue];
-node23[label = "E", style = filled, color = lightblue];
-node24[label = "entero", style = filled, color = lightblue];
-node25[label = ">", style = filled, color = lightblue];
+node23[label = "LLAMADAID_OBJ", style = filled, color = lightblue];
+node24[label = "identificador", style = filled, color = lightblue];
+node25[label = "<", style = filled, color = lightblue];
 node26[label = "E", style = filled, color = lightblue];
 node27[label = "entero", style = filled, color = lightblue];
-node28[label = "SENTENCIAS", style = filled, color = lightblue];
-node29[label = "IMPRIMIR", style = filled, color = lightblue];
-node30[label = "imprimir", style = filled, color = lightblue];
-node31[label = "EXP", style = filled, color = lightblue];
-node32[label = "E", style = filled, color = lightblue];
-node33[label = "cadena", style = filled, color = lightblue];
-node34[label = "SINO", style = filled, color = lightblue];
-node35[label = "SiNo", style = filled, color = lightblue];
-node36[label = "SENTENCIAS", style = filled, color = lightblue];
-node37[label = "CONDICIONAL_SI", style = filled, color = lightblue];
-node38[label = "Si", style = filled, color = lightblue];
-node39[label = "EXP", style = filled, color = lightblue];
-node40[label = "E", style = filled, color = lightblue];
-node41[label = "verdadero", style = filled, color = lightblue];
-node42[label = "SENTENCIAS", style = filled, color = lightblue];
-node43[label = "IMPRIMIR", style = filled, color = lightblue];
-node44[label = "imprimir", style = filled, color = lightblue];
-node45[label = "EXP", style = filled, color = lightblue];
-node46[label = "E", style = filled, color = lightblue];
-node47[label = "cadena", style = filled, color = lightblue];
-node48[label = "SINO", style = filled, color = lightblue];
-node49[label = "SiNo", style = filled, color = lightblue];
-node50[label = "CONDICIONAL_SI", style = filled, color = lightblue];
-node51[label = "Si", style = filled, color = lightblue];
-node52[label = "EXP", style = filled, color = lightblue];
+node28[label = "OPERACION", style = filled, color = lightblue];
+node29[label = "identificador", style = filled, color = lightblue];
+node30[label = "++", style = filled, color = lightblue];
+node31[label = "SENTENCIAS", style = filled, color = lightblue];
+node32[label = "FOR", style = filled, color = lightblue];
+node33[label = "Para", style = filled, color = lightblue];
+node34[label = "VARCONTROL", style = filled, color = lightblue];
+node35[label = "TIPO", style = filled, color = lightblue];
+node36[label = "entero", style = filled, color = lightblue];
+node37[label = "identificador", style = filled, color = lightblue];
+node38[label = "EXP", style = filled, color = lightblue];
+node39[label = "E", style = filled, color = lightblue];
+node40[label = "entero", style = filled, color = lightblue];
+node41[label = "EXP", style = filled, color = lightblue];
+node42[label = "E", style = filled, color = lightblue];
+node43[label = "E", style = filled, color = lightblue];
+node44[label = "LLAMADAID_OBJ", style = filled, color = lightblue];
+node45[label = "identificador", style = filled, color = lightblue];
+node46[label = "<", style = filled, color = lightblue];
+node47[label = "E", style = filled, color = lightblue];
+node48[label = "entero", style = filled, color = lightblue];
+node49[label = "OPERACION", style = filled, color = lightblue];
+node50[label = "identificador", style = filled, color = lightblue];
+node51[label = "EXP", style = filled, color = lightblue];
+node52[label = "E", style = filled, color = lightblue];
 node53[label = "E", style = filled, color = lightblue];
-node54[label = "verdadero", style = filled, color = lightblue];
-node55[label = "SENTENCIAS", style = filled, color = lightblue];
-node56[label = "IMPRIMIR", style = filled, color = lightblue];
-node57[label = "imprimir", style = filled, color = lightblue];
-node58[label = "EXP", style = filled, color = lightblue];
-node59[label = "E", style = filled, color = lightblue];
-node60[label = "cadena", style = filled, color = lightblue];
-node61[label = "SINO", style = filled, color = lightblue];
-node62[label = "SiNo", style = filled, color = lightblue];
-node63[label = "SENTENCIAS", style = filled, color = lightblue];
-node64[label = "IMPRIMIR", style = filled, color = lightblue];
-node65[label = "imprimir", style = filled, color = lightblue];
-node66[label = "EXP", style = filled, color = lightblue];
-node67[label = "E", style = filled, color = lightblue];
-node68[label = "cadena", style = filled, color = lightblue];
-node69[label = "IMPRIMIR", style = filled, color = lightblue];
-node70[label = "imprimir", style = filled, color = lightblue];
-node71[label = "EXP", style = filled, color = lightblue];
-node72[label = "E", style = filled, color = lightblue];
-node73[label = "cadena", style = filled, color = lightblue];
+node54[label = "LLAMADAID_OBJ", style = filled, color = lightblue];
+node55[label = "identificador", style = filled, color = lightblue];
+node56[label = "+", style = filled, color = lightblue];
+node57[label = "E", style = filled, color = lightblue];
+node58[label = "entero", style = filled, color = lightblue];
+node59[label = "SENTENCIAS", style = filled, color = lightblue];
 "node0"--"node1"
 "node1"--"node2"
 "node2"--"node3"
@@ -82,67 +68,53 @@ node73[label = "cadena", style = filled, color = lightblue];
 "node6"--"node8"
 "node8"--"node9"
 "node9"--"node10"
-"node9"--"node11"
-"node11"--"node12"
-"node12"--"node13"
+"node10"--"node11"
+"node9"--"node12"
+"node8"--"node13"
 "node13"--"node14"
-"node12"--"node15"
-"node12"--"node16"
-"node16"--"node17"
-"node9"--"node18"
+"node13"--"node15"
+"node15"--"node16"
+"node15"--"node17"
+"node17"--"node18"
 "node18"--"node19"
-"node19"--"node20"
-"node19"--"node21"
+"node13"--"node20"
+"node20"--"node21"
 "node21"--"node22"
 "node22"--"node23"
 "node23"--"node24"
-"node22"--"node25"
-"node22"--"node26"
+"node21"--"node25"
+"node21"--"node26"
 "node26"--"node27"
-"node19"--"node28"
+"node13"--"node28"
 "node28"--"node29"
-"node29"--"node30"
-"node29"--"node31"
-"node31"--"node32"
+"node28"--"node30"
+"node13"--"node31"
+"node8"--"node32"
 "node32"--"node33"
-"node19"--"node34"
+"node32"--"node34"
 "node34"--"node35"
-"node34"--"node36"
-"node36"--"node37"
-"node37"--"node38"
-"node37"--"node39"
+"node35"--"node36"
+"node34"--"node37"
+"node34"--"node38"
+"node38"--"node39"
 "node39"--"node40"
-"node40"--"node41"
-"node37"--"node42"
+"node32"--"node41"
+"node41"--"node42"
 "node42"--"node43"
 "node43"--"node44"
-"node43"--"node45"
-"node45"--"node46"
-"node46"--"node47"
-"node9"--"node48"
-"node48"--"node49"
-"node48"--"node50"
-"node50"--"node51"
-"node50"--"node52"
+"node44"--"node45"
+"node42"--"node46"
+"node42"--"node47"
+"node47"--"node48"
+"node32"--"node49"
+"node49"--"node50"
+"node49"--"node51"
+"node51"--"node52"
 "node52"--"node53"
 "node53"--"node54"
-"node50"--"node55"
-"node55"--"node56"
-"node56"--"node57"
-"node56"--"node58"
-"node58"--"node59"
-"node59"--"node60"
-"node50"--"node61"
-"node61"--"node62"
-"node61"--"node63"
-"node63"--"node64"
-"node64"--"node65"
-"node64"--"node66"
-"node66"--"node67"
-"node67"--"node68"
-"node8"--"node69"
-"node69"--"node70"
-"node69"--"node71"
-"node71"--"node72"
-"node72"--"node73"
+"node54"--"node55"
+"node52"--"node56"
+"node52"--"node57"
+"node57"--"node58"
+"node32"--"node59"
 }

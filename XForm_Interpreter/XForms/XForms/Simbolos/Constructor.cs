@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using XForms.ASTTree.Interfaces;
 using XForms.Objs;
 using XForms.GramaticaIrony;
+using XForms.ASTTree.Sentencias;
 namespace XForms.Simbolos
 {
     class Constructor : NodoAST, Instruccion

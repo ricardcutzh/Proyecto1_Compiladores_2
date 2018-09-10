@@ -761,6 +761,239 @@ namespace XForms.ASTTree.ASTConstructor
                         }
                         break;
                     }
+                case "MIENTRAS":
+                    {
+                        if(raiz.ChildNodes.Count == 3)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            ASTTreeExpresion arbolExpre = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(1), this.clase, this.archivo);
+                            Expresion condicion = (Expresion)arbolExpre.ConstruyeASTExpresion();
+
+                            List<Object> sentencias = new List<object>();
+
+                            foreach(ParseTreeNode nodo in raiz.ChildNodes.ElementAt(2).ChildNodes)
+                            {
+                                Object ins = construyeSentencias(nodo);
+                                if(ins!=null)
+                                {
+                                    sentencias.Add(ins);
+                                }
+                            }
+
+                            if(condicion!=null)
+                            {
+                                SentenciaMientras sente = new SentenciaMientras(condicion, sentencias, this.clase, linea, col);
+                                return sente;
+                            }
+                            
+                        }
+                        break;
+                    }
+                case "ROMPER":
+                    {
+                        return new Romper();
+                    }
+                case "CONTINUAR":
+                    {
+                        return new Continuar();
+                    }
+                case "LLAMADAFUN":
+                    {
+                        if(raiz.ChildNodes.Count == 1)
+                        {
+                            ASTTreeExpresion aux = new ASTTreeExpresion(this.raiz.ChildNodes.ElementAt(0), this.clase, this.archivo);
+
+                            Expresion exp = (Expresion)aux.traeLlamadas(raiz.ChildNodes.ElementAt(0));
+
+                            if(exp!=null)
+                            {
+                                LLamadaFuncion f = new LLamadaFuncion(this.clase, 0, 0, exp);
+                                return f;
+                            }
+                        }
+                        break;
+                    }
+                case "HACERMIENTRAS":
+                    {
+                        if(raiz.ChildNodes.Count == 4)
+                        {
+                            ASTTreeExpresion arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(3), this.clase, this.archivo);
+                            Expresion condicion = (Expresion)arbol.ConstruyeASTExpresion();
+                            List<Object> intrucciones = new List<object>();
+                            foreach(ParseTreeNode nodo in raiz.ChildNodes.ElementAt(1).ChildNodes)
+                            {
+                                Object instruccion = construyeSentencias(nodo);
+                                if(instruccion!=null)
+                                {
+                                    intrucciones.Add(instruccion);
+                                }
+                            }
+
+                            if(condicion!=null)
+                            {
+                                int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                                int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+                                HacerMientras ciclo = new HacerMientras(condicion, intrucciones, this.clase, linea, col);
+                                return ciclo;
+                            }
+                        }
+                        break;
+                    }
+                case "REPETIRHASTA":
+                    {
+                        if(raiz.ChildNodes.Count == 4)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            List<Object> instrucciones = new List<object>();
+                            foreach(ParseTreeNode nodo in raiz.ChildNodes.ElementAt(1).ChildNodes)
+                            {
+                                object instruccion = construyeSentencias(nodo);
+                                if(instruccion!=null)
+                                {
+                                    instrucciones.Add(instruccion);
+                                }
+                            }
+
+                            ASTTreeExpresion arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(3), this.clase, this.archivo);
+                            Expresion exp = (Expresion)arbol.ConstruyeASTExpresion();
+
+                            if(exp!=null)
+                            {
+                                RepetirHasta rep = new RepetirHasta(instrucciones, exp, this.clase, linea, col);
+                                return rep;
+                            }
+                        }
+                        break;
+                    }
+                case "INCREMENTO":
+                    {
+                        if(raiz.ChildNodes.Count == 2)
+                        {
+                            String id = raiz.ChildNodes.ElementAt(0).Token.Text.ToLower();
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            Incremento inc = new Incremento(id, linea, col, this.clase);
+                            return inc;
+                        }
+                        break;
+                    }
+                case "DECREMENTO":
+                    {
+                        if(raiz.ChildNodes.Count == 2)
+                        {
+                            String id = raiz.ChildNodes.ElementAt(0).Token.Text.ToLower();
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            Decremento dec = new Decremento(id.ToLower(), this.clase, linea, col);
+                            return dec;
+                        }
+                        break;
+                    }
+                case "FOR":
+                    {
+                        if(raiz.ChildNodes.Count == 5)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            Instruccion varControl = (Instruccion)construyeSentencias(raiz.ChildNodes.ElementAt(1)); //TOMO LA ASIGNACION O LA DELCARACION
+
+                            ASTTreeExpresion arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(2), clase, archivo);
+                            Expresion condicion = (Expresion)arbol.ConstruyeASTExpresion();
+
+                            Instruccion operacion = (Instruccion)construyeSentencias(raiz.ChildNodes.ElementAt(3));// OPERACION DEL CICLO
+
+                            List<object> instrucciones = new List<object>();
+
+                            foreach(ParseTreeNode nodo in raiz.ChildNodes.ElementAt(4).ChildNodes)
+                            {
+                                object ins = construyeSentencias(nodo);
+                                if(ins!=null)
+                                {
+                                    instrucciones.Add(ins);
+                                }
+                            }
+                            
+                            if(varControl!=null && condicion!=null && operacion!=null)
+                            {
+                                CicloPara para = new CicloPara(varControl, condicion, operacion, instrucciones, clase, linea, col);
+                                return para;
+                            }
+
+                        }
+                        break;
+                    }
+                case "VARCONTROL":
+                    {
+                        if(raiz.ChildNodes.Count == 2)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+                            String id = raiz.ChildNodes.ElementAt(0).Token.Text.ToLower();
+
+                            ASTTreeExpresion arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(1), this.clase, this.archivo);
+                            Expresion exp = (Expresion)arbol.ConstruyeASTExpresion();
+
+                            if(exp!=null)
+                            {
+                                AsignacionSimple asig = new AsignacionSimple(exp, id.ToLower(), linea, col, clase);
+                                return asig;
+                            }
+                        }
+                        else if(raiz.ChildNodes.Count == 3)
+                        {
+                            String tipo = (String)dameTipo(raiz.ChildNodes.ElementAt(0));
+
+                            int linea = raiz.ChildNodes.ElementAt(1).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(1).Token.Location.Column;
+                            String id = raiz.ChildNodes.ElementAt(1).Token.Text.ToLower();
+
+                            ASTTreeExpresion arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(2), this.clase, this.archivo);
+                            Expresion exp = (Expresion)arbol.ConstruyeASTExpresion();
+
+                            if(tipo!=null && exp!=null)
+                            {
+                                DeclaracionVar dec = new DeclaracionVar(id.ToLower(), tipo, Estatico.Vibililidad.LOCAL, linea, col, this.clase);
+                                return dec;
+                            }
+                        }
+                        break;
+                    }
+                case "OPERACION":
+                    {
+                        if(raiz.ChildNodes.Count ==2)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+                            String identificador = raiz.ChildNodes.ElementAt(0).Token.Text.ToLower();
+
+                            if (raiz.ChildNodes.ElementAt(1).ToString().Contains("++"))
+                            {
+                                Incremento inc = new Incremento(identificador.ToLower(), linea, col, clase);
+                                return inc;
+                            }
+                            else if(raiz.ChildNodes.ElementAt(1).ToString().Contains("--"))
+                            {
+                                Decremento dec = new Decremento(identificador.ToLower(),clase, linea, col);
+                                return dec;
+                            }
+                            else if(raiz.ChildNodes.ElementAt(1).ToString().Contains("EXP"))
+                            {
+                                ASTTreeExpresion arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(1), clase, archivo);
+                                Expresion exp = (Expresion)arbol.ConstruyeASTExpresion();
+
+                                AsignacionSimple sig = new AsignacionSimple(exp, identificador.ToLower(), linea, col, clase);
+                                return sig;
+                            }
+                        }
+                        break;
+                    }
             }
             return null;
         }
