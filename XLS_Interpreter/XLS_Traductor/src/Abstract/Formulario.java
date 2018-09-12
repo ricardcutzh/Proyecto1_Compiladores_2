@@ -70,7 +70,7 @@ public class Formulario implements ArbolForm {
 
     @Override
     public Object traducirLocal(TablaSimbolos ts, ArrayList<String> tabs, ArrayList<TError> errores) {
-        String cad = dameTabulaciones() + "Formulario "+this.nombreForm+"(){\n";
+        String cad = dameTabulaciones() + "Formulario "+this.nombreForm+"{\n";
         tabula();
         cad += dameTabulaciones()+"Respuestas resp;\n";
         destabula();

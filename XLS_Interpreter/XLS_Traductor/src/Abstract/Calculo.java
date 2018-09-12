@@ -53,7 +53,7 @@ public class Calculo extends Atributo implements ArbolForm{
         String cad = "";
         StringReader stream = new StringReader(this.cadena);
         try {
-            cad += dameTabulaciones()+"publico Calcular(){\n";
+            cad += dameTabulaciones()+"publico vacio Calcular(){\n";
             ////////////////////////////////////////////////////////////////////
             tabula();
             ExpParser exp = new ExpParser(stream);

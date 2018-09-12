@@ -31,10 +31,64 @@ namespace XForms.ASTTree.Sentencias
         {
             try
             {
-                Object condicion = condicional.getValor(ambito);
+                Ambito ambitoFor = new Ambito(ambito, this.clase, ambito.archivo);
+                ambitoFor.tomaValoresDelAmbito(ambito, true);
+
+                varControl.Ejecutar(ambitoFor);
+                Object condicion = condicional.getValor(ambitoFor);
                 if(condicion is Boolean)
                 {
-                    //
+                    Boolean val = (Boolean)condicion;
+                    ///
+                    
+                    while(val)
+                    {
+                        foreach (Object o in this.instrucciones)
+                        {
+                            if (o is Instruccion)
+                            {
+                                Instruccion aux = (Instruccion)o;
+                                Object res = aux.Ejecutar(ambitoFor);
+                                if (res is NodoReturn)
+                                {
+                                    return res;
+                                }
+                                else if (res is Romper)
+                                {
+                                    goto HacerBreak;
+                                }
+                                else if (res is Continuar)
+                                {
+                                    goto HacerContinue;
+                                }
+                            }
+                            else if (o is Expresion)
+                            {
+                                Expresion exp = (Expresion)o;
+                                Object res = exp.getValor(ambitoFor);
+                                if (res is NodoReturn)
+                                {
+                                    return res;
+                                }
+                                else if (res is Romper)
+                                {
+                                    goto HacerBreak;
+                                }
+                                else if (res is Continuar)
+                                {
+                                    goto HacerContinue;
+                                }
+                            }
+
+                        }
+                        HacerContinue:
+                        operacion.Ejecutar(ambitoFor); //EJECTUO EL IMCREMENTO
+                        condicion = condicional.getValor(ambitoFor); // EVALUO LA CONDICION, OJO QUE LA TOMO DEL PADRE
+                        val = (Boolean)condicion; /// LA PASO A BOOLEANO
+                    }
+
+                    HacerBreak:
+                    return new Nulo();
                 }
                 else
                 {

@@ -410,6 +410,7 @@ public class ExpParser implements ExpParserConstants {
                                         //ACA SE HACE EL 
                                         Simbolo sim = this.ts.getSimbolo(aux);
                                         String papaSim = sim.getPadre();
+                                        papaSim = "";//aqui booro el padre del llamado
                                         if(!papaSim.equals("")) {papaSim += "().";}
                                         if(sim.getElemento() instanceof Pregunta)
                                         {
@@ -447,6 +448,7 @@ public class ExpParser implements ExpParserConstants {
                                                 }
 
                                                 String pad = sim.getPadre();
+                                                pad = "";//aqui borro el padre del llamado
                                                 if(!pad.equals(""))
                                                 {
                                                         pad +="().";

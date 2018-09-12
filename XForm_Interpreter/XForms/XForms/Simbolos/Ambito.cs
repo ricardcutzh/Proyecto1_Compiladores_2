@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using XForms.Objs;
 using System.Windows.Forms;
+using System.Collections;
 namespace XForms.Simbolos
 {
     class Ambito
@@ -121,6 +122,74 @@ namespace XForms.Simbolos
         public void agregarConstructor(ClaveFuncion clave, Constructor constr)
         {
             this.tablaConst.AgregaConstrucor(clave, constr);
+        }
+        #endregion
+
+        #region HEREDARAMBITO
+        public void tomaValoresDelAmbito(Ambito padre, bool ignoravisibilidad)
+        {
+            tomaVariables(padre.tablaVars, ignoravisibilidad);
+            tomaFunciones(padre.tablaFuns, ignoravisibilidad);
+            tomarConstructores(padre.tablaConst);
+        }
+
+        public void tomaVariables(TablaVariables tablaPadre, bool ignoraVisibilidad)
+        {
+            Hashtable auxiliar = tablaPadre.variables;
+            foreach(DictionaryEntry data in auxiliar)
+            {
+                if(data.Value is Variable)
+                {
+                    Variable aux = (Variable)data.Value;
+                    if (this.existeVariable(aux.idSimbolo.ToLower())) { return; }
+                    if(aux.Visibilidad == Estatico.Vibililidad.PUBLICO || ignoraVisibilidad)
+                    {
+                        this.agregarVariableAlAmbito(aux.idSimbolo.ToLower(), aux);
+                    }
+                }
+                else if(data.Value is Arreglo)
+                {
+                    Arreglo aux = (Arreglo)data.Value;
+                    if (this.existeVariable(aux.idSimbolo.ToLower())) { return; }
+                    if(aux.Visibilidad == Estatico.Vibililidad.PUBLICO || ignoraVisibilidad)
+                    {
+                        this.agregarVariableAlAmbito(aux.idSimbolo, aux);
+                    }
+                }
+            }
+
+        }
+
+        public void tomaFunciones(TablaFunciones tablapadre, bool ignoraVisibilidad)
+        {
+            Hashtable auxiliar = tablapadre.funciones;
+            foreach(DictionaryEntry data in auxiliar)
+            {
+                if(data.Value is Funcion)
+                {
+                    Funcion f = (Funcion)data.Value;
+                    Clave c = (Clave)data.Key;
+                    if (this.existeFuncion(c)) { return; }
+                    if(f.Vibililidad == Estatico.Vibililidad.PUBLICO || ignoraVisibilidad)
+                    {
+                        this.tablaFuns.agregarFuncion(c, f);
+                    }
+                }
+            }
+        }
+
+        public void tomarConstructores(TablaConstructores tablaPadre)
+        {
+            Hashtable auxiliar = tablaPadre.constructores;
+            foreach(DictionaryEntry data in auxiliar)
+            {
+                if(data.Value is Constructor)
+                {
+                    Constructor cons = (Constructor)data.Value;
+                    ClaveFuncion c = (ClaveFuncion)data.Key;
+                    this.tablaConst.AgregaConstrucor(c, cons);
+                }
+            }
         }
         #endregion
     }

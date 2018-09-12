@@ -52,6 +52,10 @@ namespace XForms.ASTTree.Sentencias
                 if(condicional is Boolean)
                 {
                     Boolean res = (Boolean)condicional;
+                    ///TOMO EL AMBITO PARA PODER VALIDAR EL USO DE VARIABLES QUE HAN SIDO DECLARADAS MAS ARRIBA
+                    Ambito ambitoIF = new Ambito(ambito, this.clase, ambito.archivo);
+                    ambitoIF.tomaValoresDelAmbito(ambito, true);
+                    ///
                     if(tipo == 1)
                     {
                         //UN SI SIMPLE
@@ -62,7 +66,7 @@ namespace XForms.ASTTree.Sentencias
                                 if (o is Instruccion)
                                 {
                                     Instruccion aux = (Instruccion)o;
-                                    Object s = aux.Ejecutar(ambito);
+                                    Object s = aux.Ejecutar(ambitoIF);
                                     if (s is NodoReturn)
                                     {
                                         return s;
@@ -79,7 +83,7 @@ namespace XForms.ASTTree.Sentencias
                                 else if(o is Expresion)
                                 {
                                     Expresion exp = (Expresion)o;
-                                    Object s = exp.getValor(ambito);
+                                    Object s = exp.getValor(ambitoIF);
                                     if (s is NodoReturn)
                                     {
                                         return s;
@@ -106,7 +110,7 @@ namespace XForms.ASTTree.Sentencias
                                 if (o is Instruccion)
                                 {
                                     Instruccion aux = (Instruccion)o;
-                                    Object s = aux.Ejecutar(ambito);
+                                    Object s = aux.Ejecutar(ambitoIF);
                                     if (s is NodoReturn)
                                     {
                                         return s;
@@ -123,7 +127,7 @@ namespace XForms.ASTTree.Sentencias
                                 else if (o is Expresion)
                                 {
                                     Expresion exp = (Expresion)o;
-                                    Object s = exp.getValor(ambito);
+                                    Object s = exp.getValor(ambitoIF);
                                     if (s is NodoReturn)
                                     {
                                         return s;
@@ -147,7 +151,7 @@ namespace XForms.ASTTree.Sentencias
                                 if (o is Instruccion)
                                 {
                                     Instruccion aux = (Instruccion)o;
-                                    Object s = aux.Ejecutar(ambito);
+                                    Object s = aux.Ejecutar(ambitoIF);
                                     if (s is NodoReturn)
                                     {
                                         return s;
@@ -164,7 +168,7 @@ namespace XForms.ASTTree.Sentencias
                                 else if (o is Expresion)
                                 {
                                     Expresion exp = (Expresion)o;
-                                    Object s = exp.getValor(ambito);
+                                    Object s = exp.getValor(ambitoIF);
                                     if (s is NodoReturn)
                                     {
                                         return s;

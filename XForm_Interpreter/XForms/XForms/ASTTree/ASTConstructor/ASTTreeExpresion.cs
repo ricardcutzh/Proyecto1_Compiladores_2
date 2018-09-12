@@ -8,6 +8,9 @@ using XForms.ASTTree.Instrucciones;
 using XForms.Objs;
 using Irony.Parsing;
 using XForms.ASTTree.Valores;
+using XForms.ASTTree.Valores.Func_Cadenas;
+using XForms.ASTTree.Valores.Func_Booleanas;
+using XForms.ASTTree.Valores.Func_Numericas;
 namespace XForms.ASTTree.ASTConstructor
 {
     class ASTTreeExpresion
@@ -387,6 +390,133 @@ namespace XForms.ASTTree.ASTConstructor
                             {
                                 NuevoArreglo nuev = new NuevoArreglo(tipo, dimensiones, linea, col, clase);
                                 return nuev;
+                            }
+                        }
+                        break;
+                    }
+                case "OPCS_NUEVO":
+                    {
+                        if(raiz.ChildNodes.Count == 2)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int colum = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            NuevoListadoOpcs opcs = new NuevoListadoOpcs(this.clase.ToLower(), linea, colum);
+                            return opcs;
+                        }
+                        break;
+                    }
+                case "FUN_CADENA":
+                    {
+                        if(raiz.ChildNodes.Count == 2)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            ASTTreeExpresion arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(1), clase, archivo);
+                            Expresion exp = (Expresion)arbol.ConstruyeASTExpresion();
+
+                            if(exp!=null)
+                            {
+                                ACadena cad = new ACadena(exp, clase, linea, col);
+                                return cad;
+                            }
+                        }
+                        break;
+                    }
+                case "FUN_SUBCAD":
+                    {
+                        if(raiz.ChildNodes.Count == 4)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            ASTTreeExpresion arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(1), clase, archivo);
+                            Expresion cadena = (Expresion)arbol.ConstruyeASTExpresion();
+
+                            arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(2), clase, archivo);
+                            Expresion num1 = (Expresion)arbol.ConstruyeASTExpresion();
+
+                            arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(3), clase, archivo);
+                            Expresion num2 = (Expresion)arbol.ConstruyeASTExpresion();
+
+                            if(cadena!=null && num1!=null && num2!=null)
+                            {
+                                SubCade s = new SubCade(cadena, num1, num2, linea, col, clase);
+                                return s;
+                            }
+                        }
+                        break;
+                    }
+                case "FUN_POSCAD":
+                    {
+                        if(raiz.ChildNodes.Count == 3)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            ASTTreeExpresion arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(1), clase, archivo);
+                            Expresion cadena = (Expresion)arbol.ConstruyeASTExpresion();
+
+                            arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(2), clase, archivo);
+                            Expresion posicion = (Expresion)arbol.ConstruyeASTExpresion();
+
+                            if(cadena!=null && posicion!=null)
+                            {
+                                PosCade posca = new PosCade(cadena, posicion, clase, linea, col);
+                                return posca;
+                            }
+                        }
+                        break;
+                    }
+                case "FUN_BOOLEAN":
+                    {
+                        if(raiz.ChildNodes.Count == 2)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            ASTTreeExpresion expr = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(1), clase, archivo);
+                            Expresion expresion = (Expresion)expr.ConstruyeASTExpresion();
+
+                            if(expresion!=null)
+                            {
+                                return new ABooleano(expresion, clase, linea, col);
+                            }
+                        }
+                        break;
+                    }
+                case "FUN_ENTERO":
+                    {
+                        if(raiz.ChildNodes.Count == 2)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            ASTTreeExpresion expr = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(1), clase, archivo);
+                            Expresion expresion = (Expresion)expr.ConstruyeASTExpresion();
+
+                            if(expresion !=null)
+                            {
+                                return new AEntero(expresion, clase, linea, col);
+                            }
+                        }
+                        break;
+                    }
+                case "FUN_TAM":
+                    {
+                        if(raiz.ChildNodes.Count == 2)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            ASTTreeExpresion expr = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(1), clase, archivo);
+                            Expresion expresion = (Expresion)expr.ConstruyeASTExpresion();
+
+                            if (expresion != null)
+                            {
+                                FunTam f = new FunTam(expresion, clase, linea, col);
+                                return f;
                             }
                         }
                         break;

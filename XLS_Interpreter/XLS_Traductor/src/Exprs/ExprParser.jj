@@ -487,6 +487,7 @@ String G(String cadena):
 					//ACA SE HACE EL 
 					Simbolo sim = this.ts.getSimbolo(aux);
 					String papaSim = sim.getPadre();
+					papaSim = "";//aqui booro el padre del llamado
 					if(!papaSim.equals("")) {papaSim += "().";}
 					if(sim.getElemento() instanceof Pregunta)
 					{
@@ -524,6 +525,7 @@ String G(String cadena):
 						}
 						
 						String pad = sim.getPadre();
+						pad = "";//aqui borro el padre del llamado
 						if(!pad.equals(""))
 						{
 							pad +="().";

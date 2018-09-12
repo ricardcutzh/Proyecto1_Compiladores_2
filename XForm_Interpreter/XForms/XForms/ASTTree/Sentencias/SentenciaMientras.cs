@@ -29,6 +29,10 @@ namespace XForms.ASTTree.Sentencias
                 if(comprobacion is Boolean)
                 {
                     Boolean val = (Boolean)comprobacion;
+                    /// NUEVO AMBITO
+                    Ambito ambitoWhile = new Ambito(ambito, this.clase, ambito.archivo);
+                    ambitoWhile.tomaValoresDelAmbito(ambito, true);
+                    /// 
                     while(val)
                     {
                         foreach(Object o in this.instrucciones)
@@ -36,7 +40,7 @@ namespace XForms.ASTTree.Sentencias
                             if(o is Instruccion)
                             {
                                 Instruccion aux = (Instruccion)o;
-                                Object res = aux.Ejecutar(ambito);
+                                Object res = aux.Ejecutar(ambitoWhile);
                                 if(res is NodoReturn)
                                 {
                                     return res;
@@ -53,7 +57,7 @@ namespace XForms.ASTTree.Sentencias
                             else if(o is Expresion)
                             {
                                 Expresion exp = (Expresion)o;
-                                Object res = exp.getValor(ambito);
+                                Object res = exp.getValor(ambitoWhile);
                                 if (res is NodoReturn)
                                 {
                                     return res;
@@ -71,7 +75,7 @@ namespace XForms.ASTTree.Sentencias
                         }
 
                         HacerContinue:
-                        comprobacion = condicion.getValor(ambito);
+                        comprobacion = condicion.getValor(ambito);//OJO POSIBLE ERROR
                         val = (Boolean)comprobacion;
                     }
                     HaceBreak:

@@ -110,7 +110,7 @@ namespace XForms.Objs
 
         public static void ColocaError(TError error)
         {
-            String salida = "\n>> {{ERROR! : Tipo: "+error.Tipo+" | "+error.Mensaje + " | Linea: " + error.Linea + " , Columna: " + error.Columna+"}}";
+            String salida = "\n>> {{ERROR! : Tipo: "+error.Tipo+" | "+error.Mensaje + " | Linea: " + (error.Linea-1) + " , Columna: " + error.Columna+"}}";
             consolaSalida.AppendText(salida);
             int index = consolaSalida.Text.IndexOf(salida);
             int tam = salida.Length;

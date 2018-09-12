@@ -9,7 +9,7 @@ namespace XForms.Objs
 {
     class Date
     {
-        DateTime fecha;
+        public DateTime fecha;
         int Dia { get; }
         int Mes { get; }
         int Anio { get; }

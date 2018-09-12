@@ -11,7 +11,7 @@ namespace XForms.Simbolos
 {
     class TablaConstructores
     {
-        Hashtable constructores;
+        public Hashtable constructores;
 
         public TablaConstructores()
         {

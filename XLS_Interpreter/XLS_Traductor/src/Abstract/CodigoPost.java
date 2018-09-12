@@ -29,6 +29,7 @@ public class CodigoPost extends Atributo implements ArbolForm{
 
     public void setPadre(String padre) {
         this.padre = padre;
+        this.padre = "";
     }
     
     @Override
@@ -76,6 +77,7 @@ public class CodigoPost extends Atributo implements ArbolForm{
                 Simbolo s = ts.getSimbolo(id);
                 String pad = s.getPadre();
                 String idP = s.getId();
+                pad = "";//BORRO PADRE
                 if(!pad.equals(""))
                 {
                     pad = pad + "().";

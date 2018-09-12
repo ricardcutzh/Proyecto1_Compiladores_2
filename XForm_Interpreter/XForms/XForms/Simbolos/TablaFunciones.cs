@@ -10,7 +10,7 @@ namespace XForms.Simbolos
 {
     class TablaFunciones
     {
-        Hashtable funciones;
+        public Hashtable funciones;
 
         public TablaFunciones()
         {

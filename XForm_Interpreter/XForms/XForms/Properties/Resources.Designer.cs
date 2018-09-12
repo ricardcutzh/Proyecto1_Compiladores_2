@@ -73,10 +73,73 @@ namespace XForms.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon ICON11 {
+            get {
+                object obj = ResourceManager.GetObject("ICON11", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon if_document_open_118911 {
             get {
                 object obj = ResourceManager.GetObject("if_document_open_118911", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon if_document_open_1189111 {
+            get {
+                object obj = ResourceManager.GetObject("if_document_open_1189111", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon if_Error_381599 {
+            get {
+                object obj = ResourceManager.GetObject("if_Error_381599", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon if_Report_669954 {
+            get {
+                object obj = ResourceManager.GetObject("if_Report_669954", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon if_Warning_34248 {
+            get {
+                object obj = ResourceManager.GetObject("if_Warning_34248", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;doc&gt;
+        ///	&lt;brackets left=&quot;{&quot; right=&quot;}&quot; /&gt;
+        ///	&lt;rule style=&quot;Blue&quot;&gt;clase&lt;/rule&gt;
+        ///	&lt;rule style=&quot;Blue&quot;&gt;principal&lt;/rule&gt;
+        ///&lt;/doc&gt;.
+        /// </summary>
+        internal static string xform {
+            get {
+                return ResourceManager.GetString("xform", resourceCulture);
             }
         }
     }

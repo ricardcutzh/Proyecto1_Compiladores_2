@@ -26,6 +26,7 @@ public class CodigoPre extends Atributo implements ArbolForm{
 
     public void setPadre(String padre) {
         this.padre = padre;
+        this.padre = "";
     }
 
     public void setIdPregunta(String idPregunta) {
@@ -77,6 +78,7 @@ public class CodigoPre extends Atributo implements ArbolForm{
                 Simbolo s = ts.getSimbolo(id);
                 String pad = s.getPadre();
                 String idP = s.getId();
+                pad = "";
                 if(!pad.equals(""))
                 {
                     pad = pad + "().";

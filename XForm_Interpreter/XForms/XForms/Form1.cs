@@ -81,7 +81,7 @@ namespace XForms
                 {
                     String archivo = abrir.FileName;
                     String texto = File.ReadAllText(archivo);
-                    crearNuevaPestania(abrir.SafeFileName.Replace(".xform",""), texto);
+                    crearNuevaPestaniaColor(abrir.SafeFileName.Replace(".xform",""), texto);
                 }
             }
         }
@@ -334,13 +334,12 @@ namespace XForms
 
             FastColoredTextBox editor = new FastColoredTextBox();
 
-            editor.SetBounds(10, 0, Editor.Width - 10, Editor.Height - 30);
+            editor.SetBounds(10, 0, Editor.Width - 20, Editor.Height - 30);
             editor.AcceptsTab = true;
             editor.Font = new Font("Consolas", 9);
             editor.WordWrap = false;
             editor.TextChanged += new EventHandler<TextChangedEventArgs>(fastColoredTextBox1_TextChanged);
             editor.Text = contenido.ToLower();
-
 
             pan.Controls.Add(editor);
             nueva.Controls.Add(pan);// posicion 0 del tabpage
@@ -354,26 +353,31 @@ namespace XForms
         Style BlueStyle = new TextStyle(Brushes.Blue, null, FontStyle.Bold);
         Style LightBlue = new TextStyle(Brushes.DarkViolet, null, FontStyle.Bold);
         Style StringStyle = new TextStyle(Brushes.Brown, null, FontStyle.Regular);
+        Style StringStyle1 = new TextStyle(Brushes.DarkOrange, null, FontStyle.Regular);
         private void fastColoredTextBox1_TextChanged(Object sender, TextChangedEventArgs e)
         {
-            /*Range range = (sender as FastColoredTextBox).VisibleRange;
-            range.ClearStyle(GreenStyle);
-            //comment highlighting
-            range.SetStyle(GreenStyle, @"\$\$.*$", RegexOptions.Multiline);*/
-
+           
+            e.ChangedRange.ClearStyle(BlueStyle);
+            e.ChangedRange.ClearStyle(LightBlue);
+            e.ChangedRange.ClearStyle(StringStyle);
             e.ChangedRange.ClearFoldingMarkers();
             //set folding markers
             e.ChangedRange.SetFoldingMarkers("{", "}");
             e.ChangedRange.SetStyle(StringStyle, "\"((\\.)|[^\\\\\"])*\"");
+            e.ChangedRange.SetStyle(StringStyle1, "\'((\\.)|[^\\\\\"])*\'");
 
-            e.ChangedRange.SetStyle(BlueStyle, @"\b(publico|privado|protegido|clase|padre|principal|imprimir|nuevo|este|retorno|romper|nulo|importar|sino|si|verdadero|falso)");
-            e.ChangedRange.SetStyle(BlueStyle, @"\b(Publico|Privado|Protegido|Clase|Padre|Principal|Imprimir|Nuevo|Este|Retorno|Romper|Nulo|Importar|SiNo|Si|Verdadero|Falso)");
+            e.ChangedRange.SetStyle(GreenStyle, @"\$\$.*$", RegexOptions.Multiline);
 
-            e.ChangedRange.SetStyle(BlueStyle, @"\b(Mientras|mientras|continuar|Continuar|hacer|Hacer|Repetir|repetir|Hasta|hasta)");
+            e.ChangedRange.SetStyle(BlueStyle, @"\b(publico|privado|protegido|clase|padre|principal|imprimir|nuevo|este|retorno|romper|nulo|importar|sino|si|verdadero|falso)\b", RegexOptions.IgnoreCase);
+            e.ChangedRange.SetStyle(BlueStyle, @"\b(Publico|Privado|Protegido|Clase|Padre|Principal|Imprimir|Nuevo|Este|Retorno|Romper|Nulo|Importar|SiNo|Si|Verdadero|Falso)\b", RegexOptions.IgnoreCase);
 
-            e.ChangedRange.SetStyle(LightBlue, @"\b(cadena|entero|decimal|booleano|fecha|hora|fechahora|vacio)");
+            e.ChangedRange.SetStyle(BlueStyle, @"\b(Mientras|continuar|hacer|Repetir|Hasta|para|caso|defecto)\b", RegexOptions.IgnoreCase);
 
-            
+            e.ChangedRange.SetStyle(BlueStyle, @"\b(pregunta|formulario|grupo|mensajes|subcad|poscad|tam)\b", RegexOptions.IgnoreCase);
+
+            e.ChangedRange.SetStyle(LightBlue, @"\b(cadena|entero|decimal|booleano|fecha|hora|fechahora|vacio|respuestas|opciones)\b", RegexOptions.IgnoreCase);
+
+
         }
 
         //ACTUALIZA EL NUMERO DE LINEAS

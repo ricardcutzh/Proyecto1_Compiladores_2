@@ -38,6 +38,33 @@ namespace XForms.ASTTree.Sentencias
                         {
                             vari.valor = val;//ASIGNO EL NUEVO VALOR
                         }
+                        ////////////////////////////////////////////////////////////////
+                        else if (tipoEsperado.ToLower().Equals("entero") && val is double)
+                        {
+                            Double valor = (Double)val;
+                            int real = Convert.ToInt32(valor);
+                            vari.valor = real;
+                        }
+                        else if (tipoEsperado.ToLower().Equals("decimal") && val is int)
+                        {
+                            int valor = (int)val;
+                            double real = Convert.ToDouble(valor);
+                            vari.valor = real;
+                        }
+                        else if (tipoEsperado.ToLower().Equals("entero") && val is bool)
+                        {
+                            Boolean valor = (Boolean)val;
+                            int real = Convert.ToInt32(valor);
+                            vari.valor = real;
+                        }
+                        else if (tipoEsperado.ToLower().Equals("booleano") && val is int)
+                        {
+                            int valor = (int)val;
+                            Boolean real = false;
+                            if (valor == 1) { real = true; }
+                            vari.valor = real;
+                        }
+                        ////////////////////////////////////////////////////////////////
                         else
                         {
                             TError error = new TError("Semantico", "Tipos no Coinciden al Asignar, Esperado: \"" + tipoEsperado + "\", Encontrado: " + tipoEncontrado + "\" | Clase: " + this.clase + " | Archivo: " + ambito.archivo, linea, columna, false);

@@ -959,7 +959,7 @@ namespace XForms.ASTTree.ASTConstructor
 
                             if(tipo!=null && exp!=null)
                             {
-                                DeclaracionVar dec = new DeclaracionVar(id.ToLower(), tipo, Estatico.Vibililidad.LOCAL, linea, col, this.clase);
+                                DeclaracionVar dec = new DeclaracionVar(exp,id.ToLower(), tipo, Estatico.Vibililidad.LOCAL, linea, col, this.clase);
                                 return dec;
                             }
                         }
@@ -990,6 +990,122 @@ namespace XForms.ASTTree.ASTConstructor
 
                                 AsignacionSimple sig = new AsignacionSimple(exp, identificador.ToLower(), linea, col, clase);
                                 return sig;
+                            }
+                        }
+                        break;
+                    }
+                case "SWITCH":
+                    {
+                        if(raiz.ChildNodes.Count == 3)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            ASTTreeExpresion exp = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(1), this.clase, this.archivo);
+                            Expresion evaluado = (Expresion)exp.ConstruyeASTExpresion();
+
+                            int numeroDefectos = 0;
+
+                            NodoDefecto defecto = null;
+
+                            List<NodoCaso> casos = new List<NodoCaso>();
+                            foreach(ParseTreeNode nodo in raiz.ChildNodes.ElementAt(2).ChildNodes)
+                            {
+                                Object obj = construyeSentencias(nodo);
+                                if(obj!=null)
+                                {
+                                    if(obj is NodoCaso)
+                                    {
+                                        NodoCaso c = (NodoCaso)obj;
+                                        casos.Add(c);
+                                    }
+                                    else if(obj is NodoDefecto)
+                                    {
+                                        numeroDefectos++;
+                                        defecto = (NodoDefecto)obj;
+                                        if(numeroDefectos > 1)
+                                        {
+                                            TError error = new TError("Sintactico", "No es permitido tener mas de una sentencia por Defecto en sentencia CASO | Clase: " + this.clase + " | Archivo: " + this.archivo, linea, col, false);
+                                            Estatico.errores.Add(error);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if(evaluado!=null)
+                            {
+                                if(defecto==null)
+                                {
+                                    return new SwitchCase(casos, evaluado, clase, linea, col);
+                                }
+                                else
+                                {
+                                    return new SwitchCase(defecto, casos, evaluado, clase, linea, col);
+                                }
+                            }
+
+                        }
+                        break;
+                    }
+                case "CASO":
+                    {
+                        if(raiz.ChildNodes.Count == 3)
+                        {
+                            ASTTreeExpresion arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(0), this.clase, this.archivo);
+                            Expresion expresion = (Expresion)arbol.ConstruyeASTExpresion();
+                            List<Object> sentencias = new List<object>();
+
+                            foreach(ParseTreeNode nodo in raiz.ChildNodes.ElementAt(2).ChildNodes)
+                            {
+                                Object ins = construyeSentencias(nodo);
+                                if(ins!=null)
+                                {
+                                    sentencias.Add(ins);
+                                }
+                            }
+
+                            if(expresion!=null)
+                            {
+                                NodoCaso caso = new NodoCaso(expresion, sentencias);
+                                return caso;
+                            }
+                        }
+                        break;
+                    }
+                case "DEFECTO":
+                    {
+                        if(raiz.ChildNodes.Count == 3)
+                        {
+                            List<Object> sentencias = new List<object>();
+                            foreach(ParseTreeNode nodo in raiz.ChildNodes.ElementAt(2).ChildNodes)
+                            {
+                                Object ins = construyeSentencias(nodo);
+                                if(ins!=null)
+                                {
+                                    sentencias.Add(ins);
+                                }
+                            }
+
+                            NodoDefecto defecto = new NodoDefecto(sentencias);
+                            return defecto;
+                        }
+                        break;
+                    }
+                case "MENSAJES":
+                    {
+                        if(raiz.ChildNodes.Count == 2)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int colum = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            ASTTreeExpresion arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(1), this.clase, this.archivo);
+                            Expresion expre = (Expresion)arbol.ConstruyeASTExpresion();
+
+                            if(expre!=null)
+                            {
+                                Mensajes m = new Mensajes(expre, this.clase, linea, colum);
+                                return m;
                             }
                         }
                         break;

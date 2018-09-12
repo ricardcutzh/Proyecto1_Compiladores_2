@@ -122,7 +122,25 @@ namespace XForms.GramaticaIrony
             DECREMENTO = new NonTerminal("DECREMENTO"),
             FOR = new NonTerminal("FOR"),
             VARCONTROL = new NonTerminal("VARCONTROL"),
-            OPERACION = new NonTerminal("OPERACION");
+            OPERACION = new NonTerminal("OPERACION"),
+            SWITCH = new NonTerminal("SWITCH"),
+            CASO = new NonTerminal("CASO"),
+            DEFECTO = new NonTerminal("DEFECTO"),
+            CUERPOSWITCH = new NonTerminal("CUERPOSWITCH"),
+            LLAMADAFORMULARIO = new NonTerminal("LLAMADAFORM"),
+            ESTILOS = new NonTerminal("ESTILOS"),
+            CUERPO_PREGUNTA = new NonTerminal("CUERPO_PREGUNTA"),
+            CALL_Q = new NonTerminal("CALL_Q"),
+            CASTEO_PREGUNTA = new NonTerminal("CASTEO_PREGUNTA"),
+            ESTILO_RESP = new NonTerminal("ESTILO_RESP"),
+            MENSAJES = new NonTerminal("MENSAJES"),
+            OPCS_NUEVO = new NonTerminal("OPCS_NUEVO"),
+            FUN_CADENA = new NonTerminal("FUN_CADENA"),
+            FUN_SUBCAD = new NonTerminal("FUN_SUBCAD"),
+            FUN_POSCAD = new NonTerminal("FUN_POSCAD"),
+            FUN_BOOLEAN = new NonTerminal("FUN_BOOLEAN"),
+            FUN_ENTERO = new NonTerminal("FUN_ENTERO"),
+            FUN_TAM = new NonTerminal("FUN_TAM");
             #endregion
 
             #region Reglas
@@ -173,7 +191,8 @@ namespace XForms.GramaticaIrony
                        | ToTerm("fechahora")
                        | ToTerm("respuestas")
                        | identificador //EN CASO QUE SEA UN TIPO DE OBJETO
-                       | ToTerm("vacio");
+                       | ToTerm("vacio")
+                       | ToTerm("Respuestas");
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------
@@ -185,6 +204,11 @@ namespace XForms.GramaticaIrony
                              | MakeStarRule(CUERPOCLASE, PREGUNTA)
                              | MakeStarRule(CUERPOCLASE, GRUPO)
                              | MakeStarRule(CUERPOCLASE, FORMULARIO);
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            CUERPO_PREGUNTA.Rule = MakeStarRule(CUERPO_PREGUNTA, DECLARACION_LOCAL)
+                                | MakeStarRule(CUERPO_PREGUNTA, FUNCIONES);
             //-------------------------------------------------------------------------------------------
             #endregion
 
@@ -222,17 +246,17 @@ namespace XForms.GramaticaIrony
 
             #region FORMULARIOS
             //-------------------------------------------------------------------------------------------
-            PREGUNTA.Rule = ToTerm("pregunta") + identificador + "(" + PARAMETROS + ")" + "{" + "}";
+            PREGUNTA.Rule = ToTerm("pregunta") + identificador + "(" + PARAMETROS + ")" + "{" + CUERPO_PREGUNTA + "}";
             PREGUNTA.ErrorRule = SyntaxError + "}";
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------
-            GRUPO.Rule = ToTerm("grupo") + identificador + "{" + "}";
+            GRUPO.Rule = ToTerm("grupo") + identificador + "{" + SENTENCIAS + "}";
             GRUPO.ErrorRule = SyntaxError + "}";
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------
-            FORMULARIO.Rule = ToTerm("formulario") + identificador + "{" + "}";
+            FORMULARIO.Rule = ToTerm("formulario") + identificador + "{" + SENTENCIAS + "}";
             FORMULARIO.ErrorRule = SyntaxError + "}";
             //-------------------------------------------------------------------------------------------
             #endregion
@@ -287,11 +311,38 @@ namespace XForms.GramaticaIrony
                      | deci
                      | verdadero
                      | falso
+                     | FUN_ENTERO
+                     | FUN_TAM
+                     | FUN_BOOLEAN
+                     | FUN_SUBCAD
+                     | FUN_POSCAD
                      | LLAMADAID_OBJ
                      | DECLARACION_OBJ
                      | DECLARACION_ARR
+                     | OPCS_NUEVO
+                     | FUN_CADENA
                      | nulo
                      ;
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            FUN_CADENA.Rule = ToTerm("Cadena") + "(" + EXP + ")";
+            FUN_CADENA.ErrorRule = SyntaxError + ";";
+
+            FUN_SUBCAD.Rule = ToTerm("subCad") + "(" + EXP + "," + EXP + "," + EXP + ")";
+            FUN_SUBCAD.ErrorRule = SyntaxError + ";";
+
+            FUN_POSCAD.Rule = ToTerm("posCad") + "(" + EXP + "," + EXP + ")";
+            FUN_POSCAD.ErrorRule = SyntaxError + ";";
+
+            FUN_BOOLEAN.Rule = ToTerm("booleano") + "(" + EXP + ")";
+            FUN_BOOLEAN.ErrorRule = SyntaxError + ";";
+
+            FUN_ENTERO.Rule = ToTerm("entero") + "(" + EXP + ")";
+            FUN_ENTERO.ErrorRule = SyntaxError + ";";
+
+            FUN_TAM.Rule = ToTerm("tam") + "(" + EXP + ")";
+            FUN_TAM.ErrorRule = SyntaxError + ";";
             //-------------------------------------------------------------------------------------------
             #endregion
 
@@ -331,6 +382,10 @@ namespace XForms.GramaticaIrony
             ACCESOARRAY.Rule = identificador + DIMS;
 
             //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            OPCS_NUEVO.Rule = ToTerm("nuevo") + ToTerm("Opciones") + "(" + ")";
+            //-------------------------------------------------------------------------------------------
             #endregion
 
             #region OTROS
@@ -354,7 +409,11 @@ namespace XForms.GramaticaIrony
                             | MakeStarRule(SENTENCIAS, REPETIRHASTA)
                             | MakeStarRule(SENTENCIAS, INCREMENTO)
                             | MakeStarRule(SENTENCIAS, DECREMENTO)
-                            | MakeStarRule(SENTENCIAS, FOR);
+                            | MakeStarRule(SENTENCIAS, FOR)
+                            | MakeStarRule(SENTENCIAS, SWITCH)
+                            | MakeStarRule(SENTENCIAS, LLAMADAFORMULARIO)
+                            | MakeStarRule(SENTENCIAS, CALL_Q)
+                            | MakeStarRule(SENTENCIAS, MENSAJES);
 
             SENTENCIAS_CONS.Rule = MakeStarRule(SENTENCIAS_CONS, DECLARACION_LOCAL)
                                  | MakeStarRule(SENTENCIAS_CONS, IMPRIMIR)
@@ -368,7 +427,11 @@ namespace XForms.GramaticaIrony
                                  | MakeStarRule(SENTENCIAS_CONS, REPETIRHASTA)
                                  | MakeStarRule(SENTENCIAS_CONS, INCREMENTO)
                                  | MakeStarRule(SENTENCIAS_CONS, DECREMENTO)
-                                 | MakeStarRule(SENTENCIAS_CONS, FOR);
+                                 | MakeStarRule(SENTENCIAS_CONS, FOR)
+                                 | MakeStarRule(SENTENCIAS_CONS, SWITCH)
+                                 | MakeStarRule(SENTENCIAS_CONS, LLAMADAFORMULARIO)
+                                 | MakeStarRule(SENTENCIAS_CONS, CALL_Q)
+                                 | MakeStarRule(SENTENCIAS_CONS, MENSAJES);
             //-------------------------------------------------------------------------------------------
             #endregion
 
@@ -441,6 +504,58 @@ namespace XForms.GramaticaIrony
                            | identificador + dec
                            | identificador + "=" + EXP;
             //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            CASO.Rule = EXP + ":" + "{" + SENTENCIAS + "}";
+
+            CASO.ErrorRule = SyntaxError + "}";
+
+            DEFECTO.Rule = ToTerm("Defecto") + ":" + "{" + SENTENCIAS + "}";
+
+            DEFECTO.ErrorRule = SyntaxError + "}";
+
+            SWITCH.Rule = ToTerm("Caso") + "(" + EXP + ")" + "{" + CUERPOSWITCH + "}";
+            SWITCH.ErrorRule = SyntaxError + "}";
+
+            CUERPOSWITCH.Rule = MakeStarRule(CUERPOSWITCH, CASO)
+                            | MakeStarRule(CUERPOSWITCH, DEFECTO);
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            LLAMADAFORMULARIO.Rule = ToTerm("nuevo") + identificador + "(" + ")" + ";"
+                                   | ToTerm("nuevo") + identificador + "(" + ")" + "." +  ESTILOS + ";";
+
+            ESTILOS.Rule = ToTerm("Todo")
+                         | ToTerm("Cuadricula")
+                         | ToTerm("Pagina");
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            CALL_Q.Rule = identificador + "(" + L_EXPRE + ")" + "." + ToTerm("Respuesta") + "(" +CASTEO_PREGUNTA + ")" + "." + ESTILO_RESP + "(" + ")" + ";";
+
+            CALL_Q.ErrorRule = SyntaxError + ";";
+
+            CASTEO_PREGUNTA.Rule = ToTerm("resp.esCadena")
+                                | ToTerm("resp.esBooleano")
+                                | ToTerm("resp.esEntero")
+                                | ToTerm("resp.esDecimal")
+                                | ToTerm("resp.esFecha")
+                                | ToTerm("resp.esHora")
+                                | ToTerm("resp.esFechaHora");
+
+            ESTILO_RESP.Rule = ToTerm("Cadena")
+                            | ToTerm("Entero")
+                            | ToTerm("Decimal")
+                            | ToTerm("Condicion")
+                            | ToTerm("Hora")
+                            | ToTerm("FechaHora")
+                            | ToTerm("Fecha")
+                            | ToTerm("Fichero");
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            MENSAJES.Rule = ToTerm("Mensajes") + "(" + EXP + ")" + ";";
+            //-------------------------------------------------------------------------------------------
             #endregion
 
 
@@ -457,7 +572,7 @@ namespace XForms.GramaticaIrony
             RegisterOperators(9, Associativity.Right, inc, dec, not);
             RegisterOperators(10, Associativity.Neutral, ToTerm("("), ToTerm(")"));
 
-            this.MarkPunctuation("{", "}", "(", ")", ";",".xform","{","}", "=", "[", "]",".");
+            this.MarkPunctuation("{", "}", "(", ")", ";",".xform","{","}", "=", "[", "]",".",",");
             NonGrammarTerminals.Add(LineComment);
             NonGrammarTerminals.Add(MultiLineComment);
             this.Root = INICIO;

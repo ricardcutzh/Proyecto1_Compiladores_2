@@ -63,6 +63,81 @@ namespace XForms.ASTTree.Instrucciones
                             Estatico.ColocaError(error);
                         }
                     }
+                    ////////////////////////////////////////////////////
+                    else if(this.tipo.ToLower().Equals("entero") && valor is Double) // si espero un entero y llega un double
+                    {
+                        Double val = (Double)valor;
+                        int real = Convert.ToInt32(val);
+                        //AQUI ASGINO LA VARIABLE
+                        if (!ambito.existeVariable(this.idVar.ToLower())) //YA EXISTE?
+                        {
+                            Variable variable = new Variable(this.idVar.ToLower(), this.tipo.ToLower(), this.visibilidad, real);
+                            ambito.agregarVariableAlAmbito(this.idVar.ToLower(), variable);
+                            //ambito.ImprimeAmbito();
+                        }
+                        else
+                        {
+                            TError error = new TError("Semantico", "Ya existe una declaracion de: \"" + this.idVar + "\" en este Ambito | Clase: " + this.clase + " | Archivo: " + ambito.archivo, this.linea, this.columna, false);
+                            Estatico.errores.Add(error);
+                            Estatico.ColocaError(error);
+                        }
+                    }
+                    else if (this.tipo.ToLower().Equals("decimal") && valor is int) //SI ESPERO UN DOUBLE Y LLEGA UN ENTERO
+                    {
+                        int val = (int)valor;
+                        double real = Convert.ToDouble(val);
+                        //AQUI ASGINO LA VARIABLE
+                        if (!ambito.existeVariable(this.idVar.ToLower())) //YA EXISTE?
+                        {
+                            Variable variable = new Variable(this.idVar.ToLower(), this.tipo.ToLower(), this.visibilidad, real);
+                            ambito.agregarVariableAlAmbito(this.idVar.ToLower(), variable);
+                            //ambito.ImprimeAmbito();
+                        }
+                        else
+                        {
+                            TError error = new TError("Semantico", "Ya existe una declaracion de: \"" + this.idVar + "\" en este Ambito | Clase: " + this.clase + " | Archivo: " + ambito.archivo, this.linea, this.columna, false);
+                            Estatico.errores.Add(error);
+                            Estatico.ColocaError(error);
+                        }
+                    }
+                    else if (this.tipo.ToLower().Equals("entero") && valor is Boolean) //SI ESPERO UN DOUBLE Y LLEGA UN ENTERO
+                    {
+                        Boolean val = (Boolean)valor;
+                        int real = Convert.ToInt32(val);
+                        //AQUI ASGINO LA VARIABLE
+                        if (!ambito.existeVariable(this.idVar.ToLower())) //YA EXISTE?
+                        {
+                            Variable variable = new Variable(this.idVar.ToLower(), this.tipo.ToLower(), this.visibilidad, real);
+                            ambito.agregarVariableAlAmbito(this.idVar.ToLower(), variable);
+                            //ambito.ImprimeAmbito();
+                        }
+                        else
+                        {
+                            TError error = new TError("Semantico", "Ya existe una declaracion de: \"" + this.idVar + "\" en este Ambito | Clase: " + this.clase + " | Archivo: " + ambito.archivo, this.linea, this.columna, false);
+                            Estatico.errores.Add(error);
+                            Estatico.ColocaError(error);
+                        }
+                    }
+                    else if (this.tipo.ToLower().Equals("booleano") && valor is int) //SI ESPERO UN DOUBLE Y LLEGA UN ENTERO
+                    {
+                        int val = (int)valor;
+                        Boolean real = false;
+                        if(val == 1) { real = true; }
+                        //AQUI ASGINO LA VARIABLE
+                        if (!ambito.existeVariable(this.idVar.ToLower())) //YA EXISTE?
+                        {
+                            Variable variable = new Variable(this.idVar.ToLower(), this.tipo.ToLower(), this.visibilidad, real);
+                            ambito.agregarVariableAlAmbito(this.idVar.ToLower(), variable);
+                            //ambito.ImprimeAmbito();
+                        }
+                        else
+                        {
+                            TError error = new TError("Semantico", "Ya existe una declaracion de: \"" + this.idVar + "\" en este Ambito | Clase: " + this.clase + " | Archivo: " + ambito.archivo, this.linea, this.columna, false);
+                            Estatico.errores.Add(error);
+                            Estatico.ColocaError(error);
+                        }
+                    }
+                    ////////////////////////////////////////////////////
                     else
                     {
                         //AQUI MUESTRO EL ERROR QUE SUCEDA
@@ -70,7 +145,7 @@ namespace XForms.ASTTree.Instrucciones
                         Estatico.errores.Add(error);
                         Estatico.ColocaError(error);
                     }
-                }
+                }//ACA TENGO QUE ARREGLAR LA ASIGNACION DE TIPOS
                 else
                 {
                     if(!ambito.existeVariable(this.idVar.ToLower()))// EXISTE YA UNA DEFINICION DE LA VARIABLE?

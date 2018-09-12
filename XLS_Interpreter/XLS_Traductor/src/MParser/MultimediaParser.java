@@ -479,6 +479,7 @@ public class MultimediaParser implements MultimediaParserConstants {
                                         //ACA SE HACE EL 
                                         Simbolo sim = this.ts.getSimbolo(aux);
                                         String papaSim = sim.getPadre();
+                                        papaSim = "";
                                         if(!papaSim.equals("")) {papaSim += "().";}
                                         if(sim.getElemento() instanceof Pregunta)
                                         {
@@ -516,6 +517,7 @@ public class MultimediaParser implements MultimediaParserConstants {
                                                 }
 
                                                 String pad = sim.getPadre();
+                                                pad = "";
                                                 if(!pad.equals(""))
                                                 {
                                                         pad +="().";

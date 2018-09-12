@@ -107,7 +107,9 @@ public class Pregunta implements ArbolForm {
         try {
             //////////////////////////////////////////////////////////////////
             //INICIO DE LA PREGUNTA
+            this.Etiqueta = this.Etiqueta.replace("\n", " ");
             this.Etiqueta = traduceEtiqueta(ts, errores);
+            
             if (this.Etiqueta.contains("NULL")) {
                 this.Etiqueta = "Cadena Etiqueta = \" \";\n";
             }
@@ -173,7 +175,8 @@ public class Pregunta implements ArbolForm {
             this.padre += "().";
         }
         //cad += this.padre+this.Idpregunta+"("+cadenaParamsPadre()+")."+this.EstiloPregunta+"("+this.cadenaEspeciales+");";
-        cad += this.padre + this.Idpregunta + "(" + cadenaParamsPadre() + ")." + estiloResp + this.EstiloPregunta;
+        //cad += this.padre + this.Idpregunta + "(" + cadenaParamsPadre() + ")." + estiloResp + this.EstiloPregunta;
+        cad += this.Idpregunta + "(" + cadenaParamsPadre() + ")." + estiloResp + this.EstiloPregunta;
         if (this.lePongoApariencia == 1) {
             if (this.Tipo == TipoPregunta.NOTA && !(this.llamaMostrar.equals(""))) {
                 cad += "().Mostrar();";
@@ -198,7 +201,8 @@ public class Pregunta implements ArbolForm {
             try {
                 StringReader s = new StringReader(r.cadena);
                 Exprs.ExpParser par = new ExpParser(s);
-                par.setUp(errores, ts, padre, this.Idpregunta, "Repeticion", "Encuesta", TipoPregunta.TRADUC_2);
+                //par.setUp(errores, ts, padre, this.Idpregunta, "Repeticion", "Encuesta", TipoPregunta.TRADUC_2);
+                par.setUp(errores, ts, "", this.Idpregunta, "Repeticion", "Encuesta", TipoPregunta.TRADUC_2);
                 String cond = par.S();
                 cadenaFor += dameTabulaciones()+"Para(Entero " + this.Idpregunta + "_iter = 0, " + this.Idpregunta + "_iter < " + cond + ", " + this.Idpregunta + "_iter++){\n";
                 tabula();
@@ -227,7 +231,8 @@ public class Pregunta implements ArbolForm {
             try {
                 StringReader s = new StringReader(ap.cadena);
                 Exprs.ExpParser par = new ExpParser(s);
-                par.setUp(errores, ts, padre, this.Idpregunta, "Aplicable", "Encuesta", TipoPregunta.TRADUC_2);
+                //par.setUp(errores, ts, padre, this.Idpregunta, "Aplicable", "Encuesta", TipoPregunta.TRADUC_2);
+                par.setUp(errores, ts, "", this.Idpregunta, "Aplicable", "Encuesta", TipoPregunta.TRADUC_2);
                 String cond = par.S();
                 cadenaIf += dameTabulaciones()+"Si("+cond+"){\n";
                 tabula();
@@ -291,7 +296,7 @@ public class Pregunta implements ArbolForm {
         ///////////////////////////////////////////////////////////////////////////////////////////
         String tipo = this.traduceTipo();
         //tipo = tipo.replace(" Respuesta;\n", "");
-        this.metodoResp = dameTabulaciones() + this.visibilidadResp + "respuesta(" + this.tipoRespParam + " param_1){\n";
+        this.metodoResp = dameTabulaciones() + this.visibilidadResp + "vacio respuesta(" + this.tipoRespParam + " param_1){\n";
 
         if (this.cuerpo.equals("")) {
             tabula();

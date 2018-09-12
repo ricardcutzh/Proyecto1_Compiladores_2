@@ -212,6 +212,7 @@ namespace XForms.ASTTree.Valores
 
         private String getNumCodigo(Expresion operando, Ambito ambito)
         {
+            object op = operando.getValor(ambito);
             String tipo = operando.getTipo(ambito).ToLower();
             switch(tipo)
             {

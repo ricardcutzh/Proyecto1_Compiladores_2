@@ -190,6 +190,7 @@ String S(String cad):
 			// PRIMERO VOY A TRAERLO Y VEO QUE SEA UNA INSTANCIA DE UNA PREGUNTA PARA LUEGO SABER SU TIPO Y TRADUCIRLO
 			Simbolo sim = this.ts.getSimbolo(aux);
 			String papaSim = sim.getPadre();
+			papaSim = "";//BOORE EL PARDRE!!!
 			if(!papaSim.equals("")) {papaSim += "().";}
 			if(sim.getElemento() instanceof Pregunta)
 			{

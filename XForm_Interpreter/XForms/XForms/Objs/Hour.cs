@@ -8,7 +8,7 @@ namespace XForms.Objs
 {
     class Hour
     {
-        DateTime fecha;
+        public DateTime fecha;
         int Hora { get; }
         int Min { get; }
         int Seg { get; }

@@ -47,7 +47,7 @@ public class Multimedia extends Atributo implements ArbolForm{
         String cad = "";
         StringReader stream = new StringReader(this.cadena);
         try {
-            cad += dameTabulaciones()+"publico Mostrar(){\n";
+            cad += dameTabulaciones()+"publico vacio Mostrar(){\n";
             ////////////////////////////////////////////////////////////////////
             tabula();
             MultimediaParser parse = new MultimediaParser(stream);

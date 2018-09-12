@@ -47,10 +47,37 @@ namespace XForms.ASTTree.Sentencias
                         {
                             Variable vari = (Variable)s;
                             String tipoEsperado = vari.Tipo.ToLower();
-                            if (tipoEsperado.Equals(tipoAsignado))
+                            if (tipoEsperado.Equals(tipoAsignado) || tipoAsignado.ToLower().Equals("nulo"))
                             {
                                 vari.valor = valor;//ASIGNO EL VALOR AL FIN....
                             }
+                            ////////////////////////////////////////////////////////////////
+                            else if(tipoEsperado.ToLower().Equals("entero") && valor is double)
+                            {
+                                Double val = (Double)valor;
+                                int real = Convert.ToInt32(val);
+                                vari.valor = real;
+                            }
+                            else if(tipoEsperado.ToLower().Equals("decimal") && valor is int)
+                            {
+                                int val = (int)valor;
+                                double real = Convert.ToDouble(val);
+                                vari.valor = real;
+                            }
+                            else if(tipoEsperado.ToLower().Equals("entero") && valor is bool)
+                            {
+                                Boolean val = (Boolean)valor;
+                                int real = Convert.ToInt32(val);
+                                vari.valor = real;
+                            }
+                            else if(tipoEsperado.ToLower().Equals("booleano") && valor is int)
+                            {
+                                int val = (int)valor;
+                                Boolean real = false;
+                                if (val == 1) { real = true; }
+                                vari.valor = real;
+                            }
+                            ////////////////////////////////////////////////////////////////
                             else
                             {
                                 TError error = new TError("Semantico", "Tipos Incompatibles No se puede asignar: \"" + tipoAsignado + "\", a una Variable de tipo: \"" + tipoEsperado + "\" | Clase: " + this.clase + " | Archivo: " + ambito.archivo, linea, columna, false);
@@ -81,10 +108,37 @@ namespace XForms.ASTTree.Sentencias
                         {
                             Variable vari = (Variable)s;
                             String tipoEsperado = vari.Tipo.ToLower();
-                            if(tipoEsperado.Equals(tipoAsignado))
+                            if(tipoEsperado.Equals(tipoAsignado) || tipoAsignado.ToLower().Equals("nulo"))
                             {
                                 vari.valor = valor;//ASIGNO EL VALOR AL FIN....
                             }
+                            ////////////////////////////////////////////////////////////////
+                            else if (tipoEsperado.ToLower().Equals("entero") && valor is double)
+                            {
+                                Double val = (Double)valor;
+                                int real = Convert.ToInt32(val);
+                                vari.valor = real;
+                            }
+                            else if (tipoEsperado.ToLower().Equals("decimal") && valor is int)
+                            {
+                                int val = (int)valor;
+                                double real = Convert.ToDouble(val);
+                                vari.valor = real;
+                            }
+                            else if (tipoEsperado.ToLower().Equals("entero") && valor is bool)
+                            {
+                                Boolean val = (Boolean)valor;
+                                int real = Convert.ToInt32(val);
+                                vari.valor = real;
+                            }
+                            else if (tipoEsperado.ToLower().Equals("booleano") && valor is int)
+                            {
+                                int val = (int)valor;
+                                Boolean real = false;
+                                if (val == 1) { real = true; }
+                                vari.valor = real;
+                            }
+                            ////////////////////////////////////////////////////////////////
                             else
                             {
                                 TError error = new TError("Semantico", "Tipos Incompatibles No se puede asignar: \"" + tipoAsignado + "\", a una Variable de tipo: \""+tipoEsperado+"\" | Clase: " + this.clase + " | Archivo: " + ambito.archivo, linea, columna, false);
