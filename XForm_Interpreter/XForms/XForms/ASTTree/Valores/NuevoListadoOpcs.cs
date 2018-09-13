@@ -28,7 +28,9 @@ namespace XForms.ASTTree.Valores
         {
             try
             {
-                Opciones ops = new Opciones(this.clase.ToLower(), ambito);
+                Ambito ambitoOpcs = new Ambito(null, this.clase, ambito.archivo);
+
+                Opciones ops = new Opciones(this.clase.ToLower(), ambitoOpcs);
 
                 return ops;
             }

@@ -195,8 +195,15 @@ namespace XForms
             DateTime p = DateTime.ParseExact(mihora, "dd/MM/yy hh:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
             MessageBox.Show(p.Day.ToString());
             TError errorp = new TError("Prueba", "Este es un error de prueba", 1, 1, false);
-            Estatico.ColocaError(errorp);*/
-            crearNuevaPestaniaColor("prueba", "hola mundo");
+            Estatico.ColocaError(errorp);
+            crearNuevaPestaniaColor("prueba", "hola mundo");*/
+            Object ob = "hola mundo!";
+            Object ob1 = "hola mundo!";
+
+            if(ob.Equals(ob1))
+            {
+                MessageBox.Show("iguales");
+            }
         }
 
         #endregion
@@ -370,7 +377,7 @@ namespace XForms
 
             e.ChangedRange.SetStyle(BlueStyle, @"\b(Mientras|continuar|hacer|Repetir|Hasta|para|caso|defecto|pregunta|formulario|grupo|mensajes|)\b", RegexOptions.IgnoreCase);
 
-            e.ChangedRange.SetStyle(functionStyle, @"\b(subcad|poscad|tam|random|max|min|pow|Log|Log10|abs|sin|cos|tan|sqrt|pi|hoy|ahora)\b", RegexOptions.IgnoreCase);
+            e.ChangedRange.SetStyle(functionStyle, @"\b(subcad|poscad|tam|random|max|min|pow|Log|Log10|abs|sin|cos|tan|sqrt|pi|hoy|ahora|buscar|insertar|obtener)\b", RegexOptions.IgnoreCase);
 
             e.ChangedRange.SetStyle(LightBlue, @"\b(cadena|entero|decimal|booleano|fecha|hora|fechahora|vacio|respuestas|opciones)\b", RegexOptions.IgnoreCase);
 

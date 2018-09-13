@@ -441,6 +441,8 @@ namespace XForms.GramaticaIrony
 
             LLAMADA.Rule = identificador + "(" + L_EXPRE + ")"
                          | identificador + DIMS;
+                         //| identificador + "." + ToTerm("obtener") + "(" + EXP + ")" + "[" + EXP + "]"
+                         //| identificador + "." + ToTerm("buscar") + "(" + EXP + ")" + "[" + EXP + "]";
 
             L_EXPRE.Rule = MakeStarRule(L_EXPRE, ToTerm(","), EXP);
             //-------------------------------------------------------------------------------------------

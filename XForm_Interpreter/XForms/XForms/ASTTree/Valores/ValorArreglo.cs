@@ -12,7 +12,7 @@ namespace XForms.ASTTree.Valores
 {
     class ValorArreglo : NodoAST, Expresion
     {
-        String id;
+        public String id;
         List<Expresion> expresions;
 
         public ValorArreglo(String id, List<Expresion> expresiones, int linea, int col, String clase):base(linea, col, clase)
@@ -141,7 +141,8 @@ namespace XForms.ASTTree.Valores
             List<int> dims = new List<int>();
             foreach (Expresion e in this.expresions)
             {
-                Object valor = e.getValor(ambito);
+                //Object valor = e.getValor(ambito);
+                Object valor = e.getValor(Estatico.temporal);
                 if (valor is int)
                 {
                     dims.Add((int)valor);
