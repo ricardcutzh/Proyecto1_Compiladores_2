@@ -11,6 +11,7 @@ using XForms.ASTTree.Valores;
 using XForms.ASTTree.Valores.Func_Cadenas;
 using XForms.ASTTree.Valores.Func_Booleanas;
 using XForms.ASTTree.Valores.Func_Numericas;
+using XForms.ASTTree.Valores.Fun_Fechas;
 namespace XForms.ASTTree.ASTConstructor
 {
     class ASTTreeExpresion
@@ -516,6 +517,323 @@ namespace XForms.ASTTree.ASTConstructor
                             if (expresion != null)
                             {
                                 FunTam f = new FunTam(expresion, clase, linea, col);
+                                return f;
+                            }
+                        }
+                        break;
+                    }
+                case "FUN_RANDOM":
+                    {
+                        if(raiz.ChildNodes.Count == 1)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            FunRandom r = new FunRandom(clase, linea, col);
+                            return r;
+                        }
+                        else if(raiz.ChildNodes.Count == 2)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            List<Expresion> exp = new List<Expresion>();
+
+                            foreach(ParseTreeNode nodo in raiz.ChildNodes.ElementAt(1).ChildNodes)
+                            {
+                                Expresion aux = (Expresion)recorreExpresion(nodo);
+                                if(aux!=null)
+                                {
+                                    exp.Add(aux);
+                                }
+                            }
+
+                            FunRandom r = new FunRandom(exp, clase, linea, col);
+                            return r;
+
+                        }
+                        break;
+                    }
+                case "FUN_MIN":
+                    {
+                        if(raiz.ChildNodes.Count == 2)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+                            if(raiz.ChildNodes.ElementAt(1).ToString().Equals("L_EXPRE"))
+                            {
+                                List<Expresion> expresiones = new List<Expresion>();
+                                foreach(ParseTreeNode nodo in raiz.ChildNodes.ElementAt(1).ChildNodes)
+                                {
+                                    Expresion exp = (Expresion)recorreExpresion(nodo);
+                                    if(exp!=null)
+                                    {
+                                        expresiones.Add(exp);
+                                    }
+                                }
+
+                                ///AQUI RETORNO
+                                FunMin f = new FunMin(expresiones, clase, linea, col);
+                                return f;
+                            }
+                            else
+                            {
+                                String idArreglo = raiz.ChildNodes.ElementAt(1).Token.Text.ToLower();
+                                FunMin f = new FunMin(idArreglo.ToLower(), clase, linea, col);
+                                return f;
+                            }
+                        }
+                        break;
+                    }
+                case "FUN_MAX":
+                    {
+                        if(raiz.ChildNodes.Count == 2)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+                            if (raiz.ChildNodes.ElementAt(1).ToString().Equals("L_EXPRE"))
+                            {
+                                List<Expresion> expresiones = new List<Expresion>();
+                                foreach (ParseTreeNode nodo in raiz.ChildNodes.ElementAt(1).ChildNodes)
+                                {
+                                    Expresion exp = (Expresion)recorreExpresion(nodo);
+                                    if (exp != null)
+                                    {
+                                        expresiones.Add(exp);
+                                    }
+                                }
+
+                                /// AQUI RETORNO
+                                FunMax f = new FunMax(expresiones, clase, linea, col);
+                                return f;
+                            }
+                            else
+                            {
+                                String idArreglo = raiz.ChildNodes.ElementAt(1).Token.Text.ToLower();
+                                FunMax f = new FunMax(idArreglo.ToLower(), clase, linea, col);
+                                return f;
+                            }
+                        }
+                        break;
+                    }
+                case "FUN_POW":
+                    {
+                        if(raiz.ChildNodes.Count == 3)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            Expresion bas = (Expresion)recorreExpresion(raiz.ChildNodes.ElementAt(1));
+                            Expresion pot = (Expresion)recorreExpresion(raiz.ChildNodes.ElementAt(2));
+
+                            if(bas!=null && pot!=null)
+                            {
+                                FunPow po = new FunPow(bas, pot, clase, linea, col);
+                                return po;
+                            }
+                        }
+                        break;
+                    }
+                case "FUN_LOG":
+                    {
+                        if(raiz.ChildNodes.Count == 2)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            Expresion exp = (Expresion)recorreExpresion(raiz.ChildNodes.ElementAt(1));
+
+                            if(exp!=null)
+                            {
+                                Logaritmo l = new Logaritmo(exp, clase, linea, col);
+                                return l;
+                            }
+                        }
+                        break;
+                    }
+                case "FUN_LOG10":
+                    {
+                        if(raiz.ChildNodes.Count == 2)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            Expresion exp = (Expresion)recorreExpresion(raiz.ChildNodes.ElementAt(1));
+
+                            if(exp!=null)
+                            {
+                                LogTen l = new LogTen(exp, clase, linea, col);
+                                return l;
+                            }
+                        }
+                        break;
+                    }
+                case "FUN_ABS":
+                    {
+                        if(raiz.ChildNodes.Count == 2)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            Expresion exp = (Expresion)recorreExpresion(raiz.ChildNodes.ElementAt(1));
+
+                            if(exp!=null)
+                            {
+                                FunAbs abs = new FunAbs(exp, clase, linea, col);
+                                return abs;
+                            }
+                        }
+                        break;
+                    }
+                case "FUN_SIN":
+                    {
+                        if(raiz.ChildNodes.Count == 2)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            Expresion exp = (Expresion)recorreExpresion(raiz.ChildNodes.ElementAt(1));
+
+                            if(exp!=null)
+                            {
+                                Seno s = new Seno(exp, clase, linea, col);
+                                return s;
+                            }
+                        }
+                        break;
+                    }
+                case "FUN_COS":
+                    {
+                        if(raiz.ChildNodes.Count == 2)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            Expresion exp = (Expresion)recorreExpresion(raiz.ChildNodes.ElementAt(1));
+
+                            if(exp!=null)
+                            {
+                                Coseno c = new Coseno(exp, clase, linea, col);
+                                return c;
+                            }
+                        }
+                        break;
+                    }
+                case "FUN_TAN":
+                    {
+                        if(raiz.ChildNodes.Count == 2)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            Expresion exp = (Expresion)recorreExpresion(raiz.ChildNodes.ElementAt(1));
+
+                            if(exp!=null)
+                            {
+                                Tangente t = new Tangente(exp, clase, linea, col);
+                                return t;
+                            }
+                        }
+                        break;
+                    }
+                case "FUN_SQRT":
+                    {
+                        if(raiz.ChildNodes.Count == 2)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            Expresion exp = (Expresion)recorreExpresion(raiz.ChildNodes.ElementAt(1));
+
+                            if(exp!=null)
+                            {
+                                Raiz r = new Raiz(exp, clase, linea, col);
+                                return r;
+                            }
+                        }
+                        break;
+                    }
+                case "FUN_PI":
+                    {
+                        if(raiz.ChildNodes.Count == 1)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+                            Pi p = new Pi(clase, linea, col);
+                            return p;
+                        }
+                        break;
+                    }
+                case "FUN_HOY":
+                    {
+                        if(raiz.ChildNodes.Count == 1)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            FunHoy hoy = new FunHoy(clase, linea, col);
+                            return hoy;
+                        }
+                        break;
+                    }
+                case "FUN_AHORA":
+                    {
+                        if(raiz.ChildNodes.Count == 1)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            FunAhora ahora = new FunAhora(clase, linea, col);
+                            return ahora;
+                        }
+                        break;
+                    }
+                case "FUN_AFECHA":
+                    {
+                        if(raiz.ChildNodes.Count == 2)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            Expresion exp = (Expresion)recorreExpresion(raiz.ChildNodes.ElementAt(1));
+
+                            if (exp != null)
+                            {
+                                FunAFecha r = new FunAFecha(exp, clase, linea, col);
+                                return r;
+                            }
+                        }
+                        break;
+                    }
+                case "FUN_TOHORA":
+                    {
+                        if(raiz.ChildNodes.Count == 2)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            Expresion exp = (Expresion)recorreExpresion(raiz.ChildNodes.ElementAt(1));
+
+                            if(exp!=null)
+                            {
+                                FunToHora f = new FunToHora(exp, clase, linea, col);
+                                return f;
+                            }
+                        }
+                        break;
+                    }
+                case "FUN_TOFECHAHORA":
+                    {
+                        if(raiz.ChildNodes.Count == 2)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            Expresion exp = (Expresion)recorreExpresion(raiz.ChildNodes.ElementAt(1));
+
+                            if (exp != null)
+                            {
+                                FunFechaHora f = new FunFechaHora(exp, clase, linea, col);
                                 return f;
                             }
                         }

@@ -112,7 +112,7 @@ namespace XForms.ASTTree.Valores
                     {
                         Object valorReal = ((NodoReturn)valor).valor;
                         String tipoEsperado = f.Tipo.ToLower();
-                        if(tipoEsperado.Equals(((NodoReturn)valor).tipo.ToLower()))
+                        if (tipoEsperado.Equals(((NodoReturn)valor).tipo.ToLower()) || ((NodoReturn)valor).tipo.ToLower().Equals("nulo"))
                         {
                             
                             this.ValorAux = valorReal;
@@ -158,7 +158,8 @@ namespace XForms.ASTTree.Valores
             List<NodoParametro> parametros = new List<NodoParametro>();
             foreach(Expresion e in this.expresiones)
             {
-                String tipo = e.getTipo(ambito);
+                //String tipo = e.getTipo(ambito);
+                String tipo = e.getTipo(Estatico.temporal);
                 NodoParametro p = new NodoParametro("aux", tipo.ToLower(), false);
                 parametros.Add(p);
             }
@@ -170,8 +171,9 @@ namespace XForms.ASTTree.Valores
             List<Object> valores = new List<object>();
             foreach(Expresion e in this.expresiones)
             {
-                object val = e.getValor(ambito);
-                if(val!=null)
+                //object val = e.getValor(ambito);
+                object val = e.getValor(Estatico.temporal);
+                if (val!=null)
                 {
                     valores.Add(val);
                 }

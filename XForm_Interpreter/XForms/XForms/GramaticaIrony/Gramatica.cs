@@ -140,7 +140,24 @@ namespace XForms.GramaticaIrony
             FUN_POSCAD = new NonTerminal("FUN_POSCAD"),
             FUN_BOOLEAN = new NonTerminal("FUN_BOOLEAN"),
             FUN_ENTERO = new NonTerminal("FUN_ENTERO"),
-            FUN_TAM = new NonTerminal("FUN_TAM");
+            FUN_TAM = new NonTerminal("FUN_TAM"),
+            FUN_RANDOM = new NonTerminal("FUN_RANDOM"),
+            FUN_MIN = new NonTerminal("FUN_MIN"),
+            FUN_MAX = new NonTerminal("FUN_MAX"),
+            FUN_POW = new NonTerminal("FUN_POW"),
+            FUN_LOG = new NonTerminal("FUN_LOG"),
+            FUN_LOG10 = new NonTerminal("FUN_LOG10"),
+            FUN_ABS = new NonTerminal("FUN_ABS"),
+            FUN_SIN = new NonTerminal("FUN_SIN"),
+            FUN_COS = new NonTerminal("FUN_COS"),
+            FUN_TAN = new NonTerminal("FUN_TAN"),
+            FUN_SQRT = new NonTerminal("FUN_SQRT"),
+            FUN_PI = new NonTerminal("FUN_PI"),
+            FUN_HOY = new NonTerminal("FUN_HOY"),
+            FUN_AHORA = new NonTerminal("FUN_AHORA"),
+            FUN_AFECHA = new NonTerminal("FUN_AFECHA"),
+            FUN_TOHORA = new NonTerminal("FUN_TOHORA"),
+            FUN_TOFECHAHORA = new NonTerminal("FUN_TOFECHAHORA");
             #endregion
 
             #region Reglas
@@ -311,6 +328,23 @@ namespace XForms.GramaticaIrony
                      | deci
                      | verdadero
                      | falso
+                     | FUN_TOFECHAHORA
+                     | FUN_TOHORA
+                     | FUN_AFECHA
+                     | FUN_AHORA
+                     | FUN_HOY
+                     | FUN_PI
+                     | FUN_SIN
+                     | FUN_COS
+                     | FUN_TAN
+                     | FUN_SQRT
+                     | FUN_ABS
+                     | FUN_LOG10
+                     | FUN_LOG
+                     | FUN_POW
+                     | FUN_MIN
+                     | FUN_MAX
+                     | FUN_RANDOM
                      | FUN_ENTERO
                      | FUN_TAM
                      | FUN_BOOLEAN
@@ -343,6 +377,60 @@ namespace XForms.GramaticaIrony
 
             FUN_TAM.Rule = ToTerm("tam") + "(" + EXP + ")";
             FUN_TAM.ErrorRule = SyntaxError + ";";
+
+            FUN_RANDOM.Rule = ToTerm("random") + "(" + L_EXPRE + ")"
+                            | ToTerm("random") + "(" + ")";
+            FUN_RANDOM.ErrorRule = SyntaxError + ";";
+
+            FUN_MIN.Rule = ToTerm("min") + "(" + L_EXPRE + ")" // POR SI VIENEN MUCHAS EXPRESIONES
+                        | ToTerm("min") + "(" + identificador + ")";//ESTO ES POR SI ES ARREGLO
+            FUN_MIN.ErrorRule = SyntaxError + ";";
+
+            FUN_MAX.Rule = ToTerm("max") + "(" + L_EXPRE + ")" //ESTO ES POR SI VIENEN MUCHAS EXPRESIONES
+                        | ToTerm("max") + "(" + identificador + ")"; // POR SI ES ARREGLO
+            FUN_MAX.ErrorRule = SyntaxError + ";";
+
+            FUN_POW.Rule = ToTerm("pow") + "(" + EXP + "," + EXP + ")";
+            FUN_POW.ErrorRule = SyntaxError + ";";
+
+            FUN_LOG.Rule = ToTerm("log") + "(" + EXP + ")";
+            FUN_LOG.ErrorRule = SyntaxError + ";";
+
+            FUN_LOG10.Rule = ToTerm("log10") + "(" + EXP + ")";
+            FUN_LOG10.ErrorRule = SyntaxError + ";";
+
+            FUN_ABS.Rule = ToTerm("abs") + "(" + EXP + ")";
+            FUN_ABS.ErrorRule = SyntaxError + ";";
+
+            FUN_SIN.Rule = ToTerm("sin") + "(" + EXP + ")";
+            FUN_SIN.ErrorRule = SyntaxError + ";";
+
+            FUN_COS.Rule = ToTerm("cos") + "(" + EXP + ")";
+            FUN_COS.ErrorRule = SyntaxError + ";";
+
+            FUN_TAN.Rule = ToTerm("tan") + "(" + EXP + ")";
+            FUN_TAN.ErrorRule = SyntaxError + ";";
+
+            FUN_SQRT.Rule = ToTerm("sqrt") + "(" + EXP + ")";
+            FUN_SQRT.ErrorRule = SyntaxError + ";";
+
+            FUN_PI.Rule = ToTerm("pi") + "(" + ")";
+            FUN_PI.ErrorRule = SyntaxError + ";";
+
+            FUN_HOY.Rule = ToTerm("hoy") + "(" + ")";
+            FUN_HOY.ErrorRule = SyntaxError + ";";
+
+            FUN_AHORA.Rule = ToTerm("ahora") + "(" + ")";
+            FUN_AHORA.ErrorRule = SyntaxError + ";";
+
+            FUN_AFECHA.Rule = ToTerm("fecha") + "(" + EXP + ")";
+            FUN_AFECHA.ErrorRule = SyntaxError + ";";
+
+            FUN_TOHORA.Rule = ToTerm("hora") + "(" + EXP + ")";
+            FUN_TOHORA.ErrorRule = SyntaxError + ";";
+
+            FUN_TOFECHAHORA.Rule = ToTerm("fechahora") + "(" + EXP +")";
+            FUN_TOFECHAHORA.ErrorRule = SyntaxError + ";";
             //-------------------------------------------------------------------------------------------
             #endregion
 

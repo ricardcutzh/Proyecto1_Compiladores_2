@@ -40,7 +40,7 @@ namespace XForms.Objs
             if(obj is NodoParametro)
             {
                 NodoParametro aux = (NodoParametro)obj;
-                if(this.tipo != aux.tipo) { mensajeError = "El Tipo No Coincide en Parametro "+this.idparam+", Se esperaba: " + this.tipo + " y se Encontro: " + aux.tipo; return false; }
+                if(this.tipo != aux.tipo && !aux.tipo.Equals("nulo")) { mensajeError = "El Tipo No Coincide en Parametro "+this.idparam+", Se esperaba: " + this.tipo + " y se Encontro: " + aux.tipo; return false; }
                 if(this.soyVector != aux.soyVector) { if (this.soyVector) { mensajeError = "Se esperaba un Parametro de Tipo Arreglor"; }
                 else { mensajeError = "No se esperaba un Parametro de Tipo Arreglo"; }
                 ; return false; }

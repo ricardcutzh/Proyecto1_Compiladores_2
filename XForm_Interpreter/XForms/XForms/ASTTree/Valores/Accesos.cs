@@ -80,6 +80,7 @@ namespace XForms.ASTTree.Valores
         {
             try
             {
+                Estatico.temporal = ambito; //AQUI SETEO EL TEMPORAL
                 if(this.expresiones.Count == 1)//SI SOLO SE HACE REFERENCIA A UN ID O UNA LLAMADA A UNA FUNCION
                 {
                     this.valorAux = expresiones.ElementAt(0).getValor(ambito);

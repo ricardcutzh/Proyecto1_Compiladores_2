@@ -37,6 +37,7 @@ namespace XForms.ASTTree.Valores.Func_Numericas
         {
             try
             {
+                //ESTA FUNCION AUN HAY QYE MEJORARLA
                 object valorReal = this.exp.getValor(ambito);
                 String tam = valorReal.ToString();
                 if(valorReal is Nulo)
