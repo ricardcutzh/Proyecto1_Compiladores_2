@@ -94,6 +94,7 @@ namespace XForms.GramaticaIrony
                                 ClasePreAnalizada c = (ClasePreAnalizada)recorreClases(n);
                                 if(c!=null)
                                 {
+                                    
                                     if(c!=null)
                                     {
                                         this.clases.Add(c);

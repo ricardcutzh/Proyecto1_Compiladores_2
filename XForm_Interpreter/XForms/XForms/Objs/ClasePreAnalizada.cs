@@ -61,11 +61,12 @@ namespace XForms.Objs
         {
             ///ESTE SE ECARGA DE CONSTRUIR EL AST PARA EJECUTAR
             this.constructor = new ASTTreeConstructor(this.cuerpoClase, id, archivoOringen);
+            this.constructor.pordefecto = this.vibililidad;
             arbolClase = (CuerpoClase)constructor.ConstruyerAST();
             Principal p = constructor.main;//SETEO EL MAIN
 
             Clase clase = new Clase(this.id, this.padre, this.Hereda, arbolClase, p, this.archivoOringen);
-            
+            clase.visibilidad = this.vibililidad;
             return clase;
         }
         

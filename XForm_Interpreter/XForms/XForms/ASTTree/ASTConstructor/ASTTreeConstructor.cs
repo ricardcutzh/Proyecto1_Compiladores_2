@@ -18,6 +18,7 @@ namespace XForms.ASTTree.ASTConstructor
         String clase; /*SOLO POR SI OCURRE UN ERROR DURANTE EL PARSER*/
         String archivo; /*SOLO SI OCURRE UN ERROR LO UTILIZARE*/
         public Principal main { get; set; }
+        public Estatico.Vibililidad pordefecto { get; set; }
 
         /*YA QUE EL LENGUAJE ES CASE INSENSITIVE ENTONCES VOY A CONVERTIR TODO A MINUSCULAS*/
         public ASTTreeConstructor(ParseTreeNode raiz, String clase, String Archivo)
@@ -171,7 +172,7 @@ namespace XForms.ASTTree.ASTConstructor
                             ///
                             if (tipo!=null)
                             {
-                                DeclaracionFuncion declaracion = new DeclaracionFuncion(instrucciones, tipo, parametros, Estatico.Vibililidad.PRIVADO, idfun, linea, col, this.clase);
+                                DeclaracionFuncion declaracion = new DeclaracionFuncion(instrucciones, tipo, parametros, this.pordefecto, idfun, linea, col, this.clase);
                                 declaracion.SetArchivoOrigen(archivo);
                                 return declaracion;
                             }
@@ -311,7 +312,7 @@ namespace XForms.ASTTree.ASTConstructor
                                 {
                                     int linea = raiz.ChildNodes.ElementAt(1).Token.Location.Line;
                                     int colum = raiz.ChildNodes.ElementAt(1).Token.Location.Column;
-                                    DeclaracionVar declaracion = new DeclaracionVar(exp, idvar, tipo, Estatico.Vibililidad.PRIVADO, linea, colum, this.clase);
+                                    DeclaracionVar declaracion = new DeclaracionVar(exp, idvar, tipo, this.pordefecto, linea, colum, this.clase);
                                     return declaracion;
                                 }
                             }
@@ -328,7 +329,7 @@ namespace XForms.ASTTree.ASTConstructor
 
                                 if(tipo!=null)
                                 {
-                                    DeclaracionArreglo decla = new DeclaracionArreglo(tipo, Estatico.Vibililidad.LOCAL, idArr, numDim, linea, col, clase);
+                                    DeclaracionArreglo decla = new DeclaracionArreglo(tipo, this.pordefecto, idArr, numDim, linea, col, clase);
                                     return decla;
                                 }
                             }
@@ -341,7 +342,7 @@ namespace XForms.ASTTree.ASTConstructor
                             {
                                 int linea = raiz.ChildNodes.ElementAt(1).Token.Location.Line;
                                 int colum = raiz.ChildNodes.ElementAt(1).Token.Location.Column;
-                                DeclaracionVar declaracion = new DeclaracionVar(idvar, tipo, Estatico.Vibililidad.PRIVADO, linea, colum, this.clase);
+                                DeclaracionVar declaracion = new DeclaracionVar(idvar, tipo, this.pordefecto, linea, colum, this.clase);
                                 declaracion.SetArchivoOrigen(archivo);
                                 return declaracion;
                             }
@@ -365,7 +366,7 @@ namespace XForms.ASTTree.ASTConstructor
 
                                 if (tipo!=null && exp!=null)
                                 {
-                                    DeclaracionArreglo de = new DeclaracionArreglo(tipo, Estatico.Vibililidad.LOCAL, idArr, numDim, exp, linea, col, clase);
+                                    DeclaracionArreglo de = new DeclaracionArreglo(tipo, this.pordefecto, idArr, numDim, exp, linea, col, clase);
                                     return de;
                                 }
                             }
@@ -384,7 +385,7 @@ namespace XForms.ASTTree.ASTConstructor
 
                                 if(tipo!=null && arbolArreglo!=null)
                                 {
-                                    DeclaracionArreglo de = new DeclaracionArreglo(tipo, Estatico.Vibililidad.LOCAL, idArr, numDim, arbolArreglo, linea, col, clase);
+                                    DeclaracionArreglo de = new DeclaracionArreglo(tipo, this.pordefecto, idArr, numDim, arbolArreglo, linea, col, clase);
                                     return de;
                                 }
                                 

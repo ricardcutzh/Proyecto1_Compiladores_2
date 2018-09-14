@@ -19,6 +19,8 @@ namespace XForms.Simbolos
 
         public Boolean tieneMain;
 
+        public Estatico.Vibililidad visibilidad { get; set; }
+
         public Clase(String idclase, String padre, Boolean hereda, CuerpoClase AST, Principal main, String Archivo)
         {
             this.idClase = idclase;
