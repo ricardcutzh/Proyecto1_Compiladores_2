@@ -158,7 +158,8 @@ namespace XForms.GramaticaIrony
             FUN_AFECHA = new NonTerminal("FUN_AFECHA"),
             FUN_TOHORA = new NonTerminal("FUN_TOHORA"),
             FUN_TOFECHAHORA = new NonTerminal("FUN_TOFECHAHORA"),
-            OPCS_AGREGAR = new NonTerminal("OPCS_AGREGAR");
+            OPCS_AGREGAR = new NonTerminal("OPCS_AGREGAR"),
+            SUPER = new NonTerminal("SUPER");
             #endregion
 
             #region Reglas
@@ -522,7 +523,8 @@ namespace XForms.GramaticaIrony
                                  | MakeStarRule(SENTENCIAS_CONS, SWITCH)
                                  | MakeStarRule(SENTENCIAS_CONS, LLAMADAFORMULARIO)
                                  | MakeStarRule(SENTENCIAS_CONS, CALL_Q)
-                                 | MakeStarRule(SENTENCIAS_CONS, MENSAJES);
+                                 | MakeStarRule(SENTENCIAS_CONS, MENSAJES)
+                                 | MakeStarRule(SENTENCIAS_CONS, SUPER);
             //-------------------------------------------------------------------------------------------
             #endregion
 
@@ -649,7 +651,7 @@ namespace XForms.GramaticaIrony
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------
-
+            SUPER.Rule = ToTerm("super") + "(" + L_EXPRE + ")" + ";";
             //-------------------------------------------------------------------------------------------
             #endregion
 

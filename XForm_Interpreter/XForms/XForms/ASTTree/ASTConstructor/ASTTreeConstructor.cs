@@ -20,6 +20,8 @@ namespace XForms.ASTTree.ASTConstructor
         public Principal main { get; set; }
         public Estatico.Vibililidad pordefecto { get; set; }
 
+        public Boolean llamaASuper = false;
+
         /*YA QUE EL LENGUAJE ES CASE INSENSITIVE ENTONCES VOY A CONVERTIR TODO A MINUSCULAS*/
         public ASTTreeConstructor(ParseTreeNode raiz, String clase, String Archivo)
         {
@@ -1108,6 +1110,30 @@ namespace XForms.ASTTree.ASTConstructor
                                 Mensajes m = new Mensajes(expre, this.clase, linea, colum);
                                 return m;
                             }
+                        }
+                        break;
+                    }
+                case "SUPER":
+                    {
+                        if(raiz.ChildNodes.Count==2)
+                        {
+                            this.llamaASuper = true;
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            List<Expresion> expresiones = new List<Expresion>();
+                            foreach(ParseTreeNode nodo in raiz.ChildNodes.ElementAt(1).ChildNodes)
+                            {
+                                ASTTreeExpresion arbol = new ASTTreeExpresion(nodo, clase, archivo);
+                                Expresion exp = (Expresion)arbol.ConstruyeASTExpresion();
+                                if(exp!=null)
+                                {
+                                    expresiones.Add(exp);
+                                }
+                            }
+
+                            llamadaConstructor l = new llamadaConstructor(expresiones, clase, linea, col);
+                            return l;
                         }
                         break;
                     }

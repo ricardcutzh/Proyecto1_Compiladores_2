@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using XForms.ASTTree.Interfaces;
 using XForms.ASTTree.Instrucciones;
 using XForms.Objs;
+using XForms.GramaticaIrony;
 namespace XForms.Simbolos
 {
     class Clase : Instruccion
@@ -39,6 +40,22 @@ namespace XForms.Simbolos
         public object Ejecutar(Ambito ambito)
         {
             AST.Ejecutar(ambito);
+            if(this.Hereda)
+            {
+                Clase padre = Estatico.clasesDisponibles.getClase(this.Padre.ToLower());
+                if (padre != null)
+                {
+                    Ambito tata = new Ambito(null, this.Padre.ToLower()+" "+this.idClase, ambito.archivo);
+                    tata = (Ambito)padre.Ejecutar(tata);
+                    ambito.HeredaAmbito(tata);
+                }
+                else
+                {
+                    TError error = new TError("Semantico", "Se intenta heredar: \"" + padre + "\" la cual no existe, desde clase: \"" + this.idClase + "\" | Clase: " + this.idClase + " | Archivo: " + ambito.archivo, 0, 0, false);
+                    Estatico.ColocaError(error);
+                    Estatico.errores.Add(error);
+                }
+            }            
             return ambito;
         }
 

@@ -191,6 +191,71 @@ namespace XForms.Simbolos
                 }
             }
         }
+
+        
+        public void HeredaAmbito(Ambito padre)
+        {
+            heredaAtributos(padre.tablaVars);
+            heredaMetodosFunciones(padre.tablaFuns);
+            heredaConstructores(padre.tablaConst);
+        }
+
+        public void heredaAtributos(TablaVariables tabla)
+        {
+            Hashtable auxiliar = tabla.variables;
+            foreach (DictionaryEntry data in auxiliar)
+            {
+                if (data.Value is Variable)
+                {
+                    Variable aux = (Variable)data.Value;
+                    if (!this.existeVariable(aux.idSimbolo.ToLower()) && (aux.Visibilidad == Estatico.Vibililidad.PUBLICO || aux.Visibilidad == Estatico.Vibililidad.PROTEGIDO) )
+                    {
+                        this.agregarVariableAlAmbito(aux.idSimbolo.ToLower(), aux);
+                    }
+                }
+                else if (data.Value is Arreglo)
+                {
+                    Arreglo aux = (Arreglo)data.Value;
+                    if (!this.existeVariable(aux.idSimbolo.ToLower()) && (aux.Visibilidad == Estatico.Vibililidad.PUBLICO || aux.Visibilidad == Estatico.Vibililidad.PROTEGIDO))
+                    {
+                        this.agregarVariableAlAmbito(aux.idSimbolo, aux);
+                    }
+                }
+            }
+        }
+
+        public void heredaMetodosFunciones(TablaFunciones tabla)
+        {
+            Hashtable auxiliar = tabla.funciones;
+            foreach(DictionaryEntry data in auxiliar)
+            {
+                if(data.Value is Funcion)
+                {
+                    Funcion f = (Funcion)data.Value;
+                    Clave c = (Clave)data.Key;
+                    if(!this.existeFuncion(c) && (f.Vibililidad == Estatico.Vibililidad.PUBLICO || f.Vibililidad == Estatico.Vibililidad.PROTEGIDO))
+                    {
+                        this.tablaFuns.agregarFuncion(c, f);
+                    }
+                }
+            }
+        }
+
+        public void heredaConstructores(TablaConstructores tabla)
+        {
+            Hashtable auxiliar = tabla.constructores;
+            foreach(DictionaryEntry data in auxiliar)
+            {
+                if(data.Value is Constructor)
+                {
+                    Constructor cons = (Constructor)data.Value;
+                    ClaveFuncion c = (ClaveFuncion)data.Key;
+                    c.idFuncion = "padre";
+                    c.Tipo = "vacio";
+                    this.tablaConst.AgregaConstrucor(c, cons);
+                }
+            }
+        }
         #endregion
     }
 }

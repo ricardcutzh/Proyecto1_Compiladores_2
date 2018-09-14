@@ -8,6 +8,7 @@ using XForms.ASTTree.ASTConstructor;
 using XForms.ASTTree.Instrucciones;
 using System.Windows.Forms;
 using XForms.Simbolos;
+using XForms.GramaticaIrony;
 namespace XForms.Objs
 {
     class ClasePreAnalizada
@@ -22,6 +23,7 @@ namespace XForms.Objs
         ASTTreeConstructor constructor;
         CuerpoClase arbolClase;
 
+        public int linea, col;
 
         /*
          * Primer constructor de una clase que no hereda
@@ -64,6 +66,12 @@ namespace XForms.Objs
             this.constructor.pordefecto = this.vibililidad;
             arbolClase = (CuerpoClase)constructor.ConstruyerAST();
             Principal p = constructor.main;//SETEO EL MAIN
+
+            if(this.Hereda && !constructor.llamaASuper)
+            {
+                TError error = new TError("Semantico", "Clase: \"" + this.id + "\" hereda de: \"" + this.padre + "\" pero no se hace referencia a su constructor padre 'Super' | Clase: " + this.id + " | Archivo: " + this.archivoOringen, linea, col+6, false);
+                Estatico.errores.Add(error);
+            }
 
             Clase clase = new Clase(this.id, this.padre, this.Hereda, arbolClase, p, this.archivoOringen);
             clase.visibilidad = this.vibililidad;

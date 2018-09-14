@@ -94,9 +94,9 @@ namespace XForms.ASTTree.Valores
             }
             catch(Exception e)
             {
-                TError error = new TError("Ejecucion", "Error al Crear un Objeto en Clase: "+this.clase+" | Archivo: "+ambito.archivo+" | Error: "+e.Message, this.linea, this.columna, false);
-                Estatico.errores.Add(error);
-                Estatico.ColocaError(error);
+                    TError error = new TError("Ejecucion", "Error al Crear un Objeto en Clase: "+this.clase+" | Archivo: "+ambito.archivo+" | Error: "+e.Message, this.linea, this.columna, false);
+                    Estatico.errores.Add(error);
+                    Estatico.ColocaError(error);
             }
             return new Nulo();
         }

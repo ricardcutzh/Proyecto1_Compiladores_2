@@ -74,6 +74,7 @@
     <Compile Include="ASTTree\Sentencias\HacerMientras.cs" />
     <Compile Include="ASTTree\Sentencias\Imprimir.cs" />
     <Compile Include="ASTTree\Sentencias\Incremento.cs" />
+    <Compile Include="ASTTree\Sentencias\llamadaConstructor.cs" />
     <Compile Include="ASTTree\Sentencias\LLamadaFuncion.cs" />
     <Compile Include="ASTTree\Sentencias\Mensajes.cs" />
     <Compile Include="ASTTree\Sentencias\RepetirHasta.cs" />

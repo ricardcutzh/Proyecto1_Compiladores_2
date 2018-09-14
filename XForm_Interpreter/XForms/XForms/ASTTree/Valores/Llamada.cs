@@ -103,6 +103,10 @@ namespace XForms.ASTTree.Valores
                     ///CREO EL AMBITO DE LA FUNCION
                     Ambito auxliar = new Ambito(aux, this.clase.ToLower(), ambito.archivo);
                     this.vibililidad = f.Vibililidad;
+                    if(this.vibililidad == Estatico.Vibililidad.PROTEGIDO && !(ambito.idAmbito.ToLower().Contains(Estatico.temporal.idAmbito.ToLower())))
+                    {
+                        return new Nulo();
+                    }
                     ///SETEO LOS PARAMETROS QUE RECIBE
                     auxliar = f.seteaParametrosLocales(auxliar, valores);
 

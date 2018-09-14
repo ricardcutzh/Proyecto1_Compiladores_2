@@ -124,6 +124,8 @@ namespace XForms.GramaticaIrony
                             Estatico.Vibililidad visi = (Estatico.Vibililidad)obtenerVisibilidad(raiz.ChildNodes.ElementAt(2));
                             String padre = raiz.ChildNodes.ElementAt(4).Token.Text;
                             ClasePreAnalizada clase = new ClasePreAnalizada(idclase, visi, raiz.ChildNodes.ElementAt(5), padre, this.archivo);
+                            clase.linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            clase.col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
                             return clase;
                         }
                         if(raiz.ChildNodes.Count == 5)//SI EXACTAMENTE TIENE 5 HIJOS
@@ -131,6 +133,8 @@ namespace XForms.GramaticaIrony
                             String idClase = raiz.ChildNodes.ElementAt(1).Token.Text.ToLower();
                             String padre = raiz.ChildNodes.ElementAt(3).Token.Text;
                             ClasePreAnalizada clase = new ClasePreAnalizada(idClase, Estatico.Vibililidad.PUBLICO, raiz.ChildNodes.ElementAt(4),padre, this.archivo);
+                            clase.linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            clase.col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
                             return clase;
                         }
                         if(raiz.ChildNodes.Count == 4)//SI EXACTAMENTE TIENE 4 HIJOS
@@ -138,6 +142,8 @@ namespace XForms.GramaticaIrony
                             String idclase = raiz.ChildNodes.ElementAt(1).Token.Text.ToLower();
                             Estatico.Vibililidad visi = (Estatico.Vibililidad)obtenerVisibilidad(raiz.ChildNodes.ElementAt(2));
                             ClasePreAnalizada clase = new ClasePreAnalizada(idclase, visi, raiz.ChildNodes.ElementAt(3), this.archivo);
+                            clase.linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            clase.col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
                             return clase;
                         }
                         if(raiz.ChildNodes.Count == 3)//SI EXACTAMENTE TIENE 3 HIJOS
@@ -145,6 +151,8 @@ namespace XForms.GramaticaIrony
                             /*SI NO TIENE VISIBILIDAD LA CLASE SERA PRIVADA*/
                             String idclase = raiz.ChildNodes.ElementAt(1).Token.Text.ToLower();
                             ClasePreAnalizada clase = new ClasePreAnalizada(idclase, Estatico.Vibililidad.PUBLICO, raiz.ChildNodes.ElementAt(2), this.archivo);
+                            clase.linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            clase.col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
                             return clase;
                         }
                         break;
