@@ -127,6 +127,61 @@ namespace XForms.ASTTree.Valores
                         }
                     }
                 }
+                else if(this.id.ToLower().Equals("buscar"))
+                {
+                    Simbolo l = (Simbolo)ambito.getSimbolo("cutz");/// :)
+                    if (l != null)
+                    {
+                        Variable v = (Variable)l;
+                        Opciones listado = (Opciones)v.valor;
+                        if(valores.Count == 2)
+                        {
+                            if(valores.ElementAt(1) is int)
+                            {
+                                Object index1 = valores.ElementAt(0);
+                                int index2 = (int)valores.ElementAt(1);
+
+                                Object val = listado.obtenerDeLista(index1, index2);
+
+                                NodoReturn n = creaNodoReturn(val);
+
+                                this.ValorAux = n.valor;
+
+                                return n.valor;
+                            }
+                        }
+                    }
+                }
+                else if(this.id.ToLower().Equals("obtener"))
+                {
+                    Simbolo l = (Simbolo)ambito.getSimbolo("cutz");
+                    if (l != null)
+                    {
+                        Variable v = (Variable)l;
+                        Opciones listado = (Opciones)v.valor;
+                        if(valores.ElementAt(0) is int &&  valores.ElementAt(1) is int)
+                        {
+                            int index1 = (int)valores.ElementAt(0);
+                            int index2 = (int)valores.ElementAt(1);
+                            Object val = listado.obtenerDeLista(index1, index2);
+                            NodoReturn n =  creaNodoReturn(val);
+
+                            this.ValorAux = n.valor;
+                            return n.valor;
+                        }
+                    }
+                }
+                else if(this.id.ToLower().Equals("insertar"))
+                {
+                    Simbolo l = (Simbolo)ambito.getSimbolo("cutz");
+                    if(l!=null)
+                    {
+                        Variable v = (Variable)l;
+                        Opciones listado = (Opciones)v.valor;
+                        listado.agregarElementos(valores);/// INSERTA ELEMENTOS VACIOS
+                        return new Vacio();
+                    }
+                }
                 else
                 {
                     TError error = new TError("Semantico", "No existe funcion: "+this.id+" que reciba parametro: "+getMensajeError(ambito)+" | Clase: "+this.clase+" | "+ambito.archivo, this.linea, this.columna, false);
@@ -189,6 +244,50 @@ namespace XForms.ASTTree.Valores
                 aux = aux.Anterior;
             }
             return aux;
+        }
+
+
+
+        private NodoReturn creaNodoReturn(Object valor)
+        {
+            if(valor is int)
+            {
+                return new NodoReturn(valor, "entero");
+            }
+            if(valor is double)
+            {
+                return new NodoReturn(valor, "decimal");
+            }
+            if(valor is string)
+            {
+                return new NodoReturn(valor, "cadena");
+            }
+            if(valor is Boolean)
+            {
+                return new NodoReturn(valor, "booleano");
+            }
+            if(valor is DateTime)
+            {
+                return new NodoReturn(valor, "fechahora");
+            }
+            if(valor is Date)
+            {
+                return new NodoReturn(valor, "fecha");
+            }
+            if(valor is Hour)
+            {
+                return new NodoReturn(valor, "hora");
+            }
+            if(valor is Objeto)
+            {
+                Objeto aux = (Objeto)valor;
+                return new NodoReturn(valor, aux.idClase.ToLower());
+            }
+            if(valor is Arreglo)
+            {
+                return new NodoReturn(valor, "arreglo");
+            }
+            return new NodoReturn(new Nulo(), "nulo");
         }
 
     }

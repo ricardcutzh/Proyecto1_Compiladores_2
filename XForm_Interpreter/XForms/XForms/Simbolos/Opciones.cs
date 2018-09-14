@@ -16,6 +16,7 @@ namespace XForms.Simbolos
         public Opciones(string idClase, Ambito ambito) : base(idClase, ambito)
         {
             listados = new List<List<object>>();
+            //EL AMBITO NI LO VOY A USAR
 
         }
 

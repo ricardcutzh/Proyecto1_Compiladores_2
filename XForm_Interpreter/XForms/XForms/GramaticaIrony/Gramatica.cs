@@ -157,7 +157,8 @@ namespace XForms.GramaticaIrony
             FUN_AHORA = new NonTerminal("FUN_AHORA"),
             FUN_AFECHA = new NonTerminal("FUN_AFECHA"),
             FUN_TOHORA = new NonTerminal("FUN_TOHORA"),
-            FUN_TOFECHAHORA = new NonTerminal("FUN_TOFECHAHORA");
+            FUN_TOFECHAHORA = new NonTerminal("FUN_TOFECHAHORA"),
+            OPCS_AGREGAR = new NonTerminal("OPCS_AGREGAR");
             #endregion
 
             #region Reglas
@@ -440,9 +441,9 @@ namespace XForms.GramaticaIrony
                                | MakePlusRule(LLAMADAID_OBJ, ToTerm("."), LLAMADA);
 
             LLAMADA.Rule = identificador + "(" + L_EXPRE + ")"
-                         | identificador + DIMS;
-                         //| identificador + "." + ToTerm("obtener") + "(" + EXP + ")" + "[" + EXP + "]"
-                         //| identificador + "." + ToTerm("buscar") + "(" + EXP + ")" + "[" + EXP + "]";
+                         | identificador + DIMS
+                         | ToTerm("buscar") + "(" + EXP + ")" + "[" + EXP + "]"
+                         | ToTerm("obtener") + "(" + EXP + ")" + "[" + EXP + "]";
 
             L_EXPRE.Rule = MakeStarRule(L_EXPRE, ToTerm(","), EXP);
             //-------------------------------------------------------------------------------------------
@@ -645,6 +646,10 @@ namespace XForms.GramaticaIrony
 
             //-------------------------------------------------------------------------------------------
             MENSAJES.Rule = ToTerm("Mensajes") + "(" + EXP + ")" + ";";
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+
             //-------------------------------------------------------------------------------------------
             #endregion
 

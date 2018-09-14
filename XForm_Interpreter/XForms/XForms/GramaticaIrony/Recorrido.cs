@@ -129,7 +129,7 @@ namespace XForms.GramaticaIrony
                         {
                             String idClase = raiz.ChildNodes.ElementAt(1).Token.Text.ToLower();
                             String padre = raiz.ChildNodes.ElementAt(3).Token.Text;
-                            ClasePreAnalizada clase = new ClasePreAnalizada(idClase, Estatico.Vibililidad.PRIVADO, raiz.ChildNodes.ElementAt(4),padre, this.archivo);
+                            ClasePreAnalizada clase = new ClasePreAnalizada(idClase, Estatico.Vibililidad.PUBLICO, raiz.ChildNodes.ElementAt(4),padre, this.archivo);
                             return clase;
                         }
                         if(raiz.ChildNodes.Count == 4)//SI EXACTAMENTE TIENE 4 HIJOS
@@ -143,7 +143,7 @@ namespace XForms.GramaticaIrony
                         {
                             /*SI NO TIENE VISIBILIDAD LA CLASE SERA PRIVADA*/
                             String idclase = raiz.ChildNodes.ElementAt(1).Token.Text.ToLower();
-                            ClasePreAnalizada clase = new ClasePreAnalizada(idclase, Estatico.Vibililidad.PRIVADO, raiz.ChildNodes.ElementAt(2), this.archivo);
+                            ClasePreAnalizada clase = new ClasePreAnalizada(idclase, Estatico.Vibililidad.PUBLICO, raiz.ChildNodes.ElementAt(2), this.archivo);
                             return clase;
                         }
                         break;

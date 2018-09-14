@@ -342,6 +342,30 @@ namespace XForms.ASTTree.ASTConstructor
                                 }
                             }    
                         }
+                        else if(raiz.ChildNodes.Count == 3)
+                        {
+                            if(raiz.ChildNodes.ElementAt(0).ToString().Contains("obtener") || raiz.ChildNodes.ElementAt(0).ToString().Contains("buscar"))
+                            {
+                                String id = raiz.ChildNodes.ElementAt(0).Token.Text.ToLower();//MINUSCULAS
+                                int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                                int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                                Llamada llam = new Llamada(id, linea, col, this.clase);
+
+                                ASTTreeExpresion ar = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(1), clase, archivo);
+                                Expresion uno = (Expresion)ar.ConstruyeASTExpresion();
+
+                                ar = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(2), clase, archivo);
+                                Expresion dos = (Expresion)ar.ConstruyeASTExpresion();
+
+                                if(uno!=null && dos!=null)
+                                {
+                                    llam.AddExpresion(uno);
+                                    llam.AddExpresion(dos);
+                                    return llam;
+                                }
+                            }
+                        }
                         break;
                     }   
                 case "identificador":

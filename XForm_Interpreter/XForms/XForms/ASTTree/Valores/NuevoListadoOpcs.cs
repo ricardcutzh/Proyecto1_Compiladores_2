@@ -7,6 +7,7 @@ using XForms.GramaticaIrony;
 using XForms.ASTTree.Interfaces;
 using XForms.Simbolos;
 using XForms.Objs;
+using XForms.ASTTree.Sentencias;
 
 namespace XForms.ASTTree.Valores
 {
@@ -28,11 +29,19 @@ namespace XForms.ASTTree.Valores
         {
             try
             {
-                Ambito ambitoOpcs = new Ambito(null, this.clase, ambito.archivo);
 
-                Opciones ops = new Opciones(this.clase.ToLower(), ambitoOpcs);
+                Ambito ambitoOpcs = new Ambito(null, this.clase, ambito.archivo); //CREO EL AMBITO DEL OBJETO
 
-                return ops;
+                Opciones listado = new Opciones("opciones", null); // CREO EL LISTADO QUE VA A MANEJAR LOS VALORES
+
+                Variable v = new Variable("cutz", "opciones", Estatico.Vibililidad.LOCAL, listado); // SETEO LA VARIABLE QUE ME VA A GUARDAR EL LISTADO
+
+                ambitoOpcs.agregarVariableAlAmbito("cutz", v); /// LO AGREGO AL AMBITO
+
+                Objeto opciones = new Objeto("opciones", ambitoOpcs); /// CREO EL OBJETO OPCIONES
+
+
+                return opciones; //LO RETORNO
             }
             catch(Exception e)
             {
