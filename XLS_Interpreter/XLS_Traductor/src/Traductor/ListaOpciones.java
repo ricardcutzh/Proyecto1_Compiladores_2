@@ -76,11 +76,11 @@ public class ListaOpciones {
             
             if(mul.equals(""))
             {
-                listado.add(this.nombreLista+".Agregar(\""+opc+"\",\""+eti+"\");");
+                listado.add(this.nombreLista+".Insertar(\""+opc+"\",\""+eti+"\");");
             }
             else
             {
-                listado.add(this.nombreLista+".Agregar(\""+opc+"\",\""+eti+"\",\""+mul+"\");");
+                listado.add(this.nombreLista+".Insertar(\""+opc+"\",\""+eti+"\",\""+mul+"\");");
             }
             
         }

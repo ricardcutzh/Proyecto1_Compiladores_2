@@ -377,7 +377,7 @@ namespace XForms
 
             e.ChangedRange.SetStyle(BlueStyle, @"\b(super|Mientras|continuar|hacer|Repetir|Hasta|para|caso|defecto|pregunta|formulario|grupo|mensajes|)\b", RegexOptions.IgnoreCase);
 
-            e.ChangedRange.SetStyle(functionStyle, @"\b(subcad|poscad|tam|random|max|min|pow|Log|Log10|abs|sin|cos|tan|sqrt|pi|hoy|ahora|buscar|insertar|obtener)\b", RegexOptions.IgnoreCase);
+            e.ChangedRange.SetStyle(functionStyle, @"\b(imagen|video|audio|subcad|poscad|tam|random|max|min|pow|Log|Log10|abs|sin|cos|tan|sqrt|pi|hoy|ahora|buscar|insertar|obtener)\b", RegexOptions.IgnoreCase);
 
             e.ChangedRange.SetStyle(LightBlue, @"\b(cadena|entero|decimal|booleano|fecha|hora|fechahora|vacio|respuestas|opciones)\b", RegexOptions.IgnoreCase);
 

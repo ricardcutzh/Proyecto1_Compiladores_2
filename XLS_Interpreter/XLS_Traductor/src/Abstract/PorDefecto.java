@@ -47,7 +47,7 @@ public class PorDefecto extends Atributo implements ArbolForm{
         StringReader stream = new StringReader(this.cadena);
         try {
             ExpParser exp = new ExpParser(stream);
-            exp.setUp(errores, ts, padre, actual, cadena, actual, TipoPregunta.TRADUC_1);
+            exp.setUp(errores, ts, padre, actual, "Predeterminado", "Encuesta", TipoPregunta.TRADUC_1);
             cad = "="+exp.S();
             this.params = exp.getParams();
             this.paramsPadre = exp.getParamsPadre();

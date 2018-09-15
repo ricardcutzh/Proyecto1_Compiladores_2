@@ -57,7 +57,7 @@ public class Calculo extends Atributo implements ArbolForm{
             ////////////////////////////////////////////////////////////////////
             tabula();
             ExpParser exp = new ExpParser(stream);
-            exp.setUp(errores, ts, padre, actual, cadena, actual, TipoPregunta.TRADUC_1);
+            exp.setUp(errores, ts, padre, actual, "Calcular", "Encuesta", TipoPregunta.TRADUC_1);
             String aux = exp.S();
             this.tipoCalcular = exp.getTipoCalcular()+" Respuesta";
             this.params = exp.getParams();

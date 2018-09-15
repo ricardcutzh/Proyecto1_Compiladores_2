@@ -28,7 +28,7 @@ public class Requerido extends Atributo implements ArbolForm{
         {
             val = "Verdadero";
         }
-        return "Booelano Requerido = "+val+";\n";
+        return "Booleano Requerido = "+val+";\n";
     }
 
     @Override

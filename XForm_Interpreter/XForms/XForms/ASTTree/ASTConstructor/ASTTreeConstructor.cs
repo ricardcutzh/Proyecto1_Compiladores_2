@@ -9,6 +9,7 @@ using XForms.ASTTree.Valores;
 using XForms.Simbolos;
 using XForms.GramaticaIrony;
 using XForms.ASTTree.Sentencias;
+using System.Windows.Forms;
 
 namespace XForms.ASTTree.ASTConstructor
 {
@@ -181,6 +182,88 @@ namespace XForms.ASTTree.ASTConstructor
                         }
                         break;
                     }
+                case "GRUPO":
+                    {
+                        if(raiz.ChildNodes.Count == 3)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            String identificador = raiz.ChildNodes.ElementAt(1).Token.Text.ToLower();
+
+                            List<Object> instrucciones = new List<object>();
+
+                            foreach(ParseTreeNode nodo in raiz.ChildNodes.ElementAt(2).ChildNodes)
+                            {
+                                Object ins = (Object)construyeSentencias(nodo);
+                                if(ins!=null)
+                                {
+                                    instrucciones.Add(ins);
+                                }
+                            }
+
+                            List<NodoParametro> parametros = new List<NodoParametro>();
+
+                            DeclaracionFuncion declaracion = new DeclaracionFuncion(instrucciones, "vacio", parametros, Estatico.Vibililidad.PRIVADO, identificador.ToLower(), linea, col, clase);
+                            return declaracion;
+                        }
+                        break;
+                    }
+                case "FORMULARIO":
+                    {
+                        if(raiz.ChildNodes.Count == 3)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            String identificador = raiz.ChildNodes.ElementAt(1).Token.Text.ToLower();
+
+                            List<Object> instrucciones = new List<object>();
+
+                            foreach (ParseTreeNode nodo in raiz.ChildNodes.ElementAt(2).ChildNodes)
+                            {
+                                Object ins = (Object)construyeSentencias(nodo);
+                                if (ins != null)
+                                {
+                                    instrucciones.Add(ins);
+                                }
+                            }
+
+                            List<NodoParametro> parametros = new List<NodoParametro>();
+
+                            DeclaracionFuncion declaracion = new DeclaracionFuncion(instrucciones, "vacio", parametros, Estatico.Vibililidad.PRIVADO, identificador.ToLower(), linea, col, clase);
+                            return declaracion;
+                        }
+                        break;
+                    }
+                case "PREGUNTA":
+                    {
+                        if(raiz.ChildNodes.Count == 4)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            String identificador = raiz.ChildNodes.ElementAt(1).Token.Text.ToLower();
+
+                            List<NodoParametro> parametros = (List<NodoParametro>)getParametros(raiz.ChildNodes.ElementAt(2));
+
+                            List<Instruccion> declaraciones = new List<Instruccion>();
+
+                            foreach(ParseTreeNode nodo in raiz.ChildNodes.ElementAt(3).ChildNodes)
+                            {
+                                Instruccion ins = (Instruccion)recorreCuerpo(nodo);
+                                if(ins!=null)
+                                {
+                                    declaraciones.Add(ins);
+                                }
+                            }
+
+                            DeclaracionPregunta p = new DeclaracionPregunta(declaraciones, identificador.ToLower(), parametros, clase, linea, col);
+                            return p;
+                        }
+                        break;
+                    }
+
             }
             return null;
         }
@@ -1133,6 +1216,93 @@ namespace XForms.ASTTree.ASTConstructor
                             }
 
                             llamadaConstructor l = new llamadaConstructor(expresiones, clase, linea, col);
+                            return l;
+                        }
+                        break;
+                    }
+                case "CALL_Q":
+                    {
+                        if(raiz.ChildNodes.Count > 0)
+                        {
+                            /*int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+                            String identificador = raiz.ChildNodes.ElementAt(0).Token.Text.ToLower(); /// Identificador
+
+                            List<Expresion> parametros = new List<Expresion>(); /// L_EXP
+                            foreach(ParseTreeNode nodo in raiz.ChildNodes.ElementAt(1).ChildNodes)
+                            {
+                                ASTTreeExpresion arbol = new ASTTreeExpresion(nodo, clase, archivo);
+                                Expresion exp = (Expresion)arbol.ConstruyeASTExpresion();
+                                if(exp!=null)
+                                {
+                                    parametros.Add(exp);
+                                }
+                            }*/
+
+                            if (raiz.ChildNodes.Count == 3)
+                            {
+
+                                /// identificador + "(" + L_EXPRE + ")" + "." + ToTerm("nota") + "(" + ")" + ";"
+                                if (raiz.ChildNodes.ElementAt(2).ToString().ToLower().Contains("nota"))
+                                {
+                                    //MessageBox.Show("es para nota sin mostrar");
+                                }
+                                /// identificador + "(" + L_EXPRE + ")" + "." + ToTerm("fichero") + "(" + ")" + ";"
+                                else if (raiz.ChildNodes.ElementAt(2).ToString().ToLower().Contains("fichero"))
+                                {
+                                    //MessageBox.Show("es para ficheros sin extensiones");
+                                }
+                            }
+                            else if (raiz.ChildNodes.Count == 4)
+                            {
+                                ///identificador + "(" + L_EXPRE + ")" + "." + ToTerm("nota") + "(" + ")" + "." + ToTerm("mostrar") + "(" + ")" + ";"
+                                if (raiz.ChildNodes.ElementAt(3).ToString().Contains("mostrar"))
+                                {
+                                    //MessageBox.Show("es para nota con mostrar");
+                                }
+                                ///identificador + "(" + L_EXPRE + ")" + "." + ToTerm("fichero") + "(" + EXP + ")" + ";"
+                                else if (raiz.ChildNodes.ElementAt(3).ToString().Contains("EXP"))
+                                {
+                                    //MessageBox.Show("es para ficheros con extensiones");
+                                }
+                            }
+                            else if (raiz.ChildNodes.Count == 5)
+                            {
+                                /// identificador + "(" + L_EXPRE + ")" + "." + ToTerm("respuesta") + "(" + CASTEO_PREGUNTA + ")" + "." + ESTILO_RESP + ";"
+                                //MessageBox.Show("pregunta con su estilo nativo");
+                            }
+                            else if (raiz.ChildNodes.Count == 6)
+                            {
+                                /// identificador + "(" + L_EXPRE + ")" + "." + ToTerm("respuesta") + "(" + CASTEO_PREGUNTA + ")" + "." + ToTerm("Apariencia") + "(" + ")" + "." + ESTILO_RESP + ";";
+                                //MessageBox.Show("pregunta con apariencia forzada");
+                            }
+                        }
+                        break;
+                    }
+                case "LLAMADAFORM":
+                    {
+                        if(raiz.ChildNodes.Count == 2)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+                            String id = raiz.ChildNodes.ElementAt(1).Token.Text.ToLower();
+
+                            Llamada ll = new Llamada(id, linea, col, clase);
+
+                            LLamadaFuncion l = new LLamadaFuncion(clase, linea, col, ll);
+
+                            return l;
+                        }
+                        else if(raiz.ChildNodes.Count == 3)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+                            String id = raiz.ChildNodes.ElementAt(1).Token.Text.ToLower();
+
+                            Llamada ll = new Llamada(id, linea, col, clase);
+
+                            LLamadaFuncion l = new LLamadaFuncion(clase, linea, col, ll);
+
                             return l;
                         }
                         break;

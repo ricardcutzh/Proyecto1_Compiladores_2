@@ -55,7 +55,7 @@ public class Restringir extends Atributo implements ArbolForm{
             cad += dameTabulaciones()+"Si(";
             /////////////////////////////////////////////////////////////
             ExpParser exp = new ExpParser(stream);
-            exp.setUp(errores, ts, padre, actual, cadena, actual, TipoPregunta.TRADUC_1);
+            exp.setUp(errores, ts, padre, actual, "Restringir", "Encuesta", TipoPregunta.TRADUC_1);
             cad += exp.S();
             this.params = exp.getParams();
             this.paramsPadre = exp.getParamsPadre();

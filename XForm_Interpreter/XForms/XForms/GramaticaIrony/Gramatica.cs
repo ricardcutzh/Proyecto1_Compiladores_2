@@ -159,7 +159,15 @@ namespace XForms.GramaticaIrony
             FUN_TOHORA = new NonTerminal("FUN_TOHORA"),
             FUN_TOFECHAHORA = new NonTerminal("FUN_TOFECHAHORA"),
             OPCS_AGREGAR = new NonTerminal("OPCS_AGREGAR"),
-            SUPER = new NonTerminal("SUPER");
+            SUPER = new NonTerminal("SUPER"),
+            EST_CADENA = new NonTerminal("EST_CADENA"),
+            EST_ENTERO = new NonTerminal("EST_ENTERO"),
+            EST_SELECC = new NonTerminal("EST_SELECC"),
+            EST_DECIMAL = new NonTerminal("EST_DECIMAL"),
+            EST_CONDICION = new NonTerminal("EST_CONDICION"),
+            EST_FECHA = new NonTerminal("EST_FECHA"),
+            EST_HORA = new NonTerminal("EST_HORA"),
+            EST_FECHAHORA = new NonTerminal("EST_FECHAHORA");
             #endregion
 
             #region Reglas
@@ -624,7 +632,12 @@ namespace XForms.GramaticaIrony
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------
-            CALL_Q.Rule = identificador + "(" + L_EXPRE + ")" + "." + ToTerm("Respuesta") + "(" +CASTEO_PREGUNTA + ")" + "." + ESTILO_RESP + "(" + ")" + ";";
+            CALL_Q.Rule = identificador + "(" + L_EXPRE + ")" + "." + ToTerm("nota") + "(" + ")" + ";" /// pregunta(params).nota();
+                        | identificador + "(" + L_EXPRE + ")" + "." + ToTerm("nota") + "(" + ")" + "." + ToTerm("mostrar") + "(" + ")" + ";" /// pregunta(params).nota().mostrar();
+                        | identificador + "(" + L_EXPRE + ")" + "." + ToTerm("fichero") + "(" + EXP + ")" + ";"
+                        | identificador + "(" + L_EXPRE + ")" + "." + ToTerm("fichero") + "(" + ")" + ";"
+                        | identificador + "(" + L_EXPRE + ")" + "." + ToTerm("respuesta") + "(" + CASTEO_PREGUNTA + ")" + "." + ESTILO_RESP + ";"
+                        | identificador + "(" + L_EXPRE + ")" + "." + ToTerm("respuesta") + "(" + CASTEO_PREGUNTA + ")" + "." + ToTerm("Apariencia") + "(" + ")" + "." + ESTILO_RESP + ";";
 
             CALL_Q.ErrorRule = SyntaxError + ";";
 
@@ -636,14 +649,33 @@ namespace XForms.GramaticaIrony
                                 | ToTerm("resp.esHora")
                                 | ToTerm("resp.esFechaHora");
 
-            ESTILO_RESP.Rule = ToTerm("Cadena")
-                            | ToTerm("Entero")
-                            | ToTerm("Decimal")
-                            | ToTerm("Condicion")
-                            | ToTerm("Hora")
-                            | ToTerm("FechaHora")
-                            | ToTerm("Fecha")
-                            | ToTerm("Fichero");
+            ESTILO_RESP.Rule = EST_CADENA
+                            | EST_ENTERO
+                            | EST_SELECC
+                            | EST_DECIMAL
+                            | EST_CONDICION
+                            | EST_FECHA
+                            | EST_HORA
+                            | EST_FECHAHORA;
+
+            EST_CADENA.Rule = ToTerm("Cadena") + "(" + EXP + "," + EXP + "," + EXP + ")" /// SI VIENE PARAMETROS EN CADENA
+                            | ToTerm("Cadena") + "(" + ")"; /// CADENA SIN PARAMETROS
+
+            EST_ENTERO.Rule = ToTerm("Entero") + "(" + ")" /// ENTEROS
+                            | ToTerm("Entero") + "(" + EXP + "," + EXP + ")"; /// CUANDO VIENE RANGO INICIAL O FINAL
+
+            EST_SELECC.Rule = ToTerm("seleccionar_1") + "(" + EXP + ")" /// SELECCIONAR 1
+                            | ToTerm("seleccionar") + "(" + EXP + ")"; /// SELECCIONAR
+
+            EST_DECIMAL.Rule = ToTerm("Decimal") + "(" + ")"; /// DECIMAL
+
+            EST_CONDICION.Rule = ToTerm("Condicion") + "(" + EXP + "," + EXP + ")"; /// SI VIENE SI O NO Y ES PARA CONDICION
+
+            EST_FECHA.Rule = ToTerm("Fecha") + "(" + ")"; /// FECHA
+
+            EST_HORA.Rule = ToTerm("Hora") + "(" + ")";/// HORA
+
+            EST_FECHAHORA.Rule = ToTerm("FechaHora") + "(" + ")";
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------

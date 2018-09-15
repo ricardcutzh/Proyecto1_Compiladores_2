@@ -204,7 +204,7 @@ public class Pregunta implements ArbolForm {
                 //par.setUp(errores, ts, padre, this.Idpregunta, "Repeticion", "Encuesta", TipoPregunta.TRADUC_2);
                 par.setUp(errores, ts, "", this.Idpregunta, "Repeticion", "Encuesta", TipoPregunta.TRADUC_2);
                 String cond = par.S();
-                cadenaFor += dameTabulaciones()+"Para(Entero " + this.Idpregunta + "_iter = 0, " + this.Idpregunta + "_iter < " + cond + ", " + this.Idpregunta + "_iter++){\n";
+                cadenaFor += dameTabulaciones()+"Para(Entero " + this.Idpregunta + "_iter = 0; " + this.Idpregunta + "_iter < " + cond + "; " + this.Idpregunta + "_iter++){\n";
                 tabula();
                 cadenaFor += evaluaAplicable(pregunta, atributo, ts, errores, tabs);
                 destabula();
@@ -431,6 +431,10 @@ public class Pregunta implements ArbolForm {
                 cad += "$$ NO TIENE RESPUESTA: ACEPTA FICHEROS DE TIPO: " + this.ficheroExt + "\n";
                 this.EstiloPregunta = "Fichero";
                 this.cadenaEspeciales = this.ficheroExt;
+                if(!this.ficheroExt.equals(""))
+                {
+                    this.ficheroExt = "\"" +this.ficheroExt +"\"";
+                }
                 this.estiloResp = "";
                 break;
             }
@@ -597,7 +601,7 @@ public class Pregunta implements ArbolForm {
             case "restringir": {
                 if (this.atributos.containsKey("restringir")) {
                     Restringir r = (Restringir) this.atributos.get(atributo);
-                    r.setActual("param_1");
+                    r.setActual(this.Idpregunta);
                     //r.setPadre(this.padre);
                     r.setPadre("");
                     this.cuerpo = (String) r.traducirLocal(ts, tabs, errores);
@@ -619,7 +623,7 @@ public class Pregunta implements ArbolForm {
             case "predeterminado": {
                 if (this.atributos.containsKey("predeterminado")) {
                     PorDefecto p = (PorDefecto) this.atributos.get(atributo);
-                    p.setActual("");
+                    p.setActual(this.Idpregunta);
                     //p.setPadre(padre);
                     p.setPadre("");
                     this.predeterminado = (String) p.traducirLocal(ts, tabs, errores) + ";\n";
@@ -691,7 +695,7 @@ public class Pregunta implements ArbolForm {
                 if (this.atributos.containsKey("apariencia")) {
                     Apariencia ap = (Apariencia) this.atributos.get(atributo);
                     this.lePongoApariencia = 0;
-                    this.EstiloPregunta = ap.getCadena();
+                    this.EstiloPregunta = ap.getCadena()+";";
                 }
                 break;
             }
@@ -705,7 +709,7 @@ public class Pregunta implements ArbolForm {
                         //////////////////////PADRE//////////////////////////////////////////////////////////////
                         par.setUp(errores, ts, "", this.Idpregunta, "Repeticion", "Encuesta", TipoPregunta.TRADUC_2);
                         String cond = par.S();
-                        cadenaFor += "Para(Entero " + this.Idpregunta + "_iter = 0, " + this.Idpregunta + "_iter < " + cond + ", " + this.Idpregunta + "_iter++){";
+                        cadenaFor += "Para(Entero " + this.Idpregunta + "_iter = 0; " + this.Idpregunta + "_iter < " + cond + "; " + this.Idpregunta + "_iter++){";
                     } catch (Exception e) {
                         errores.add(new TError("Ejecucion", "Error Al Ejecutar el Parser de Repeticion", "Repeticion", "Encuesta"));
                     }

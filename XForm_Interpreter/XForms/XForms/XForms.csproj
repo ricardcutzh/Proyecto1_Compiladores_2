@@ -60,6 +60,7 @@
     <Compile Include="ASTTree\Instrucciones\DeclaracionConstructor.cs" />
     <Compile Include="ASTTree\Instrucciones\DeclaracionFuncion.cs" />
     <Compile Include="ASTTree\Instrucciones\DeclaracionMain.cs" />
+    <Compile Include="ASTTree\Instrucciones\DeclaracionPregunta.cs" />
     <Compile Include="ASTTree\Instrucciones\DeclaracionVar.cs" />
     <Compile Include="ASTTree\Interfaces\Expresion.cs" />
     <Compile Include="ASTTree\Interfaces\Instruccion.cs" />

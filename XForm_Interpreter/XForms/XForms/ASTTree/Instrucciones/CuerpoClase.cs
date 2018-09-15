@@ -34,7 +34,7 @@ namespace XForms.ASTTree.Instrucciones
         {
             foreach(Instruccion instruccion in this.instrucciones)//PRIMERO EJECUTO EL GUARDADO DE FUNCIONES
             {
-                if(instruccion is DeclaracionConstructor || instruccion is DeclaracionFuncion)
+                if(instruccion is DeclaracionConstructor || instruccion is DeclaracionFuncion || instruccion is DeclaracionPregunta)
                 {
                     instruccion.Ejecutar(ambito);
                 }

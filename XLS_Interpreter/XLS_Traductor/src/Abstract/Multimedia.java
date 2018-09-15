@@ -51,7 +51,7 @@ public class Multimedia extends Atributo implements ArbolForm{
             ////////////////////////////////////////////////////////////////////
             tabula();
             MultimediaParser parse = new MultimediaParser(stream);
-            parse.setUp(errores, ts, padre, actual, cadena, actual, TipoPregunta.TRADUC_1);
+            parse.setUp(errores, ts, padre, actual, "Multimedia", "Encuesta", TipoPregunta.TRADUC_1);
             parse.INIT();
             this.params = parse.getParams();
             this.paramsPadre = parse.getParamsPadre();
