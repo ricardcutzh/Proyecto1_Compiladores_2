@@ -65,6 +65,7 @@
     <Compile Include="ASTTree\Interfaces\Expresion.cs" />
     <Compile Include="ASTTree\Interfaces\Instruccion.cs" />
     <Compile Include="ASTTree\Interfaces\NodoAST.cs" />
+    <Compile Include="ASTTree\Preguntas\EjecutaNota.cs" />
     <Compile Include="ASTTree\Sentencias\AsignacionArregloComp.cs" />
     <Compile Include="ASTTree\Sentencias\AsignacionPropiedad.cs" />
     <Compile Include="ASTTree\Sentencias\AsignacionSimple.cs" />
@@ -72,6 +73,9 @@
     <Compile Include="ASTTree\Sentencias\CicloPara.cs" />
     <Compile Include="ASTTree\Sentencias\Continuar.cs" />
     <Compile Include="ASTTree\Sentencias\Decremento.cs" />
+    <Compile Include="ASTTree\Sentencias\FuncionAudio.cs" />
+    <Compile Include="ASTTree\Sentencias\FuncionImagen.cs" />
+    <Compile Include="ASTTree\Sentencias\FuncionVideo.cs" />
     <Compile Include="ASTTree\Sentencias\HacerMientras.cs" />
     <Compile Include="ASTTree\Sentencias\Imprimir.cs" />
     <Compile Include="ASTTree\Sentencias\Incremento.cs" />
@@ -129,6 +133,30 @@
     <Compile Include="GramaticaIrony\Gramatica.cs" />
     <Compile Include="GramaticaIrony\Recorrido.cs" />
     <Compile Include="GramaticaIrony\TError.cs" />
+    <Compile Include="GUI\Funciones\DisplayAudio.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Funciones\DisplayAudio.Designer.cs">
+      <DependentUpon>DisplayAudio.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Funciones\DisplayImage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Funciones\DisplayImage.Designer.cs">
+      <DependentUpon>DisplayImage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Funciones\DisplayVideo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Funciones\DisplayVideo.Designer.cs">
+      <DependentUpon>DisplayVideo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Notas\Nota.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Notas\Nota.Designer.cs">
+      <DependentUpon>Nota.cs</DependentUpon>
+    </Compile>
     <Compile Include="Objs\ClasePreAnalizada.cs" />
     <Compile Include="Objs\Clave.cs" />
     <Compile Include="Objs\ClaveFuncion.cs" />
@@ -143,6 +171,7 @@
     <Compile Include="Objs\NodoParametro.cs" />
     <Compile Include="Objs\NodoReturn.cs" />
     <Compile Include="Objs\Nulo.cs" />
+    <Compile Include="Objs\Pregunta.cs" />
     <Compile Include="Objs\Vacio.cs" />
     <Compile Include="Objs\XFormFile.cs" />
     <Compile Include="Program.cs" />
@@ -162,6 +191,18 @@
     <Compile Include="Simbolos\Variable.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Funciones\DisplayAudio.resx">
+      <DependentUpon>DisplayAudio.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Funciones\DisplayImage.resx">
+      <DependentUpon>DisplayImage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Funciones\DisplayVideo.resx">
+      <DependentUpon>DisplayVideo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Notas\Nota.resx">
+      <DependentUpon>Nota.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -199,8 +240,27 @@
     <None Include="Resources\xform.xml" />
     <None Include="Resources\if_Error_381599.ico" />
     <None Include="Resources\if_Report_669954.ico" />
+    <None Include="Resources\if_shield-error_299056.png" />
     <Content Include="Resources\if_Warning_34248.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <COMReference Include="AxWMPLib">
+      <Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>aximp</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
+    <COMReference Include="WMPLib">
+      <Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

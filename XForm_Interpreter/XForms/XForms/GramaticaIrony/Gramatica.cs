@@ -167,7 +167,8 @@ namespace XForms.GramaticaIrony
             EST_CONDICION = new NonTerminal("EST_CONDICION"),
             EST_FECHA = new NonTerminal("EST_FECHA"),
             EST_HORA = new NonTerminal("EST_HORA"),
-            EST_FECHAHORA = new NonTerminal("EST_FECHAHORA");
+            EST_FECHAHORA = new NonTerminal("EST_FECHAHORA"),
+            FUNC_MULTIMEDIA = new NonTerminal("FUN_MULTIMEDIA");
             #endregion
 
             #region Reglas
@@ -513,7 +514,8 @@ namespace XForms.GramaticaIrony
                             | MakeStarRule(SENTENCIAS, SWITCH)
                             | MakeStarRule(SENTENCIAS, LLAMADAFORMULARIO)
                             | MakeStarRule(SENTENCIAS, CALL_Q)
-                            | MakeStarRule(SENTENCIAS, MENSAJES);
+                            | MakeStarRule(SENTENCIAS, MENSAJES)
+                            | MakeStarRule(SENTENCIAS, FUNC_MULTIMEDIA);
 
             SENTENCIAS_CONS.Rule = MakeStarRule(SENTENCIAS_CONS, DECLARACION_LOCAL)
                                  | MakeStarRule(SENTENCIAS_CONS, IMPRIMIR)
@@ -532,7 +534,8 @@ namespace XForms.GramaticaIrony
                                  | MakeStarRule(SENTENCIAS_CONS, LLAMADAFORMULARIO)
                                  | MakeStarRule(SENTENCIAS_CONS, CALL_Q)
                                  | MakeStarRule(SENTENCIAS_CONS, MENSAJES)
-                                 | MakeStarRule(SENTENCIAS_CONS, SUPER);
+                                 | MakeStarRule(SENTENCIAS_CONS, SUPER)
+                                 | MakeStarRule(SENTENCIAS_CONS, FUNC_MULTIMEDIA);
             //-------------------------------------------------------------------------------------------
             #endregion
 
@@ -620,6 +623,14 @@ namespace XForms.GramaticaIrony
 
             CUERPOSWITCH.Rule = MakeStarRule(CUERPOSWITCH, CASO)
                             | MakeStarRule(CUERPOSWITCH, DEFECTO);
+            //-------------------------------------------------------------------------------------------
+
+            //-------------------------------------------------------------------------------------------
+            FUNC_MULTIMEDIA.Rule = ToTerm("Imagen") + "(" + EXP + "," + EXP + ")" + ";"
+                                 | ToTerm("Video") + "(" + EXP + "," + EXP + ")" + ";"
+                                 | ToTerm("Audio") + "(" + EXP + "," + EXP + ")" + ";";
+
+            FUNC_MULTIMEDIA.ErrorRule = SyntaxError + ";";
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------

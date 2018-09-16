@@ -121,6 +121,16 @@ namespace XForms.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap if_shield_error_299056 {
+            get {
+                object obj = ResourceManager.GetObject("if_shield_error_299056", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon if_Warning_34248 {
@@ -132,10 +142,16 @@ namespace XForms.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;doc&gt;
-        ///	&lt;brackets left=&quot;{&quot; right=&quot;}&quot; /&gt;
-        ///	&lt;rule style=&quot;Blue&quot;&gt;clase&lt;/rule&gt;
-        ///	&lt;rule style=&quot;Blue&quot;&gt;principal&lt;/rule&gt;
-        ///&lt;/doc&gt;.
+        ///    &lt;brackets left=&quot;&lt;&quot; right=&quot;&gt;&quot; /&gt;
+        ///    &lt;style name=&quot;Maroon&quot; color=&quot;Maroon&quot; fontStyle=&quot;Bold,Italic&quot; /&gt;
+        ///    &lt;style name=&quot;Blue&quot; color=&quot;Blue&quot;/&gt;
+        ///    &lt;style name=&quot;Red&quot; color=&quot;Red&quot; backColor=&quot;#f5f5e5&quot; /&gt;
+        ///    &lt;rule style=&quot;Blue&quot;&gt;&lt;|/&gt;|&lt;/|&gt;&lt;/rule&gt;
+        ///    &lt;rule style=&quot;Maroon&quot;&gt;&lt;(?&lt;range&gt;[!\w\d]+)&lt;/rule&gt;
+        ///    &lt;rule style=&quot;Maroon&quot;&gt;&lt;/(?&lt;range&gt;[\w\d]+)&gt;&lt;/rule&gt;
+        ///    &lt;rule style=&quot;Red&quot; options=&quot;Multiline&quot;&gt;(?&lt;range&gt;\S+?)=&apos;[^&apos;]*
+        ///        &apos;|(?&lt;range&gt;\S+)=&quot;[^&quot;]*&quot;|(?&lt;range&gt;\S+)=\S+&lt;/rule&gt;
+        ///    &lt;folding start=&quot;&lt;div&quot; finish [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string xform {
             get {

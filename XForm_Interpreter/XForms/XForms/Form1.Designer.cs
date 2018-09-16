@@ -41,7 +41,13 @@
             this.manualTecnicoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.manualDeUsuarioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gramaticaUtilizadaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.configuracionesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.erroresSemanticosPermitidosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Editor = new System.Windows.Forms.TabControl();
+            this.Consola = new System.Windows.Forms.RichTextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.abrirProyectoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
@@ -59,12 +65,7 @@
             this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
-            this.Editor = new System.Windows.Forms.TabControl();
-            this.Consola = new System.Windows.Forms.RichTextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.configuracionesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.erroresSemanticosPermitidosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -87,7 +88,8 @@
             this.archivoToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.abrirToolStripMenuItem,
             this.guardarToolStripMenuItem,
-            this.guardarComoToolStripMenuItem});
+            this.guardarComoToolStripMenuItem,
+            this.abrirProyectoToolStripMenuItem});
             this.archivoToolStripMenuItem.Name = "archivoToolStripMenuItem";
             this.archivoToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
             this.archivoToolStripMenuItem.Text = "Archivo";
@@ -95,21 +97,21 @@
             // abrirToolStripMenuItem
             // 
             this.abrirToolStripMenuItem.Name = "abrirToolStripMenuItem";
-            this.abrirToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.abrirToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.abrirToolStripMenuItem.Text = "Abrir";
             this.abrirToolStripMenuItem.Click += new System.EventHandler(this.abrirToolStripMenuItem_Click);
             // 
             // guardarToolStripMenuItem
             // 
             this.guardarToolStripMenuItem.Name = "guardarToolStripMenuItem";
-            this.guardarToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.guardarToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.guardarToolStripMenuItem.Text = "Guardar";
             this.guardarToolStripMenuItem.Click += new System.EventHandler(this.guardarToolStripMenuItem_Click);
             // 
             // guardarComoToolStripMenuItem
             // 
             this.guardarComoToolStripMenuItem.Name = "guardarComoToolStripMenuItem";
-            this.guardarComoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.guardarComoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.guardarComoToolStripMenuItem.Text = "Guardar Como";
             this.guardarComoToolStripMenuItem.Click += new System.EventHandler(this.guardarComoToolStripMenuItem_Click);
             // 
@@ -149,49 +151,86 @@
             // manualTecnicoToolStripMenuItem
             // 
             this.manualTecnicoToolStripMenuItem.Name = "manualTecnicoToolStripMenuItem";
-            this.manualTecnicoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.manualTecnicoToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.manualTecnicoToolStripMenuItem.Text = "Manual Tecnico";
             this.manualTecnicoToolStripMenuItem.Click += new System.EventHandler(this.manualTecnicoToolStripMenuItem_Click);
             // 
             // manualDeUsuarioToolStripMenuItem
             // 
             this.manualDeUsuarioToolStripMenuItem.Name = "manualDeUsuarioToolStripMenuItem";
-            this.manualDeUsuarioToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.manualDeUsuarioToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.manualDeUsuarioToolStripMenuItem.Text = "Manual de Usuario";
             this.manualDeUsuarioToolStripMenuItem.Click += new System.EventHandler(this.manualDeUsuarioToolStripMenuItem_Click);
             // 
             // gramaticaUtilizadaToolStripMenuItem
             // 
             this.gramaticaUtilizadaToolStripMenuItem.Name = "gramaticaUtilizadaToolStripMenuItem";
-            this.gramaticaUtilizadaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.gramaticaUtilizadaToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.gramaticaUtilizadaToolStripMenuItem.Text = "Gramatica Utilizada";
             this.gramaticaUtilizadaToolStripMenuItem.Click += new System.EventHandler(this.gramaticaUtilizadaToolStripMenuItem_Click);
             // 
-            // toolStrip1
+            // configuracionesToolStripMenuItem
             // 
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton1,
-            this.toolStripSeparator1,
-            this.toolStripButton2,
-            this.Progreso,
-            this.StatusControl,
-            this.toolStripSeparator2,
-            this.toolStripButton3,
-            this.toolStripSeparator3,
-            this.toolStripLabel1,
-            this.errorLabel,
-            this.toolStripSeparator4,
-            this.toolStripLabel2,
-            this.warningsLabel,
-            this.toolStripSeparator5,
-            this.toolStripButton4,
-            this.toolStripSeparator6,
-            this.toolStripSeparator7});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 24);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1044, 25);
-            this.toolStrip1.TabIndex = 1;
-            this.toolStrip1.Text = "toolStrip1";
+            this.configuracionesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.erroresSemanticosPermitidosToolStripMenuItem});
+            this.configuracionesToolStripMenuItem.Name = "configuracionesToolStripMenuItem";
+            this.configuracionesToolStripMenuItem.Size = new System.Drawing.Size(106, 20);
+            this.configuracionesToolStripMenuItem.Text = "Configuraciones";
+            // 
+            // erroresSemanticosPermitidosToolStripMenuItem
+            // 
+            this.erroresSemanticosPermitidosToolStripMenuItem.Name = "erroresSemanticosPermitidosToolStripMenuItem";
+            this.erroresSemanticosPermitidosToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
+            this.erroresSemanticosPermitidosToolStripMenuItem.Text = "Errores Semanticos Permitidos";
+            this.erroresSemanticosPermitidosToolStripMenuItem.Click += new System.EventHandler(this.erroresSemanticosPermitidosToolStripMenuItem_Click);
+            // 
+            // Editor
+            // 
+            this.Editor.Location = new System.Drawing.Point(12, 78);
+            this.Editor.Name = "Editor";
+            this.Editor.SelectedIndex = 0;
+            this.Editor.Size = new System.Drawing.Size(1020, 534);
+            this.Editor.TabIndex = 2;
+            // 
+            // Consola
+            // 
+            this.Consola.BackColor = System.Drawing.SystemColors.MenuText;
+            this.Consola.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Consola.ForeColor = System.Drawing.SystemColors.Menu;
+            this.Consola.Location = new System.Drawing.Point(12, 650);
+            this.Consola.Name = "Consola";
+            this.Consola.ReadOnly = true;
+            this.Consola.Size = new System.Drawing.Size(1020, 186);
+            this.Consola.TabIndex = 3;
+            this.Consola.Text = ">> XForm Console | Compiladores 2 | 2018";
+            this.Consola.TextChanged += new System.EventHandler(this.Consola_TextChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(12, 623);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(185, 24);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "Consola de Salida:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(12, 51);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(136, 20);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "Editor de Texto:";
+            // 
+            // abrirProyectoToolStripMenuItem
+            // 
+            this.abrirProyectoToolStripMenuItem.Name = "abrirProyectoToolStripMenuItem";
+            this.abrirProyectoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.abrirProyectoToolStripMenuItem.Text = "Abrir Proyecto";
+            this.abrirProyectoToolStripMenuItem.Click += new System.EventHandler(this.abrirProyectoToolStripMenuItem_Click);
             // 
             // toolStripButton1
             // 
@@ -301,61 +340,31 @@
             this.toolStripSeparator7.Name = "toolStripSeparator7";
             this.toolStripSeparator7.Size = new System.Drawing.Size(6, 25);
             // 
-            // Editor
+            // toolStrip1
             // 
-            this.Editor.Location = new System.Drawing.Point(12, 78);
-            this.Editor.Name = "Editor";
-            this.Editor.SelectedIndex = 0;
-            this.Editor.Size = new System.Drawing.Size(1020, 534);
-            this.Editor.TabIndex = 2;
-            // 
-            // Consola
-            // 
-            this.Consola.BackColor = System.Drawing.SystemColors.MenuText;
-            this.Consola.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Consola.ForeColor = System.Drawing.SystemColors.Menu;
-            this.Consola.Location = new System.Drawing.Point(12, 650);
-            this.Consola.Name = "Consola";
-            this.Consola.ReadOnly = true;
-            this.Consola.Size = new System.Drawing.Size(1020, 186);
-            this.Consola.TabIndex = 3;
-            this.Consola.Text = ">> XForm Console | Compiladores 2 | 2018";
-            this.Consola.TextChanged += new System.EventHandler(this.Consola_TextChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(12, 623);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(185, 24);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "Consola de Salida:";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(12, 51);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(136, 20);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "Editor de Texto:";
-            // 
-            // configuracionesToolStripMenuItem
-            // 
-            this.configuracionesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.erroresSemanticosPermitidosToolStripMenuItem});
-            this.configuracionesToolStripMenuItem.Name = "configuracionesToolStripMenuItem";
-            this.configuracionesToolStripMenuItem.Size = new System.Drawing.Size(106, 20);
-            this.configuracionesToolStripMenuItem.Text = "Configuraciones";
-            // 
-            // erroresSemanticosPermitidosToolStripMenuItem
-            // 
-            this.erroresSemanticosPermitidosToolStripMenuItem.Name = "erroresSemanticosPermitidosToolStripMenuItem";
-            this.erroresSemanticosPermitidosToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
-            this.erroresSemanticosPermitidosToolStripMenuItem.Text = "Errores Semanticos Permitidos";
-            this.erroresSemanticosPermitidosToolStripMenuItem.Click += new System.EventHandler(this.erroresSemanticosPermitidosToolStripMenuItem_Click);
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButton1,
+            this.toolStripSeparator1,
+            this.toolStripButton2,
+            this.Progreso,
+            this.StatusControl,
+            this.toolStripSeparator2,
+            this.toolStripButton3,
+            this.toolStripSeparator3,
+            this.toolStripLabel1,
+            this.errorLabel,
+            this.toolStripSeparator4,
+            this.toolStripLabel2,
+            this.warningsLabel,
+            this.toolStripSeparator5,
+            this.toolStripButton4,
+            this.toolStripSeparator6,
+            this.toolStripSeparator7});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 24);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(1044, 25);
+            this.toolStrip1.TabIndex = 1;
+            this.toolStrip1.Text = "toolStrip1";
             // 
             // Form1
             // 
@@ -373,6 +382,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "XForms App";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -397,16 +407,20 @@
         private System.Windows.Forms.ToolStripMenuItem manualTecnicoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem manualDeUsuarioToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gramaticaUtilizadaToolStripMenuItem;
-        private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripButton toolStripButton2;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripButton toolStripButton3;
         private System.Windows.Forms.TabControl Editor;
         private System.Windows.Forms.RichTextBox Consola;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ToolStripMenuItem configuracionesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem erroresSemanticosPermitidosToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem abrirProyectoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripButton toolStripButton2;
+        private System.Windows.Forms.ToolStripProgressBar Progreso;
+        private System.Windows.Forms.ToolStripLabel StatusControl;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripButton toolStripButton3;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ToolStripLabel errorLabel;
@@ -415,12 +429,9 @@
         private System.Windows.Forms.ToolStripLabel warningsLabel;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripButton toolStripButton4;
-        private System.Windows.Forms.ToolStripProgressBar Progreso;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
-        private System.Windows.Forms.ToolStripLabel StatusControl;
-        private System.Windows.Forms.ToolStripMenuItem configuracionesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem erroresSemanticosPermitidosToolStripMenuItem;
+        private System.Windows.Forms.ToolStrip toolStrip1;
     }
 }
 

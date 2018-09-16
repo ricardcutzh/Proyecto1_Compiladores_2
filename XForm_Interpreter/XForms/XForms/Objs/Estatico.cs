@@ -21,6 +21,9 @@ namespace XForms.Objs
          * @author  Ricardo Antonio Cutz Hernandez
          * 
          */
+
+        /*RUTA DEL PROYECTO EN CUESTION*/
+        public static String PROYECT_PATH = "";
         
         public static int tolerancia = 5;
 

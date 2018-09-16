@@ -9,6 +9,7 @@ using XForms.ASTTree.Valores;
 using XForms.Simbolos;
 using XForms.GramaticaIrony;
 using XForms.ASTTree.Sentencias;
+using XForms.ASTTree.Preguntas; 
 using System.Windows.Forms;
 
 namespace XForms.ASTTree.ASTConstructor
@@ -1224,7 +1225,7 @@ namespace XForms.ASTTree.ASTConstructor
                     {
                         if(raiz.ChildNodes.Count > 0)
                         {
-                            /*int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
                             int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
                             String identificador = raiz.ChildNodes.ElementAt(0).Token.Text.ToLower(); /// Identificador
 
@@ -1237,7 +1238,7 @@ namespace XForms.ASTTree.ASTConstructor
                                 {
                                     parametros.Add(exp);
                                 }
-                            }*/
+                            }
 
                             if (raiz.ChildNodes.Count == 3)
                             {
@@ -1245,7 +1246,8 @@ namespace XForms.ASTTree.ASTConstructor
                                 /// identificador + "(" + L_EXPRE + ")" + "." + ToTerm("nota") + "(" + ")" + ";"
                                 if (raiz.ChildNodes.ElementAt(2).ToString().ToLower().Contains("nota"))
                                 {
-                                    //MessageBox.Show("es para nota sin mostrar");
+                                    EjecutaNota nota = new EjecutaNota(identificador, parametros, clase, linea, col, false);
+                                    return nota;
                                 }
                                 /// identificador + "(" + L_EXPRE + ")" + "." + ToTerm("fichero") + "(" + ")" + ";"
                                 else if (raiz.ChildNodes.ElementAt(2).ToString().ToLower().Contains("fichero"))
@@ -1304,6 +1306,48 @@ namespace XForms.ASTTree.ASTConstructor
                             LLamadaFuncion l = new LLamadaFuncion(clase, linea, col, ll);
 
                             return l;
+                        }
+                        break;
+                    }
+                case "FUN_MULTIMEDIA":
+                    {
+                        if(raiz.ChildNodes.Count == 3)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+                            if (raiz.ChildNodes.ElementAt(0).ToString().ToLower().Contains("imagen"))
+                            {
+                                ASTTreeExpresion arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(1), clase, archivo);
+                                Expresion ruta = (Expresion)arbol.ConstruyeASTExpresion();
+
+                                arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(2), clase, archivo);
+                                Expresion condicion = (Expresion)arbol.ConstruyeASTExpresion();
+
+                                FuncionImagen f = new FuncionImagen(ruta, condicion, clase, linea, col);
+                                return f;
+                            }
+                            else if(raiz.ChildNodes.ElementAt(0).ToString().ToLower().Contains("video"))
+                            {
+                                ASTTreeExpresion arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(1), clase, archivo);
+                                Expresion ruta = (Expresion)arbol.ConstruyeASTExpresion();
+
+                                arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(2), clase, archivo);
+                                Expresion condicion = (Expresion)arbol.ConstruyeASTExpresion();
+
+                                FuncionVideo f = new FuncionVideo(condicion, ruta, clase, linea, col);
+                                return f;
+                            }
+                            else if(raiz.ChildNodes.ElementAt(0).ToString().ToLower().Contains("audio"))
+                            {
+                                ASTTreeExpresion arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(1), clase, archivo);
+                                Expresion ruta = (Expresion)arbol.ConstruyeASTExpresion();
+
+                                arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(2), clase, archivo);
+                                Expresion condicion = (Expresion)arbol.ConstruyeASTExpresion();
+
+                                FuncionAudio f = new FuncionAudio(ruta, condicion, clase, linea, col);
+                                return f;
+                            }
                         }
                         break;
                     }

@@ -10,3 +10,12 @@ C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Pr
 C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.pdb
 C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\bin\Debug\irony.dll
 C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.csproj.CopyComplete
+C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.GUI.Funciones.DisplayImage.resources
+C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.GUI.Funciones.DisplayVideo.resources
+C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\bin\Debug\Interop.WMPLib.dll
+C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\bin\Debug\AxInterop.WMPLib.dll
+C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\Interop.WMPLib.dll
+C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\AxInterop.WMPLib.dll
+C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.csproj.ResolveComReference.cache
+C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.GUI.Funciones.DisplayAudio.resources
+C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.GUI.Notas.Nota.resources

@@ -14,6 +14,7 @@ using System.Collections;
 using XForms.Simbolos;
 using FastColoredTextBoxNS;
 using System.Text.RegularExpressions;
+using XForms.GUI;
 
 namespace XForms
 {
@@ -24,7 +25,7 @@ namespace XForms
             InitializeComponent();
         }
 
-        String ProyectoPath;
+        String ProyectoPath = "";
         String archivo;
 
         /*
@@ -89,13 +90,46 @@ namespace XForms
         //PERMITE GUARDAR EL ARCHIVO
         private void guardarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            if (this.ProyectoPath.Equals("")) { guardarComo(); return; }
+            if(Editor.TabPages.Count > 0)
+            {
+                String filename = Editor.TabPages[Editor.SelectedIndex].Text;
+                FastColoredTextBox principal = (FastColoredTextBox)Editor.TabPages[Editor.SelectedIndex].Controls[0].Controls[0];
+                String texto = principal.Text;
+                using (StreamWriter writer =
+                        new StreamWriter(Estatico.PROYECT_PATH + "\\" + filename))
+                {
+                    writer.Write(texto);
+                }
+            }
         }
 
         //PERMITE GUARDAR COMO
         private void guardarComoToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            guardarComo();
+        }
 
+
+        private void guardarComo()
+        {
+            if(Editor.TabPages.Count == 0) { return; }
+            SaveFileDialog s = new SaveFileDialog();
+            if(s.ShowDialog() == DialogResult.OK)
+            {
+                FastColoredTextBox principal = (FastColoredTextBox)Editor.TabPages[Editor.SelectedIndex].Controls[0].Controls[0];
+                String texto = principal.Text;
+                var file = new FileInfo(s.FileName);
+                using (StreamWriter writer =
+                        new StreamWriter(s.FileName))
+                {
+                    writer.Write(texto);
+                }
+
+                this.ProyectoPath = file.DirectoryName;
+                Estatico.PROYECT_PATH = this.ProyectoPath;
+                this.Text = "XForms App | Proyecto Iniciado en: " + this.ProyectoPath;
+            }
         }
 
         //DESPLIEGA EL MANUAL TECNICO
@@ -133,10 +167,12 @@ namespace XForms
                     // ABRIO EL ARCHIVO
                     this.ProyectoPath = archivo.Replace(abrir.SafeFileName,"");
                     this.archivo = archivo;
+                    Estatico.PROYECT_PATH = this.ProyectoPath;
                     ////////////////////////////////
                     String texto = File.ReadAllText(archivo);
                     //crearNuevaPestania(abrir.SafeFileName.Replace(".xform", ""), texto);
                     crearNuevaPestaniaColor(abrir.SafeFileName.Replace(".xform", ""), texto);
+                    this.Text =  "XForms App | Archivo Abierto en: " + this.ProyectoPath;
                 }
             }
         }
@@ -150,8 +186,10 @@ namespace XForms
             if(Editor.TabCount > 0)
             {
                 //RichTextBox principal = (RichTextBox)Editor.TabPages[Editor.SelectedIndex].Controls[0].Controls[1];
+                this.archivo = Editor.TabPages[Editor.SelectedIndex].Name;
+                
                 FastColoredTextBox principal = (FastColoredTextBox)Editor.TabPages[Editor.SelectedIndex].Controls[0].Controls[0];
-                String cadena = principal.Text.ToLower();//PARA QUE TODO ESTE EN MINUSCULAS Y NO TENGA CLAVOS CON LA COMPROBACION DE NOMBRES
+                String cadena = principal.Text;//PARA QUE TODO ESTE EN MINUSCULAS Y NO TENGA CLAVOS CON LA COMPROBACION DE NOMBRES
                 Progreso.Value = 40;
                 StatusControl.Text = "Iniciando Proceso...";
                 System.Threading.Thread.Sleep(200);
@@ -191,19 +229,13 @@ namespace XForms
         //PERMITE VER LOS FORMULARIOS
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
-            /*String mihora = "12/10/96 12:34:00";
-            DateTime p = DateTime.ParseExact(mihora, "dd/MM/yy hh:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
-            MessageBox.Show(p.Day.ToString());
-            TError errorp = new TError("Prueba", "Este es un error de prueba", 1, 1, false);
-            Estatico.ColocaError(errorp);
-            crearNuevaPestaniaColor("prueba", "hola mundo");*/
-            Object ob = "hola mundo!";
-            Object ob1 = "hola mundo!";
+            
 
-            if(ob.Equals(ob1))
-            {
-                MessageBox.Show("iguales");
-            }
+            XForms.GUI.Funciones.DisplayImage aux = new GUI.Funciones.DisplayImage("C:\\Users\\ricar\\OneDrive\\Pictures\\Saved Pictures\\Kylo.jpg");
+            XForms.GUI.Funciones.DisplayVideo aux2 = new GUI.Funciones.DisplayVideo("C:\\Users\\ricar\\Videos\\TWD\\The Walking Dead 7x08.mkv", false);
+            XForms.GUI.Funciones.DisplayAudio aux3 = new GUI.Funciones.DisplayAudio("C:\\Users\\ricar\\Music\\Underoath\\Underoath - Erase Me (Target Deluxe) (2018) [CD FLAC]\\13. Another Life.flac", true);
+            //aux.ShowDialog();
+            aux3.ShowDialog();
         }
 
         #endregion
@@ -243,14 +275,6 @@ namespace XForms
                     inicio.ejecutaMain(am);
 
                     //am.ImprimeAmbito();
-                    
-                    /*List<NodoParametro> parametros = new List<NodoParametro>();
-                    NodoParametro m = new NodoParametro("m", "booleano", false);
-                    parametros.Add(m);
-                    ClaveFuncion n = new ClaveFuncion("funcion1", "vacio", parametros);
-                    Funcion ej = am.GetFuncion(n);*/
-                    //MessageBox.Show("FUNCION RECUPERADA: " + ej.ToString());
-                    //inicio.ejecutaMain(am);
                 }
             }
         }
@@ -342,7 +366,7 @@ namespace XForms
             editor.Font = new Font("Consolas", 9);
             editor.WordWrap = false;
             editor.TextChanged += new EventHandler<TextChangedEventArgs>(fastColoredTextBox1_TextChanged);
-            editor.Text = contenido.ToLower();
+            editor.Text = contenido;
 
             pan.Controls.Add(editor);
             nueva.Controls.Add(pan);// posicion 0 del tabpage
@@ -360,10 +384,11 @@ namespace XForms
         Style functionStyle = new TextStyle(Brushes.DarkOliveGreen, null, FontStyle.Underline);
         private void fastColoredTextBox1_TextChanged(Object sender, TextChangedEventArgs e)
         {
-           
+            
             e.ChangedRange.ClearStyle(BlueStyle);
             e.ChangedRange.ClearStyle(LightBlue);
             e.ChangedRange.ClearStyle(StringStyle);
+            e.ChangedRange.ClearStyle(GreenStyle);
             e.ChangedRange.ClearFoldingMarkers();
             //set folding markers
             e.ChangedRange.SetFoldingMarkers("{", "}");
@@ -475,7 +500,30 @@ namespace XForms
             Estatico.tolerancia = cantidad;
         }
 
+        private void abrirProyectoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SelectProyectFolder();
+        }
 
 
+        private void SelectProyectFolder()
+        {
+            FolderBrowserDialog f = new FolderBrowserDialog();
+            
+            if(f.ShowDialog() == DialogResult.OK)
+            {
+                Estatico.PROYECT_PATH = f.SelectedPath;
+                this.ProyectoPath = Estatico.PROYECT_PATH;
+                this.Text =  "XForms App | Proyecto en: " + this.ProyectoPath;
+                DirectoryInfo d = new DirectoryInfo(f.SelectedPath);
+                FileInfo[] files = d.GetFiles("*.xform");
+                foreach(FileInfo file in files)
+                {
+                    String texto = File.ReadAllText(file.FullName);
+                    //crearNuevaPestania(abrir.SafeFileName.Replace(".xform", ""), texto);
+                    crearNuevaPestaniaColor(file.Name.Replace(".xform","") , texto);
+                }
+            }
+        }
     }
 }
