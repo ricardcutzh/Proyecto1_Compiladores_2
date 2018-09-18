@@ -22,6 +22,10 @@ namespace XForms.Objs
          * 
          */
 
+        /*CONTADOR DE PREGUNTAS*/
+
+        public static int contador = 1;
+
         /*RUTA DEL PROYECTO EN CUESTION*/
         public static String PROYECT_PATH = "";
         
@@ -35,6 +39,7 @@ namespace XForms.Objs
             consolaSalida.Text = ">> XForm Console | Compiladores 2 | 2018";
             errores = new List<TError>();
             clasesDisponibles = new ListaClases();
+            Estatico.contador = 1;
         }
         /*AMBITO ESTATICO PAR ACCEDER A LOS PARAMETROS*/
         public static Ambito temporal;
@@ -131,6 +136,34 @@ namespace XForms.Objs
             int tam = mensaje.Length;
             consolaSalida.Select(index, tam);
             consolaSalida.SelectionColor = Color.White;
+        }
+
+
+
+        public static String header()
+        {
+            return "<html lang='en'><head> <meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'><link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'><title>Hello, world!</title></head> <body style='background-color:#80bfff;'> <div class='container'>";
+        }
+
+        public static String footer()
+        {
+            return "</div></body></ html >";
+        }
+
+        public static String toHTMLCard(String mensaje)
+        {
+            String cad = "<br><div class='card'> <div class='card-body'> <center>" + mensaje + "</center> </div> </div>";
+            return cad; 
+        }
+
+        public static String toHTMLTitle(String mensaje)
+        {
+            return "<center> <h1> " + mensaje + "</h1> </center>";
+        }
+
+        public static String toHTMLAlert(String mensaje)
+        {
+            return "<div class='alert alert-danger' role='alert'>" + mensaje + "</div>";
         }
     }
 }

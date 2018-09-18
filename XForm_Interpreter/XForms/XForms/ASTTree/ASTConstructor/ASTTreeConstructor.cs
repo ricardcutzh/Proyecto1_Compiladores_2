@@ -1246,7 +1246,8 @@ namespace XForms.ASTTree.ASTConstructor
                                 /// identificador + "(" + L_EXPRE + ")" + "." + ToTerm("nota") + "(" + ")" + ";"
                                 if (raiz.ChildNodes.ElementAt(2).ToString().ToLower().Contains("nota"))
                                 {
-                                    EjecutaNota nota = new EjecutaNota(identificador, parametros, clase, linea, col, false);
+                                    EjecutaNota nota = new EjecutaNota(identificador, parametros, clase, linea, col, false, Estatico.contador);
+                                    Estatico.contador++;
                                     return nota;
                                 }
                                 /// identificador + "(" + L_EXPRE + ")" + "." + ToTerm("fichero") + "(" + ")" + ";"
@@ -1261,6 +1262,9 @@ namespace XForms.ASTTree.ASTConstructor
                                 if (raiz.ChildNodes.ElementAt(3).ToString().Contains("mostrar"))
                                 {
                                     //MessageBox.Show("es para nota con mostrar");
+                                    EjecutaNota nota = new EjecutaNota(identificador, parametros, clase, linea, col, true, Estatico.contador);
+                                    Estatico.contador++;
+                                    return nota;
                                 }
                                 ///identificador + "(" + L_EXPRE + ")" + "." + ToTerm("fichero") + "(" + EXP + ")" + ";"
                                 else if (raiz.ChildNodes.ElementAt(3).ToString().Contains("EXP"))

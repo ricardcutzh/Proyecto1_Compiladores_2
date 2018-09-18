@@ -898,6 +898,7 @@ int TIPO():
 		
 		|<fichero> aux = FICH_AUX()
 		{
+                        temp = new Token();
 			temp.image = aux;
 			return TipoPregunta.FICHERO;
 		}

@@ -9,6 +9,8 @@ using XForms.Objs;
 using XForms.GramaticaIrony;
 using XForms.ASTTree.Instrucciones;
 using XForms.GUI.Notas;
+using XForms.ASTTree.Sentencias;
+using XForms.ASTTree.Valores;
 namespace XForms.ASTTree.Preguntas
 {
     class EjecutaNota:NodoAST, Instruccion
@@ -19,11 +21,14 @@ namespace XForms.ASTTree.Preguntas
 
         Boolean llamaMostar;
 
-        public EjecutaNota(String identificador,List<Expresion>expresiones,  String clase, int linea, int col, Boolean mostrar):base(linea, col, clase)
+        int numero;
+
+        public EjecutaNota(String identificador,List<Expresion>expresiones,  String clase, int linea, int col, Boolean mostrar, int num):base(linea, col, clase)
         {
             this.expresiones = expresiones;
             this.identificador = identificador;
             this.llamaMostar = mostrar;
+            this.numero = num;
         }
 
         
@@ -61,12 +66,18 @@ namespace XForms.ASTTree.Preguntas
                                     List<Instruccion> declaraciones = (List<Instruccion>)instruc.valor;/*ya tengo las instrucciones que hacen la ejecucion de delcaraciones*/
                                     ejecutaLasDeclaracionesPregunta(ambitoPregunta, declaraciones);/*carga todo lo de la pregunta*/
 
-                                    Pregunta p = new Pregunta(ambitoPregunta, this.identificador.ToLower());// formo la pregunta
+                                    Pregunta p = new Pregunta(ambitoPregunta, this.identificador.ToLower(), this.numero);// formo la pregunta
 
                                     Nota n = new Nota(p);
 
                                     n.ShowDialog();
 
+                                    if(llamaMostar)
+                                    {
+                                        ambitoPregunta.Anterior = null;
+                                        LLamadaFuncion l = new LLamadaFuncion(clase, linea, columna, new Llamada("mostrar", linea, columna, clase));
+                                        l.Ejecutar(ambitoPregunta);
+                                    }
                                 }
                                 else
                                 {

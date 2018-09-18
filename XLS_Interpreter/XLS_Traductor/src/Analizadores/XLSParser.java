@@ -687,6 +687,7 @@ public class XLSParser implements XLSParserConstants {
       case fichero:
         jj_consume_token(fichero);
         aux = FICH_AUX();
+                        temp = new Token();
                         temp.image = aux;
                         {if (true) return TipoPregunta.FICHERO;}
         break;

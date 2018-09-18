@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using XForms.Simbolos;
-
+using XForms.StrParse;
 namespace XForms.Objs
 {
     class Pregunta
@@ -19,10 +19,13 @@ namespace XForms.Objs
         public Object respuesta = null; /* LA RESPUESTA DE LA PREGUNTA */
         public String idPregunta = ""; /* EL IDENTIFICADOR DE LA PREGUNTA */
 
-        public Pregunta(Ambito ambito, String idpregunta)
+        public int numeroPregunta;
+
+        public Pregunta(Ambito ambito, String idpregunta, int numeroP)
         {
             this.ambitoPregunta = ambito;
             this.idPregunta = idpregunta;
+            this.numeroPregunta = numeroP;
             tomaEtiqueta();
             tomaSugerencia();
             tomaRequerido();
@@ -37,6 +40,12 @@ namespace XForms.Objs
                 if(v.valor is String)
                 {
                     this.etiqueta = (String)v.valor;
+                    ParserStr p = new ParserStr(this.etiqueta);
+                    String n = p.reemplazaCadena();
+                    if(!this.etiqueta.Equals(n))
+                    {
+                        this.etiqueta = n;
+                    }
                 }
             }
         }
@@ -49,6 +58,12 @@ namespace XForms.Objs
                 if(v.valor is String)
                 {
                     this.sugerencia = (String)v.valor;
+                    ParserStr p = new ParserStr(this.sugerencia);
+                    String n = p.reemplazaCadena();
+                    if (!this.sugerencia.Equals(n))
+                    {
+                        this.sugerencia = n;
+                    }
                 }
             }
         }

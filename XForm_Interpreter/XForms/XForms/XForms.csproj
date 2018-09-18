@@ -189,6 +189,9 @@
     <Compile Include="Simbolos\TablaFunciones.cs" />
     <Compile Include="Simbolos\TablaVariables.cs" />
     <Compile Include="Simbolos\Variable.cs" />
+    <Compile Include="StrParse\GramaticaStr.cs" />
+    <Compile Include="StrParse\ParserStr.cs" />
+    <Compile Include="StrParse\StrAnalizador.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -262,5 +265,6 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

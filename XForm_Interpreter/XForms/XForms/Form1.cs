@@ -23,6 +23,12 @@ namespace XForms
         public Form1()
         {
             InitializeComponent();
+            String currentDir = Directory.GetCurrentDirectory();/*Estoy creando el directorio donde almacenare los archivos 'subidos'*/
+            String fileFoldre = currentDir + "\\FILES\\";
+            if(!Directory.Exists(fileFoldre))
+            {
+                Directory.CreateDirectory(fileFoldre);
+            }
         }
 
         String ProyectoPath = "";
