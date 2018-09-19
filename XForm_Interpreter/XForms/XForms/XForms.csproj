@@ -65,6 +65,7 @@
     <Compile Include="ASTTree\Interfaces\Expresion.cs" />
     <Compile Include="ASTTree\Interfaces\Instruccion.cs" />
     <Compile Include="ASTTree\Interfaces\NodoAST.cs" />
+    <Compile Include="ASTTree\Preguntas\EjecutaFichero.cs" />
     <Compile Include="ASTTree\Preguntas\EjecutaNota.cs" />
     <Compile Include="ASTTree\Sentencias\AsignacionArregloComp.cs" />
     <Compile Include="ASTTree\Sentencias\AsignacionPropiedad.cs" />
@@ -133,6 +134,12 @@
     <Compile Include="GramaticaIrony\Gramatica.cs" />
     <Compile Include="GramaticaIrony\Recorrido.cs" />
     <Compile Include="GramaticaIrony\TError.cs" />
+    <Compile Include="GUI\Ficheros\Fichero.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Ficheros\Fichero.Designer.cs">
+      <DependentUpon>Fichero.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\Funciones\DisplayAudio.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -157,6 +164,12 @@
     <Compile Include="GUI\Notas\Nota.Designer.cs">
       <DependentUpon>Nota.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\Visor\VisualizadorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Visor\VisualizadorForm.Designer.cs">
+      <DependentUpon>VisualizadorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Objs\ClasePreAnalizada.cs" />
     <Compile Include="Objs\Clave.cs" />
     <Compile Include="Objs\ClaveFuncion.cs" />
@@ -172,10 +185,12 @@
     <Compile Include="Objs\NodoReturn.cs" />
     <Compile Include="Objs\Nulo.cs" />
     <Compile Include="Objs\Pregunta.cs" />
+    <Compile Include="Objs\PreguntaAlmacenada.cs" />
     <Compile Include="Objs\Vacio.cs" />
     <Compile Include="Objs\XFormFile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SavedForms\SavedForm.cs" />
     <Compile Include="Simbolos\Ambito.cs" />
     <Compile Include="Simbolos\Arreglo.cs" />
     <Compile Include="Simbolos\Clase.cs" />
@@ -195,6 +210,9 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Ficheros\Fichero.resx">
+      <DependentUpon>Fichero.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\Funciones\DisplayAudio.resx">
       <DependentUpon>DisplayAudio.cs</DependentUpon>
     </EmbeddedResource>
@@ -206,6 +224,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Notas\Nota.resx">
       <DependentUpon>Nota.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Visor\VisualizadorForm.resx">
+      <DependentUpon>VisualizadorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

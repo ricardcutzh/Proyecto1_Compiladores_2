@@ -1254,6 +1254,9 @@ namespace XForms.ASTTree.ASTConstructor
                                 else if (raiz.ChildNodes.ElementAt(2).ToString().ToLower().Contains("fichero"))
                                 {
                                     //MessageBox.Show("es para ficheros sin extensiones");
+                                    EjecutaFichero fi = new EjecutaFichero(identificador, parametros, Estatico.contador, clase, linea, col);
+                                    Estatico.contador++;
+                                    return fi;
                                 }
                             }
                             else if (raiz.ChildNodes.Count == 4)
@@ -1270,6 +1273,14 @@ namespace XForms.ASTTree.ASTConstructor
                                 else if (raiz.ChildNodes.ElementAt(3).ToString().Contains("EXP"))
                                 {
                                     //MessageBox.Show("es para ficheros con extensiones");
+                                    ASTTreeExpresion arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(3), clase, archivo);
+                                    Expresion exp = (Expresion)arbol.ConstruyeASTExpresion();
+                                    if(exp!=null)
+                                    {
+                                        EjecutaFichero fi = new EjecutaFichero(identificador, parametros, exp, Estatico.contador, clase, linea, col);
+                                        Estatico.contador++;
+                                        return fi;
+                                    }
                                 }
                             }
                             else if (raiz.ChildNodes.Count == 5)

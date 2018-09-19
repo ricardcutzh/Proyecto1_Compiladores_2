@@ -19,3 +19,5 @@ C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Pr
 C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.csproj.ResolveComReference.cache
 C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.GUI.Funciones.DisplayAudio.resources
 C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.GUI.Notas.Nota.resources
+C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.GUI.Ficheros.Fichero.resources
+C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.GUI.Visor.VisualizadorForm.resources

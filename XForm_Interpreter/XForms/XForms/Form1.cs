@@ -14,7 +14,8 @@ using System.Collections;
 using XForms.Simbolos;
 using FastColoredTextBoxNS;
 using System.Text.RegularExpressions;
-using XForms.GUI;
+using XForms.GUI.Visor;
+using XForms.SavedForms;
 
 namespace XForms
 {
@@ -25,9 +26,14 @@ namespace XForms
             InitializeComponent();
             String currentDir = Directory.GetCurrentDirectory();/*Estoy creando el directorio donde almacenare los archivos 'subidos'*/
             String fileFoldre = currentDir + "\\FILES\\";
-            if(!Directory.Exists(fileFoldre))
+            String formsFolder = Directory.GetCurrentDirectory() + "\\FORMS\\";
+            if (!Directory.Exists(fileFoldre))
             {
                 Directory.CreateDirectory(fileFoldre);
+            }
+            if(!Directory.Exists(formsFolder))
+            {
+                Directory.CreateDirectory(formsFolder);
             }
         }
 
@@ -220,6 +226,22 @@ namespace XForms
                         System.Threading.Thread.Sleep(200);
                         Progreso.Value = 0;
                         ///////////////////////////////////////////////////////
+                        if(Estatico.resps.Count > 0)
+                        {
+                            String nombre = Microsoft.VisualBasic.Interaction.InputBox("Nombre Del Formulario A Guardar: ", "Nuevo Form", "", 100, 100);
+                            if(!nombre.Equals(""))
+                            {
+                                SavedForm s = new SavedForm(nombre, Estatico.resps);
+                                if(s.writeForm())
+                                {
+                                    MessageBox.Show("Formulario: " + nombre+" Almacenado!", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                }
+                                else
+                                {
+                                    MessageBox.Show("No se almaceno el formulario!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                }
+                            }
+                        }
                         //AQUI DEBO DE PREGUNTAR SI EN CASO HAY UN PROBLEMA CON LAS ADVERTENCIAS
                     }
                 }
@@ -235,13 +257,8 @@ namespace XForms
         //PERMITE VER LOS FORMULARIOS
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
-            
-
-            XForms.GUI.Funciones.DisplayImage aux = new GUI.Funciones.DisplayImage("C:\\Users\\ricar\\OneDrive\\Pictures\\Saved Pictures\\Kylo.jpg");
-            XForms.GUI.Funciones.DisplayVideo aux2 = new GUI.Funciones.DisplayVideo("C:\\Users\\ricar\\Videos\\TWD\\The Walking Dead 7x08.mkv", false);
-            XForms.GUI.Funciones.DisplayAudio aux3 = new GUI.Funciones.DisplayAudio("C:\\Users\\ricar\\Music\\Underoath\\Underoath - Erase Me (Target Deluxe) (2018) [CD FLAC]\\13. Another Life.flac", true);
-            //aux.ShowDialog();
-            aux3.ShowDialog();
+            VisualizadorForm f = new VisualizadorForm();
+            f.Show();
         }
 
         #endregion

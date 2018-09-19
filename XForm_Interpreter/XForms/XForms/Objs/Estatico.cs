@@ -9,6 +9,7 @@ using System.Collections;
 using XForms.Simbolos;
 using System.Drawing;
 
+
 namespace XForms.Objs
 {
     class Estatico
@@ -33,6 +34,8 @@ namespace XForms.Objs
 
         public static ListaClases clasesDisponibles;
 
+        public static List<PreguntaAlmacenada> resps;
+
         public static void setUp(RichTextBox cons)
         {
             consolaSalida = cons;
@@ -40,6 +43,7 @@ namespace XForms.Objs
             errores = new List<TError>();
             clasesDisponibles = new ListaClases();
             Estatico.contador = 1;
+            resps = new List<PreguntaAlmacenada>();
         }
         /*AMBITO ESTATICO PAR ACCEDER A LOS PARAMETROS*/
         public static Ambito temporal;

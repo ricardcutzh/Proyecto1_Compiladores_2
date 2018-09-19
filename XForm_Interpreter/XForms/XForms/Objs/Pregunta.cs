@@ -70,7 +70,7 @@ namespace XForms.Objs
 
         private void tomaRequerido()
         {
-            Variable v = (Variable)ambitoPregunta.getSimbolo("requerida");
+            Variable v = (Variable)ambitoPregunta.getSimbolo("requerido");
             if(v!=null)
             {
                 if(v.valor is Boolean)

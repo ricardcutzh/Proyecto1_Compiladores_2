@@ -64,23 +64,80 @@ node62[label = "cadena", style = filled, color = lightblue];
 node63[label = "EXP", style = filled, color = lightblue];
 node64[label = "E", style = filled, color = lightblue];
 node65[label = "falso", style = filled, color = lightblue];
-node66[label = "FORMULARIO", style = filled, color = lightblue];
-node67[label = "formulario", style = filled, color = lightblue];
+node66[label = "PREGUNTA", style = filled, color = lightblue];
+node67[label = "pregunta", style = filled, color = lightblue];
 node68[label = "identificador", style = filled, color = lightblue];
-node69[label = "SENTENCIAS", style = filled, color = lightblue];
-node70[label = "DECLARACION_LOCAL", style = filled, color = lightblue];
-node71[label = "TIPO", style = filled, color = lightblue];
-node72[label = "respuestas", style = filled, color = lightblue];
-node73[label = "identificador", style = filled, color = lightblue];
-node74[label = "CALL_Q", style = filled, color = lightblue];
-node75[label = "identificador", style = filled, color = lightblue];
-node76[label = "L_EXPRE", style = filled, color = lightblue];
-node77[label = "nota", style = filled, color = lightblue];
-node78[label = "CALL_Q", style = filled, color = lightblue];
-node79[label = "identificador", style = filled, color = lightblue];
-node80[label = "L_EXPRE", style = filled, color = lightblue];
-node81[label = "nota", style = filled, color = lightblue];
-node82[label = "mostrar", style = filled, color = lightblue];
+node69[label = "PARAMETROS", style = filled, color = lightblue];
+node70[label = "CUERPO_PREGUNTA", style = filled, color = lightblue];
+node71[label = "DECLARACION_LOCAL", style = filled, color = lightblue];
+node72[label = "TIPO", style = filled, color = lightblue];
+node73[label = "cadena", style = filled, color = lightblue];
+node74[label = "identificador", style = filled, color = lightblue];
+node75[label = "EXP", style = filled, color = lightblue];
+node76[label = "E", style = filled, color = lightblue];
+node77[label = "cadena", style = filled, color = lightblue];
+node78[label = "DECLARACION_LOCAL", style = filled, color = lightblue];
+node79[label = "TIPO", style = filled, color = lightblue];
+node80[label = "cadena", style = filled, color = lightblue];
+node81[label = "identificador", style = filled, color = lightblue];
+node82[label = "EXP", style = filled, color = lightblue];
+node83[label = "E", style = filled, color = lightblue];
+node84[label = "cadena", style = filled, color = lightblue];
+node85[label = "DECLARACION_LOCAL", style = filled, color = lightblue];
+node86[label = "TIPO", style = filled, color = lightblue];
+node87[label = "booleano", style = filled, color = lightblue];
+node88[label = "identificador", style = filled, color = lightblue];
+node89[label = "EXP", style = filled, color = lightblue];
+node90[label = "E", style = filled, color = lightblue];
+node91[label = "verdadero", style = filled, color = lightblue];
+node92[label = "DECLARACION_LOCAL", style = filled, color = lightblue];
+node93[label = "TIPO", style = filled, color = lightblue];
+node94[label = "cadena", style = filled, color = lightblue];
+node95[label = "identificador", style = filled, color = lightblue];
+node96[label = "EXP", style = filled, color = lightblue];
+node97[label = "E", style = filled, color = lightblue];
+node98[label = "cadena", style = filled, color = lightblue];
+node99[label = "FUNCIONES", style = filled, color = lightblue];
+node100[label = "VISIBILIDAD", style = filled, color = lightblue];
+node101[label = "publico", style = filled, color = lightblue];
+node102[label = "TIPO", style = filled, color = lightblue];
+node103[label = "vacio", style = filled, color = lightblue];
+node104[label = "identificador", style = filled, color = lightblue];
+node105[label = "PARAMETROS", style = filled, color = lightblue];
+node106[label = "SENTENCIAS", style = filled, color = lightblue];
+node107[label = "ASIGNACION", style = filled, color = lightblue];
+node108[label = "identificador", style = filled, color = lightblue];
+node109[label = "EXP", style = filled, color = lightblue];
+node110[label = "E", style = filled, color = lightblue];
+node111[label = "E", style = filled, color = lightblue];
+node112[label = "entero", style = filled, color = lightblue];
+node113[label = "*", style = filled, color = lightblue];
+node114[label = "E", style = filled, color = lightblue];
+node115[label = "entero", style = filled, color = lightblue];
+node116[label = "FORMULARIO", style = filled, color = lightblue];
+node117[label = "formulario", style = filled, color = lightblue];
+node118[label = "identificador", style = filled, color = lightblue];
+node119[label = "SENTENCIAS", style = filled, color = lightblue];
+node120[label = "DECLARACION_LOCAL", style = filled, color = lightblue];
+node121[label = "TIPO", style = filled, color = lightblue];
+node122[label = "respuestas", style = filled, color = lightblue];
+node123[label = "identificador", style = filled, color = lightblue];
+node124[label = "CALL_Q", style = filled, color = lightblue];
+node125[label = "identificador", style = filled, color = lightblue];
+node126[label = "L_EXPRE", style = filled, color = lightblue];
+node127[label = "nota", style = filled, color = lightblue];
+node128[label = "CALL_Q", style = filled, color = lightblue];
+node129[label = "identificador", style = filled, color = lightblue];
+node130[label = "L_EXPRE", style = filled, color = lightblue];
+node131[label = "nota", style = filled, color = lightblue];
+node132[label = "mostrar", style = filled, color = lightblue];
+node133[label = "CALL_Q", style = filled, color = lightblue];
+node134[label = "identificador", style = filled, color = lightblue];
+node135[label = "L_EXPRE", style = filled, color = lightblue];
+node136[label = "fichero", style = filled, color = lightblue];
+node137[label = "EXP", style = filled, color = lightblue];
+node138[label = "E", style = filled, color = lightblue];
+node139[label = "cadena", style = filled, color = lightblue];
 "node0"--"node1"
 "node1"--"node2"
 "node2"--"node3"
@@ -150,17 +207,74 @@ node82[label = "mostrar", style = filled, color = lightblue];
 "node66"--"node67"
 "node66"--"node68"
 "node66"--"node69"
-"node69"--"node70"
+"node66"--"node70"
 "node70"--"node71"
 "node71"--"node72"
-"node70"--"node73"
-"node69"--"node74"
-"node74"--"node75"
-"node74"--"node76"
-"node74"--"node77"
-"node69"--"node78"
+"node72"--"node73"
+"node71"--"node74"
+"node71"--"node75"
+"node75"--"node76"
+"node76"--"node77"
+"node70"--"node78"
 "node78"--"node79"
-"node78"--"node80"
+"node79"--"node80"
 "node78"--"node81"
 "node78"--"node82"
+"node82"--"node83"
+"node83"--"node84"
+"node70"--"node85"
+"node85"--"node86"
+"node86"--"node87"
+"node85"--"node88"
+"node85"--"node89"
+"node89"--"node90"
+"node90"--"node91"
+"node70"--"node92"
+"node92"--"node93"
+"node93"--"node94"
+"node92"--"node95"
+"node92"--"node96"
+"node96"--"node97"
+"node97"--"node98"
+"node70"--"node99"
+"node99"--"node100"
+"node100"--"node101"
+"node99"--"node102"
+"node102"--"node103"
+"node99"--"node104"
+"node99"--"node105"
+"node99"--"node106"
+"node106"--"node107"
+"node107"--"node108"
+"node107"--"node109"
+"node109"--"node110"
+"node110"--"node111"
+"node111"--"node112"
+"node110"--"node113"
+"node110"--"node114"
+"node114"--"node115"
+"node5"--"node116"
+"node116"--"node117"
+"node116"--"node118"
+"node116"--"node119"
+"node119"--"node120"
+"node120"--"node121"
+"node121"--"node122"
+"node120"--"node123"
+"node119"--"node124"
+"node124"--"node125"
+"node124"--"node126"
+"node124"--"node127"
+"node119"--"node128"
+"node128"--"node129"
+"node128"--"node130"
+"node128"--"node131"
+"node128"--"node132"
+"node119"--"node133"
+"node133"--"node134"
+"node133"--"node135"
+"node133"--"node136"
+"node133"--"node137"
+"node137"--"node138"
+"node138"--"node139"
 }
