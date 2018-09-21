@@ -8,11 +8,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using XForms.Objs;
+using XForms.ASTTree.Sentencias;
 
 namespace XForms.GUI.Notas
 {
     partial class Nota : Form
     {
+
+        public Object salir = null;
+
         public Nota()
         {
             InitializeComponent();
@@ -41,6 +45,12 @@ namespace XForms.GUI.Notas
 
         private void Next_Click(object sender, EventArgs e)
         {
+            this.Close();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.salir = new Romper();
             this.Close();
         }
     }

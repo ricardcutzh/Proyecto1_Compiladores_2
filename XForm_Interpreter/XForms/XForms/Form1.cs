@@ -147,7 +147,17 @@ namespace XForms
         //DESPLIEGA EL MANUAL TECNICO
         private void manualTecnicoToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Type t = typeof(String);
 
+            Object s = 1;
+            if(s.GetType().Equals(t))
+            {
+                MessageBox.Show("Ambas son cadenas");
+            }
+            else
+            {
+                MessageBox.Show("no son igual tipo");
+            }
         }
 
         //DESPLIEGA EL MANUAL DE USUARIO

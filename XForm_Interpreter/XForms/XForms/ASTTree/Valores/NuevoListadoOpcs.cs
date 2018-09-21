@@ -43,7 +43,7 @@ namespace XForms.ASTTree.Valores
 
                 return opciones; //LO RETORNO
             }
-            catch(Exception e)
+            catch
             {
 
             }

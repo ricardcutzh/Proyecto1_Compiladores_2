@@ -1258,6 +1258,13 @@ namespace XForms.ASTTree.ASTConstructor
                                     Estatico.contador++;
                                     return fi;
                                 }
+                                else if(raiz.ChildNodes.ElementAt(2).ToString().ToLower().Contains("calcular"))
+                                {
+                                    NodoEstiloRespuesta n = new NodoEstiloRespuesta("Calcular", linea, col);
+                                    EjecutaCalcular c = new EjecutaCalcular(null, identificador, parametros, n, Estatico.contador, clase, linea, col);
+                                    Estatico.contador++;
+                                    return c;
+                                }
                             }
                             else if (raiz.ChildNodes.Count == 4)
                             {
@@ -1286,12 +1293,34 @@ namespace XForms.ASTTree.ASTConstructor
                             else if (raiz.ChildNodes.Count == 5)
                             {
                                 /// identificador + "(" + L_EXPRE + ")" + "." + ToTerm("respuesta") + "(" + CASTEO_PREGUNTA + ")" + "." + ESTILO_RESP + ";"
-                                //MessageBox.Show("pregunta con su estilo nativo");
+
+                                Type casteo = (Type)dameCateo(raiz.ChildNodes.ElementAt(3));
+
+                                /*OBTENIENDO NODO ESTILO*/
+                                NodoEstiloRespuesta n = (NodoEstiloRespuesta)dameEstiloRespuesta(raiz.ChildNodes.ElementAt(4));
+
+                                Instruccion ins = InstructionFactory(identificador, parametros, casteo, n);
+                                if(ins!=null)
+                                {
+                                    return ins;
+                                }
+                                
                             }
-                            else if (raiz.ChildNodes.Count == 6)
+                            else if (raiz.ChildNodes.Count == 7)
                             {
-                                /// identificador + "(" + L_EXPRE + ")" + "." + ToTerm("respuesta") + "(" + CASTEO_PREGUNTA + ")" + "." + ToTerm("Apariencia") + "(" + ")" + "." + ESTILO_RESP + ";";
+                                /// identificador + "(" + L_EXPRE + ")" + "." + ToTerm("respuesta") + "(" + CASTEO_PREGUNTA + ")" + "." + ToTerm("Apariencia") + "(" + L_EXPRE + ")" + "." + ESTILO_RESP + ";";
                                 //MessageBox.Show("pregunta con apariencia forzada");
+
+                                /*INGORARE LOS PARAMETROS DE LA APARINCIA*/
+
+                                Type caste = (Type)dameCateo(raiz.ChildNodes.ElementAt(3));
+                                NodoEstiloRespuesta n = (NodoEstiloRespuesta)dameEstiloRespuesta(raiz.ChildNodes.ElementAt(6));
+
+                                Instruccion ins = InstructionFactory(identificador, parametros, caste, n);
+                                if(ins!=null)
+                                {
+                                    return ins;
+                                }
                             }
                         }
                         break;
@@ -1371,6 +1400,257 @@ namespace XForms.ASTTree.ASTConstructor
         }
         #endregion
 
+        #region ESTILORESP
+        private Object dameEstiloRespuesta(ParseTreeNode raiz)
+        {
+            String etiqueta = raiz.ToString();
+            switch(etiqueta)
+            {
+                case "ESTILO_RESP":
+                    {
+                        if(raiz.ChildNodes.Count == 1)
+                        {
+                            return dameEstiloRespuesta(raiz.ChildNodes.ElementAt(0));
+                        }
+                        break;
+                    }
+                case "EST_CADENA":
+                    {
+                        if(raiz.ChildNodes.Count == 4)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            /*1 P*/
+                            ASTTreeExpresion arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(1), clase, archivo);
+                            Expresion p1 = (Expresion)arbol.ConstruyeASTExpresion();
+                            if(p1 is Identificador)
+                            {
+                                Identificador aux = (Identificador)p1;
+                                if(aux.identificador.ToLower().Equals("nada"))
+                                {
+                                    p1 = new ValorPrimitivo(-1, linea, col, clase);
+                                }
+                            }
+
+                            /*2 P*/
+                            arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(2), clase, archivo);
+                            Expresion p2 = (Expresion)arbol.ConstruyeASTExpresion();
+                            if (p2 is Identificador)
+                            {
+                                Identificador aux = (Identificador)p2;
+                                if (aux.identificador.ToLower().Equals("nada"))
+                                {
+                                    p2 = new ValorPrimitivo(-1, linea, col, clase);
+                                }
+                            }
+
+                            /*3 P*/
+                            arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(3), clase, archivo);
+                            Expresion p3 = (Expresion)arbol.ConstruyeASTExpresion();
+                            if (p3 is Identificador)
+                            {
+                                Identificador aux = (Identificador)p3;
+                                if (aux.identificador.ToLower().Equals("nada"))
+                                {
+                                    p3 = new ValorPrimitivo(-1, linea, col, clase);
+                                }
+                            }
+
+                            NodoEstiloRespuesta n = new NodoEstiloRespuesta("cadena", linea, col);
+                            if(p1 !=null && p2!=null && p3!=null)
+                            {
+                                n.addParametro(p1);
+                                n.addParametro(p2);
+                                n.addParametro(p3);
+                            }
+                            return n;
+                            
+                        }
+                        if(raiz.ChildNodes.Count == 1)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+                            return new NodoEstiloRespuesta("cadena", linea, col);
+                        }
+                        break;
+                    }
+                case "EST_ENTERO":
+                    {
+                        if(raiz.ChildNodes.Count == 1)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+                            return new NodoEstiloRespuesta("entero", linea, col);
+                        }
+                        if(raiz.ChildNodes.Count == 3)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            /*P1*/
+                            ASTTreeExpresion arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(1), clase, archivo);
+                            Expresion p1 = (Expresion)arbol.ConstruyeASTExpresion();
+
+                            /*P2*/
+                            arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(2), clase, archivo);
+                            Expresion p2 = (Expresion)arbol.ConstruyeASTExpresion();
+
+                            NodoEstiloRespuesta estilo = new NodoEstiloRespuesta("rango", linea, col);
+                            estilo.addParametro(p1);
+                            estilo.addParametro(p2);
+
+                            return estilo;
+                        }
+                        break;
+                    }
+                case "EST_DECIMAL":
+                    {
+                        if(raiz.ChildNodes.Count == 1)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+                            return new NodoEstiloRespuesta("decimal", linea, col);
+                        }
+                        break;
+                    }
+                case "EST_FECHA":
+                    {
+                        if (raiz.ChildNodes.Count == 1)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+                            return new NodoEstiloRespuesta("fecha", linea, col);
+                        }
+                        break;
+                    }
+                case "EST_HORA":
+                    {
+                        if (raiz.ChildNodes.Count == 1)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+                            return new NodoEstiloRespuesta("hora", linea, col);
+                        }
+                        break;
+                    }
+                case "EST_FECHAHORA":
+                    {
+                        if (raiz.ChildNodes.Count == 1)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+                            return new NodoEstiloRespuesta("fechahora", linea, col);
+                        }
+                        break;
+                    }
+                case "EST_CONDICION":
+                    {
+                        if(raiz.ChildNodes.Count == 3)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+                            NodoEstiloRespuesta n = new NodoEstiloRespuesta("condicion", linea, col);
+
+                            /*P1*/
+                            ASTTreeExpresion arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(1), clase, archivo);
+                            Expresion p1 = (Expresion)arbol.ConstruyeASTExpresion();
+
+                            /*P2*/
+                            arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(2), clase, archivo);
+                            Expresion p2 = (Expresion)arbol.ConstruyeASTExpresion();
+
+                            if(p1!=null && p2!=null)
+                            {
+                                n.addParametro(p1);
+                                n.addParametro(p2);
+                            }
+
+                            return n;
+                        }
+                        break;
+                    }
+                case "EST_SELECC":
+                    {
+                        if(raiz.ChildNodes.Count == 2)
+                        {
+                            int linea = raiz.ChildNodes.ElementAt(0).Token.Location.Line;
+                            int col = raiz.ChildNodes.ElementAt(0).Token.Location.Column;
+
+                            ASTTreeExpresion arbol = new ASTTreeExpresion(raiz.ChildNodes.ElementAt(1), clase, archivo);
+                            Expresion exp = (Expresion)arbol.ConstruyeASTExpresion();
+
+                            if (raiz.ChildNodes.ElementAt(0).ToString().Contains("seleccionar_1"))
+                            {
+                                NodoEstiloRespuesta n = new NodoEstiloRespuesta("seleccionar_1", linea, col);
+                                n.addParametro(exp);
+                                return n;
+                            }
+                            else if(raiz.ChildNodes.ElementAt(0).ToString().Contains("seleccionar"))
+                            {
+                                NodoEstiloRespuesta n = new NodoEstiloRespuesta("seleccionar", linea, col);
+                                n.addParametro(exp);
+                                return n;
+                            }
+                        }
+                        break;
+                    }
+            }
+            return null;
+        }
+        #endregion
+
+        #region CASTEO
+        private object dameCateo(ParseTreeNode raiz)
+        {
+            String eitqueta = raiz.ToString();
+            switch(eitqueta)
+            {
+                case "CASTEO_PREGUNTA":
+                    {
+                        if(raiz.ChildNodes.Count == 1)
+                        {
+                            return dameCateo(raiz.ChildNodes.ElementAt(0));
+                        }
+                        break;
+                    }
+                default:
+                    {
+                        if(eitqueta.ToLower().Contains("escadena"))
+                        {
+                            return typeof(String);
+                        }
+                        else if(eitqueta.ToLower().Contains("esentero"))
+                        {
+                            return typeof(int);
+                        }
+                        else if(eitqueta.ToLower().Contains("esbooleano"))
+                        {
+                            return typeof(Boolean);
+                        }
+                        else if(eitqueta.ToLower().Contains("esdecimal"))
+                        {
+                            return typeof(Double);
+                        }
+                        else if (eitqueta.ToLower().Contains("esfechahora"))
+                        {
+                            return typeof(DateTime);
+                        }
+                        else if(eitqueta.ToLower().Contains("esfecha"))
+                        {
+                            return typeof(Date);
+                        }
+                        else if(eitqueta.ToLower().Contains("eshora"))
+                        {
+                            return typeof(Hour);
+                        }
+                        break;
+                    }
+            }
+            return null;
+        }
+        #endregion
+
         #region DIMVACIAS
         private object dameNumeroDimensiones(ParseTreeNode raiz)
         {
@@ -1440,5 +1720,42 @@ namespace XForms.ASTTree.ASTConstructor
             return null;
         }
         #endregion
+
+
+        private Instruccion InstructionFactory(String identificador, List<Expresion> parametros, Type casteo, NodoEstiloRespuesta estilo)
+        {
+            if (estilo.tipo.Equals("cadena"))
+            {
+                EjecutaCadena eje = new EjecutaCadena(casteo, identificador, parametros, estilo, Estatico.contador, clase, estilo.linea,estilo.col);
+                Estatico.contador++;
+                return eje;
+            }
+            if(estilo.tipo.Equals("entero") || estilo.tipo.Equals("decimal") || estilo.tipo.Equals("rango"))
+            {
+                EjecutaNumerico eje = new EjecutaNumerico(casteo, identificador, parametros, estilo, Estatico.contador, clase, estilo.linea, estilo.col);
+                Estatico.contador++;
+                return eje;
+            }
+            if(estilo.tipo.Equals("fecha") || estilo.tipo.Equals("hora") || estilo.tipo.Equals("fechahora"))
+            {
+                EjecutaFechaHora eje = new EjecutaFechaHora(casteo, identificador, parametros, estilo, Estatico.contador, clase, estilo.linea, estilo.col);
+                Estatico.contador++;
+                return eje;
+            }
+            if(estilo.tipo.Equals("condicion"))
+            {
+                EjecutaCondicion eje = new EjecutaCondicion(casteo, identificador, parametros, estilo, Estatico.contador, clase, estilo.linea, estilo.col);
+                Estatico.contador++;
+                return eje;
+            }
+            if(estilo.tipo.Equals("seleccionar") || estilo.tipo.Equals("seleccionar_1"))
+            {
+                EjecutaSeleccion eje = new EjecutaSeleccion(casteo, identificador, parametros, estilo, Estatico.contador, clase, estilo.linea, estilo.col);
+                Estatico.contador++;
+                return eje;
+            }
+            return null;
+        }
+
     }
 }

@@ -579,6 +579,7 @@ public class ExpParser implements ExpParserConstants {
                         {
                                 //SOLO AGREGO EL ID DE LA PREGUNTA ACTUAL EN CUESTION EN ESTE CASO ES EL PARAM_1
                                 cadena += this.idPreguntaActual;
+                                //cadena += "Respuesta";//YA QUE HAGO REFERENCIA A LA MISMA PREGUNTA
                         }
                         else
                         {

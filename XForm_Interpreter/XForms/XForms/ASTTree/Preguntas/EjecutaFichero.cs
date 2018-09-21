@@ -65,9 +65,17 @@ namespace XForms.ASTTree.Preguntas
                                 Constructor constructor = (Constructor)ambitoPregunta.getConstructor(clave);
                                 if(constructor!=null)
                                 {
-                                    ambitoPregunta = constructor.seteaParametrosLocales(ambitoPregunta, valores);
                                     Variable instruc = (Variable)ambitoPregunta.getSimbolo("instr");
                                     List<Instruccion> declaraciones = (List<Instruccion>)instruc.valor;/*ya tengo las instrucciones que hacen la ejecucion de delcaraciones*/
+                                    if (existePropiedad("etiqueta", ambitoPregunta))
+                                    {
+                                        /*EN CASO QUE LA PROPIEDAD YA EXISTA EN LA PREGUNTA: RESETEO EL AMBITO*/
+                                        ambitoPregunta = new Ambito(ambitoPregunta.Anterior, ambitoPregunta.idAmbito, ambitoPregunta.archivo);
+                                        ambitoPregunta.agregarConstructor(clave, constructor);
+                                        ambitoPregunta.agregarVariableAlAmbito("instr", instruc);
+                                    }
+
+                                    ambitoPregunta = constructor.seteaParametrosLocales(ambitoPregunta, valores);
                                     ejecutaLasDeclaracionesPregunta(ambitoPregunta, declaraciones);/*carga todo lo de la pregunta*/
 
                                     Pregunta p = new Pregunta(ambitoPregunta, this.identificador.ToLower(), this.numero);// formo la pregunta
@@ -90,6 +98,12 @@ namespace XForms.ASTTree.Preguntas
                                             pr.addAnswer(" Archivo Almacenado en: " + resp);
                                             Estatico.resps.Add(pr);
 
+                                            ob.ambito = ambitoPregunta;/*ASIGNO EL NUEVO AMBITO A OB*/
+
+                                            if(f.salir!=null)
+                                            {
+                                                return f.salir;
+                                            }
                                         }
                                         else
                                         {
@@ -112,7 +126,15 @@ namespace XForms.ASTTree.Preguntas
                                         PreguntaAlmacenada pr = new PreguntaAlmacenada(p.idPregunta, p.etiqueta, this.numero);
                                         pr.addAnswer(" Archivo Almacenado en: "+resp);
                                         Estatico.resps.Add(pr);
+
+                                        ob.ambito = ambitoPregunta;/*ASIGNO EL NUEVO AMBITO A OB*/
+
+                                        if (f.salir != null)
+                                        {
+                                            return f.salir;
+                                        }
                                     }
+                                    
                                 }
                                 else
                                 {
@@ -202,6 +224,15 @@ namespace XForms.ASTTree.Preguntas
                     instruccion.Ejecutar(ambito);
                 }
             }
+        }
+
+        private Boolean existePropiedad(String p, Ambito m)
+        {
+            if (m.existeVariable(p.ToLower()))
+            {
+                return true;
+            }
+            return false;
         }
 
     }

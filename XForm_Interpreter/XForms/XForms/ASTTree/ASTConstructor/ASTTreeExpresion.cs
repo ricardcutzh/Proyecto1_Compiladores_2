@@ -880,7 +880,7 @@ namespace XForms.ASTTree.ASTConstructor
             }
             try
             {
-                DateTime val = DateTime.ParseExact(valor, "dd/MM/yyyy hh:mm:ss",System.Globalization.CultureInfo.InvariantCulture);
+                DateTime val = DateTime.ParseExact(valor, "dd/MM/yyyy HH:mm:ss",System.Globalization.CultureInfo.InvariantCulture);
                 return val;
             }
             catch
@@ -890,7 +890,7 @@ namespace XForms.ASTTree.ASTConstructor
             ParseDate:
             try
             {
-                DateTime val = DateTime.ParseExact(valor + " 00:00:00", "dd/MM/yyyy hh:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                DateTime val = DateTime.ParseExact(valor + " 00:00:00", "dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
                 Date fecha = new Date(val);
                 return fecha;
             }
@@ -901,7 +901,7 @@ namespace XForms.ASTTree.ASTConstructor
             ParseHora:
             try
             {
-                DateTime val = DateTime.ParseExact("12/10/1996 "+valor, "dd/MM/yyyy hh:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                DateTime val = DateTime.ParseExact("12/10/1996 "+valor, "dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
                 Hour hora = new Hour(val);
                 return hora;
             }

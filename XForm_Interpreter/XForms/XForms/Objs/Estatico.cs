@@ -169,5 +169,100 @@ namespace XForms.Objs
         {
             return "<div class='alert alert-danger' role='alert'>" + mensaje + "</div>";
         }
+
+        public static Object casteaRespuestaA(String resp, Object valorResp, Type tipo)
+        {
+            try
+            {
+                if(tipo.Equals(typeof(int)))
+                {
+                    int aux = Convert.ToInt32(resp);
+                    valorResp = aux;
+                    return valorResp;
+                }
+                else if(tipo.Equals(typeof(String)))
+                {
+                    valorResp = resp;
+                    return valorResp;
+                }
+                else if(tipo.Equals(typeof(double)))
+                {
+                    double aux = Convert.ToDouble(resp);
+                    valorResp = aux;
+                    return valorResp;
+                }
+                else if(tipo.Equals(typeof(Boolean)))
+                {
+                    Boolean aux = Convert.ToBoolean(resp);
+                    valorResp = aux;
+                    return valorResp;
+                }
+                else if(tipo.Equals(typeof(DateTime)))
+                {
+                    DateTime val = DateTime.ParseExact(resp, "dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                    valorResp = val;
+                    return valorResp;
+                }
+                else if(tipo.Equals(typeof(Date)))
+                {
+                    DateTime val = DateTime.ParseExact(resp, "dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                    Date fecha = new Date(val);
+                    valorResp = fecha;
+                    return valorResp;
+                }
+                else if(tipo.Equals(typeof(Hour)))
+                {
+                    DateTime val = DateTime.ParseExact(resp, "dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                    Hour hora = new Hour(val);
+                    valorResp = hora;
+                    return valorResp;
+                }
+            }
+            catch
+            {
+
+            }
+            return null;
+        }
+
+        public static Object respuestaPorDefecto(Type tipo)
+        {
+            try
+            {
+                if (tipo.Equals(typeof(int)))
+                {
+                    return 0;
+                }
+                else if (tipo.Equals(typeof(String)))
+                {
+                    return "";
+                }
+                else if (tipo.Equals(typeof(double)))
+                {
+                    return 0.0;
+                }
+                else if (tipo.Equals(typeof(Boolean)))
+                {
+                    return true;
+                }
+                else if (tipo.Equals(typeof(DateTime)))
+                {
+                    return new DateTime();
+                }
+                else if (tipo.Equals(typeof(Date)))
+                {
+                    return new Date(new DateTime());   
+                }
+                else if (tipo.Equals(typeof(Hour)))
+                {
+                    return new Hour(new DateTime());
+                }
+            }
+            catch
+            {
+
+            }
+            return new Nulo();
+        }
     }
 }

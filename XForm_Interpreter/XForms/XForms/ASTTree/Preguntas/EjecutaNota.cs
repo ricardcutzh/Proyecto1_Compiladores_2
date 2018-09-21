@@ -59,11 +59,19 @@ namespace XForms.ASTTree.Preguntas
                                 Constructor constructor = (Constructor)ambitoPregunta.getConstructor(clave);
                                 if(constructor!=null)
                                 {
-                                    /*aqui ya setee los parametros que venian en la pregunta en el ambito global ahora voy a ejecutar las declaraciones sobre este ambito*/
-                                    ambitoPregunta = constructor.seteaParametrosLocales(ambitoPregunta, valores);
 
                                     Variable instruc = (Variable)ambitoPregunta.getSimbolo("instr");
                                     List<Instruccion> declaraciones = (List<Instruccion>)instruc.valor;/*ya tengo las instrucciones que hacen la ejecucion de delcaraciones*/
+
+                                    if(existePropiedad("etiqueta", ambitoPregunta))
+                                    {
+                                        /*EN CASO QUE LA PROPIEDAD YA EXISTA EN LA PREGUNTA: RESETEO EL AMBITO*/
+                                        ambitoPregunta = new Ambito(ambitoPregunta.Anterior, ambitoPregunta.idAmbito, ambitoPregunta.archivo);
+                                        ambitoPregunta.agregarConstructor(clave,constructor);
+                                        ambitoPregunta.agregarVariableAlAmbito("instr", instruc);
+                                    }
+                                    /*aqui ya setee los parametros que venian en la pregunta en el ambito global ahora voy a ejecutar las declaraciones sobre este ambito*/
+                                    ambitoPregunta = constructor.seteaParametrosLocales(ambitoPregunta, valores);
                                     ejecutaLasDeclaracionesPregunta(ambitoPregunta, declaraciones);/*carga todo lo de la pregunta*/
 
                                     Pregunta p = new Pregunta(ambitoPregunta, this.identificador.ToLower(), this.numero);// formo la pregunta
@@ -74,9 +82,18 @@ namespace XForms.ASTTree.Preguntas
 
                                     if(llamaMostar)
                                     {
+                                        Ambito aux = ambitoPregunta.Anterior;
                                         ambitoPregunta.Anterior = null;
                                         LLamadaFuncion l = new LLamadaFuncion(clase, linea, columna, new Llamada("mostrar", linea, columna, clase));
                                         l.Ejecutar(ambitoPregunta);
+                                        ambitoPregunta.Anterior = aux;
+                                    }
+
+                                    ob.ambito = ambitoPregunta; /*ASIGNO EL NUEVO AMBITO A OB*/
+
+                                    if(n.salir!=null)
+                                    {
+                                        return n.salir;
                                     }
                                 }
                                 else
@@ -168,6 +185,44 @@ namespace XForms.ASTTree.Preguntas
                     instruccion.Ejecutar(ambito);
                 }
             }
+        }
+
+        private Boolean existePropiedad(String p, Ambito m)
+        {
+            if(m.existeVariable(p.ToLower()))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private Ambito soobreEscribeParams(Constructor c, Ambito m, List<Object> valores)
+        {
+            try
+            {
+                if (valores.Count == c.parametros.Count)
+                {
+                    for (int x = 0; x < valores.Count; x++)
+                    {
+                        String tipo = c.parametros.ElementAt(x).tipo.ToLower();
+                        String id = c.parametros.ElementAt(x).idparam.ToLower();
+                        Variable v = new Variable(id, tipo, Estatico.Vibililidad.LOCAL, valores.ElementAt(x));
+                        if(m.existeVariable(id.ToLower()))
+                        {
+                            Simbolo s = m.getSimbolo(id.ToLower());
+                            Variable aux = (Variable)s;
+                            aux.valor = v.valor;
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                TError error = new TError("Ejecucion", "Error al ejecutar los parametros en clase: " + this.clase, this.linea, this.columna, false);
+                Estatico.errores.Add(error);
+                Estatico.ColocaError(error);
+            }
+            return m;
         }
     }
 }

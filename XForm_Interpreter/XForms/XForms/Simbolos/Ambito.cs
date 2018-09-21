@@ -13,7 +13,7 @@ namespace XForms.Simbolos
         public String idAmbito { get; } /*VA A SERVIR POR SI NECESITO REPORTAR UN ERROR EN UN AMBITO ESPECIFICO*/
         public Ambito Anterior { get; set; } /*VA A SERVIR PARA MOVERME DENTRO DE LOS AMBITOS BUSCANDO UNA VARIABLE*/
         TablaVariables tablaVars;
-        TablaFunciones tablaFuns;
+        public TablaFunciones tablaFuns;
         TablaConstructores tablaConst;
         public String archivo { get; }
 

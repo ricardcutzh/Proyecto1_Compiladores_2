@@ -65,8 +65,14 @@
     <Compile Include="ASTTree\Interfaces\Expresion.cs" />
     <Compile Include="ASTTree\Interfaces\Instruccion.cs" />
     <Compile Include="ASTTree\Interfaces\NodoAST.cs" />
+    <Compile Include="ASTTree\Preguntas\EjecutaCadena.cs" />
+    <Compile Include="ASTTree\Preguntas\EjecutaCalcular.cs" />
+    <Compile Include="ASTTree\Preguntas\EjecutaCondicion.cs" />
+    <Compile Include="ASTTree\Preguntas\EjecutaFechaHora.cs" />
     <Compile Include="ASTTree\Preguntas\EjecutaFichero.cs" />
     <Compile Include="ASTTree\Preguntas\EjecutaNota.cs" />
+    <Compile Include="ASTTree\Preguntas\EjecutaNumerico.cs" />
+    <Compile Include="ASTTree\Preguntas\EjecutaSeleccion.cs" />
     <Compile Include="ASTTree\Sentencias\AsignacionArregloComp.cs" />
     <Compile Include="ASTTree\Sentencias\AsignacionPropiedad.cs" />
     <Compile Include="ASTTree\Sentencias\AsignacionSimple.cs" />
@@ -134,6 +140,24 @@
     <Compile Include="GramaticaIrony\Gramatica.cs" />
     <Compile Include="GramaticaIrony\Recorrido.cs" />
     <Compile Include="GramaticaIrony\TError.cs" />
+    <Compile Include="GUI\Cadenas\Cadenas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Cadenas\Cadenas.Designer.cs">
+      <DependentUpon>Cadenas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Condicion\Condicional.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Condicion\Condicional.Designer.cs">
+      <DependentUpon>Condicional.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\FechasHoras\FechasHoras.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\FechasHoras\FechasHoras.Designer.cs">
+      <DependentUpon>FechasHoras.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\Ficheros\Fichero.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -164,6 +188,18 @@
     <Compile Include="GUI\Notas\Nota.Designer.cs">
       <DependentUpon>Nota.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\Numericos\Numerico.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Numericos\Numerico.Designer.cs">
+      <DependentUpon>Numerico.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Select\Seleccionar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Select\Seleccionar.Designer.cs">
+      <DependentUpon>Seleccionar.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\Visor\VisualizadorForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -173,6 +209,7 @@
     <Compile Include="Objs\ClasePreAnalizada.cs" />
     <Compile Include="Objs\Clave.cs" />
     <Compile Include="Objs\ClaveFuncion.cs" />
+    <Compile Include="Objs\DamePregunta.cs" />
     <Compile Include="Objs\Date.cs" />
     <Compile Include="Objs\Estatico.cs" />
     <Compile Include="Objs\Este.cs" />
@@ -181,6 +218,7 @@
     <Compile Include="Objs\ListaClases.cs" />
     <Compile Include="Objs\NodoCaso.cs" />
     <Compile Include="Objs\NodoDefecto.cs" />
+    <Compile Include="Objs\NodoEstiloRespuesta.cs" />
     <Compile Include="Objs\NodoParametro.cs" />
     <Compile Include="Objs\NodoReturn.cs" />
     <Compile Include="Objs\Nulo.cs" />
@@ -210,6 +248,15 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Cadenas\Cadenas.resx">
+      <DependentUpon>Cadenas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Condicion\Condicional.resx">
+      <DependentUpon>Condicional.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\FechasHoras\FechasHoras.resx">
+      <DependentUpon>FechasHoras.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\Ficheros\Fichero.resx">
       <DependentUpon>Fichero.cs</DependentUpon>
     </EmbeddedResource>
@@ -224,6 +271,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Notas\Nota.resx">
       <DependentUpon>Nota.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Numericos\Numerico.resx">
+      <DependentUpon>Numerico.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Select\Seleccionar.resx">
+      <DependentUpon>Seleccionar.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Visor\VisualizadorForm.resx">
       <DependentUpon>VisualizadorForm.cs</DependentUpon>

@@ -101,7 +101,7 @@ public class Ciclo implements ArbolForm{
                 par.setUp(errores, ts, padre, this.idCiclo, "Repeticion: "+this.idCiclo, "Encuesta", TipoPregunta.TRADUC_2);
                 cond = par.S();                
             }
-            cad += dameTabulaciones() + "Para(Entero "+this.idCiclo+"_iter = 0; "+cond+" ; "+this.idCiclo+"++){\n";
+            cad += dameTabulaciones() + "Para(Entero "+this.idCiclo+"_iter = 0; "+cond+" ; "+this.idCiclo+"_iter++){\n";
             tabula();
             cad += contenido;
             destabula();

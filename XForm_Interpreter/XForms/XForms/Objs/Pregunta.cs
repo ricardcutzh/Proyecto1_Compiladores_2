@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +19,8 @@ namespace XForms.Objs
         public Object respuesta = null; /* LA RESPUESTA DE LA PREGUNTA */
         public String idPregunta = ""; /* EL IDENTIFICADOR DE LA PREGUNTA */
 
+        public Boolean lectura = false;
+
         public int numeroPregunta;
 
         public Pregunta(Ambito ambito, String idpregunta, int numeroP)
@@ -30,6 +32,7 @@ namespace XForms.Objs
             tomaSugerencia();
             tomaRequerido();
             tomaRequeridoMSN();
+            tomaLectura();
         }
 
         private void tomaEtiqueta()
@@ -91,7 +94,22 @@ namespace XForms.Objs
                 }
             }
         }
-
+    
+        private void tomaLectura()
+        {
+            foreach(DictionaryEntry d in this.ambitoPregunta.tablaFuns.funciones)
+            {
+                Funcion f = (Funcion)d.Value;
+                if(f.idFuncion.ToLower().Equals("respuesta"))
+                {
+                    if(f.Vibililidad.Equals(Estatico.Vibililidad.PRIVADO))
+                    {
+                        this.lectura = true;
+                        return;
+                    }
+                }
+            }
+        }
 
     }
 }

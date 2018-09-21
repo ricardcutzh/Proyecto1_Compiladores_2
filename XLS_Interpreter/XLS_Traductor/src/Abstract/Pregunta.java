@@ -352,7 +352,8 @@ public class Pregunta implements ArbolForm {
             case TipoPregunta.RANGO: {
                 cad += "Entero Respuesta" + predeterminado;
                 this.tipoRespParam = "Entero";
-                this.EstiloPregunta = this.tipoRespParam;
+                //this.EstiloPregunta = this.tipoRespParam;
+                this.EstiloPregunta = "Rango";
                 this.estiloResp = "Respuesta(resp.esEntero).";
                 break;
             }
@@ -488,9 +489,9 @@ public class Pregunta implements ArbolForm {
         String cad = "";
         for (int x = 0; x < this.parametrosPadre.size(); x++) {
             if (!(x == this.parametrosPadre.size() - 1)) {
-                cad += this.parametrosPadre.get(x) + ", ";
+                cad += this.parametrosPadre.get(x).replace("()", "") + ", ";
             } else {
-                cad += this.parametrosPadre.get(x);
+                cad += this.parametrosPadre.get(x).replace("()", "");
             }
         }
         return cad;
@@ -601,7 +602,7 @@ public class Pregunta implements ArbolForm {
             case "restringir": {
                 if (this.atributos.containsKey("restringir")) {
                     Restringir r = (Restringir) this.atributos.get(atributo);
-                    r.setActual(this.Idpregunta);
+                    r.setActual("param_1");
                     //r.setPadre(this.padre);
                     r.setPadre("");
                     this.cuerpo = (String) r.traducirLocal(ts, tabs, errores);
@@ -671,6 +672,10 @@ public class Pregunta implements ArbolForm {
                         switch (this.Tipo) {
                             case TipoPregunta.CONDICION: {
                                 par.ParseParametroCondicion();
+                                if(par.f.equals("False"))
+                                {
+                                    par.f = "Falso";
+                                }
                                 cadenaEspeciales = "\'" + par.v + "','" + par.f + "'";
                                 break;
                             }

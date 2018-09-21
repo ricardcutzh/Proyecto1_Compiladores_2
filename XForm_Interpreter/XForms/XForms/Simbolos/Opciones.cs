@@ -75,5 +75,55 @@ namespace XForms.Simbolos
             }
             return new Nulo();
         }
-    }       
+
+        public int getNumeroListas()
+        {
+            return this.listados.Count;
+        }
+
+        public List<NodoSelecciona> getSelecciones()
+        {
+            List<NodoSelecciona> listado = new List<NodoSelecciona>();
+            foreach(List<Object> l in this.listados)
+            {
+                if(l.Count == 3)
+                {
+                    Object val1 = l.ElementAt(0);
+                    Object val2 = l.ElementAt(1);
+                    Object val3 = l.ElementAt(2);
+                    if(val1 is String && val2 is String && val3 is String)
+                    {
+                        listado.Add(new NodoSelecciona((String)val1, (String)val2, (String)val3));
+                    }
+                }
+                else if(l.Count == 2)
+                {
+                    Object val1 = l.ElementAt(0);
+                    Object val2 = l.ElementAt(1);
+                    if(val1 is String && val2 is String)
+                    {
+                        listado.Add(new NodoSelecciona((String)val1, (String)val2, ""));
+                    }
+                }
+            }
+
+            return listado;
+        }
+    }
+
+    public class NodoSelecciona
+    {
+        public String etiqueta;
+        public String valor;
+        public String ruta;
+
+        public NodoSelecciona(String etiqueta, String valor, String ruta)
+        {
+            this.etiqueta = etiqueta;
+            this.valor = valor;
+            this.ruta = ruta;
+        }
+
+        
+    }
 }

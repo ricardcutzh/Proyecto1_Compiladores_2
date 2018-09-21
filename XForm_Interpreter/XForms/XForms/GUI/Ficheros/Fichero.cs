@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using XForms.Objs;
 using XForms.GramaticaIrony;
+using XForms.ASTTree.Sentencias;
 namespace XForms.GUI.Ficheros
 {
     partial class Fichero : Form
@@ -25,6 +26,8 @@ namespace XForms.GUI.Ficheros
 
         String clase, Archivo;
 
+        public Object salir = null;
+
         public Fichero(Pregunta p, String filtros, int linea, int col, String clase, String archivo)
         {
             this.linea = linea;
@@ -35,6 +38,12 @@ namespace XForms.GUI.Ficheros
             this.filtros = filtros;
             this.p = p;
             InitializeComponent();
+
+            if(this.p.lectura == true)
+            {
+                this.button1.Enabled = false;
+            }
+
             salida = Estatico.toHTMLTitle("("+p.numeroPregunta+") Fichero: "+p.idPregunta);
             if (!p.etiqueta.Equals("") || !p.etiqueta.Equals(" "))
             {
@@ -63,7 +72,7 @@ namespace XForms.GUI.Ficheros
                 {
                     abrir.Filter = getFilters();
                 }
-                catch(Exception ex)
+                catch
                 {
                     TError error = new TError("Semantico", "La definicion de Extensiones no es correcta: \'" + getFilters() + "\' | Clase: "+clase+" | Archivo: "+Archivo, linea, col, false);
                     Estatico.errores.Add(error);
@@ -88,6 +97,19 @@ namespace XForms.GUI.Ficheros
                     this.Close();
                 }
             }            
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (this.rutaArchivo.Equals("") && p.requerido)
+            {
+                MessageBox.Show("Campo requerido", "error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                this.salir = new Romper();
+                this.Close();
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)

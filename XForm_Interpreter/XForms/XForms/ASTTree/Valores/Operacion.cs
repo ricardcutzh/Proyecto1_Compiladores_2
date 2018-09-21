@@ -389,6 +389,48 @@ namespace XForms.ASTTree.Valores
                             double valor2 = (double)val2;
                             return valor1 + valor2;
                         }
+                    case "82":
+                        {
+                            String valor1 = val1.ToString();
+                            String valor2 = (String)val2;
+                            return valor1 + valor2;
+                        }
+                    case "28":
+                        {
+                            String valor1 = (String)val1;
+                            String valor2 = val2.ToString();
+                            return valor1 + valor2;
+                        }
+                    case "81":
+                        {
+                            Boolean valor2 = (Boolean)val2;
+                            return false || valor2;
+                        }
+                    case "18":
+                        {
+                            Boolean valor1 = (Boolean)val1;
+                            return valor1 || false;
+                        }
+                    case "83":
+                        {
+                            int valor2 = (int)val2;
+                            return valor2 + 0;
+                        }
+                    case "38":
+                        {
+                            int valor1 = (int)val1;
+                            return valor1 + 0;
+                        }
+                    case "84":
+                        {
+                            double valor2 = (double)val2;
+                            return valor2 + 0.0;
+                        }
+                    case "48":
+                        {
+                            double valor1 = (double)val1;
+                            return valor1 + 0.0;
+                        }
                 }
                 TError error = new TError("Semantico", "Error Al Ejecutar Suma en Clase: " + this.clase + " Archivo: " + this.archivoOrigen + ", Tipos Incompatibles: " + tipo1 + " con " + tipo2, this.linea, this.columna, false);
                 Estatico.errores.Add(error);
@@ -481,6 +523,27 @@ namespace XForms.ASTTree.Valores
                             double valor2 = (double)val2;
                             return valor1 - valor2;
                         }
+                    case "83":
+                        {
+                            int valor2 = (int)val2;
+                            return 0 - valor2;
+                        }
+                    case "38":
+                        {
+                            int valor1 = (int)val1;
+                            return valor1 - 0;
+                        }
+                    case "84":
+                        {
+                            double valor2 = (double)val2;
+                            return 0.0 - valor2;
+                        }
+                    case "48":
+                        {
+                            double valor1 = (double)val1;
+                            return valor1 - 0.0;
+                        }
+
                 }
                 TError error = new TError("Semantico", "Error Al Ejecutar Resta en Clase: " + this.clase + " Archivo: " + this.archivoOrigen + ", Tipos Incompatibles: " + tipo1 + " con " + tipo2, this.linea, this.columna, false);
                 Estatico.errores.Add(error);
@@ -577,6 +640,36 @@ namespace XForms.ASTTree.Valores
                             double valor1 = (double)val1;
                             double valor2 = (double)val2;
                             return valor1 * valor2;
+                        }
+                    case "81":
+                        {
+                            Boolean valor2 = (Boolean)val2;
+                            return false && valor2;
+                        }
+                    case "18":
+                        {
+                            Boolean valor1 = (Boolean)val1;
+                            return valor1 && false;
+                        }
+                    case "83":
+                        {
+                            int valor2 = (int)val2;
+                            return valor2 * 0;
+                        }
+                    case "38":
+                        {
+                            int valor1 = (int)val1;
+                            return valor1 * 0;
+                        }
+                    case "84":
+                        {
+                            double valor2 = (double)val2;
+                            return valor2 * 0.0;
+                        }
+                    case "48":
+                        {
+                            double valor1 = (double)val1;
+                            return valor1 * 0.0;
                         }
                 }
                 TError error = new TError("Semantico", "Error Al Ejecutar Multiplicacion en Clase: " + this.clase + " Archivo: " + this.archivoOrigen + ", Tipos Incompatibles: " + tipo1 + " con " + tipo2, this.linea, this.columna, false);
@@ -706,6 +799,26 @@ namespace XForms.ASTTree.Valores
                                 MessageBox.Show("Error en la Ejecucion de la Operacion De Division: Linea: " + this.linea + " y Columna: " + this.columna + " | En Clase: " + this.clase + " | Archivo: " + ambito.archivo + " | Division Entre Cero! ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 return 0.0;
                             }
+                        }
+                    case "83":
+                        {
+                            int valor2 = (int)val2;
+                            return valor2 / 1;
+                        }
+                    case "38":
+                        {
+                            int valor1 = (int)val1;
+                            return valor1 / 1;
+                        }
+                    case "84":
+                        {
+                            double valor2 = (double)val2;
+                            return valor2 / 1;
+                        }
+                    case "48":
+                        {
+                            double valor1 = (double)val1;
+                            return valor1 / 1;
                         }
                 }
                 TError error = new TError("Semantico", "Error Al Ejecutar Division en Clase: " + this.clase + " Archivo: " + this.archivoOrigen + ", Tipos Incompatibles: " + tipo1 + " con " + tipo2, this.linea, this.columna, false);
@@ -954,6 +1067,48 @@ namespace XForms.ASTTree.Valores
                             /// NULO == NULO?
                             return true;
                         }
+                    case "82":
+                        {
+                            String valor1 = val1.ToString();
+                            String valor2 = (String)val2;
+                            return valor1.Equals(valor2);
+                        }
+                    case "28":
+                        {
+                            String valor1 = (String)val1;
+                            String valor2 = val2.ToString();
+                            return valor1.Equals(valor2);
+                        }
+                    case "81":
+                        {
+                            Boolean valor2 = (Boolean)val2;
+                            return false == valor2;
+                        }
+                    case "18":
+                        {
+                            Boolean valor1 = (Boolean)val1;
+                            return valor1 == false;
+                        }
+                    case "83":
+                        {
+                            int valor2 = (int)val2;
+                            return valor2 == 0;
+                        }
+                    case "38":
+                        {
+                            int valor1 = (int)val1;
+                            return valor1 == 0;
+                        }
+                    case "84":
+                        {
+                            double valor2 = (double)val2;
+                            return valor2 == 0.0;
+                        }
+                    case "48":
+                        {
+                            double valor1 = (double)val1;
+                            return valor1 == 0.0;
+                        }
                 }
                 TError error = new TError("Semantico", "Error Al Ejecutar Igual en Clase: " + this.clase + " Archivo: " + this.archivoOrigen + ", Tipos Incompatibles: " + tipo1 + " con " + tipo2, this.linea, this.columna, false);
                 Estatico.errores.Add(error);
@@ -1063,6 +1218,48 @@ namespace XForms.ASTTree.Valores
                         {
                             return true;
                         }
+                    case "82":
+                        {
+                            String valor1 = val1.ToString();
+                            String valor2 = (String)val2;
+                            return !valor1.Equals(valor2);
+                        }
+                    case "28":
+                        {
+                            String valor1 = (String)val1;
+                            String valor2 = val2.ToString();
+                            return !valor1.Equals(valor2);
+                        }
+                    case "81":
+                        {
+                            Boolean valor2 = (Boolean)val2;
+                            return false != valor2;
+                        }
+                    case "18":
+                        {
+                            Boolean valor1 = (Boolean)val1;
+                            return valor1 != false;
+                        }
+                    case "83":
+                        {
+                            int valor2 = (int)val2;
+                            return valor2 != 0;
+                        }
+                    case "38":
+                        {
+                            int valor1 = (int)val1;
+                            return valor1 != 0;
+                        }
+                    case "84":
+                        {
+                            double valor2 = (double)val2;
+                            return valor2 != 0.0;
+                        }
+                    case "48":
+                        {
+                            double valor1 = (double)val1;
+                            return valor1 != 0.0;
+                        }
                 }
                 TError error = new TError("Semantico", "Error Al Ejecutar Diferente en Clase: " + this.clase + " Archivo: " + this.archivoOrigen + ", Tipos Incompatibles: " + tipo1 + " con " + tipo2, this.linea, this.columna, false);
                 Estatico.errores.Add(error);
@@ -1158,6 +1355,26 @@ namespace XForms.ASTTree.Valores
                             if(c > 0) { return true; }
                             return false;
                         }
+                    case "83":
+                        {
+                            int valor2 = (int)val2;
+                            return valor2 < 0;
+                        }
+                    case "38":
+                        {
+                            int valor1 = (int)val1;
+                            return valor1 > 0;
+                        }
+                    case "84":
+                        {
+                            double valor2 = (double)val2;
+                            return valor2 < 0.0;
+                        }
+                    case "48":
+                        {
+                            double valor1 = (double)val1;
+                            return valor1 > 0.0;
+                        }
                 }
                 TError error = new TError("Semantico", "Error Al Ejecutar Mayor en Clase: " + this.clase + " Archivo: " + this.archivoOrigen + ", Tipos Incompatibles: " + tipo1 + " con " + tipo2, this.linea, this.columna, false);
                 Estatico.errores.Add(error);
@@ -1252,6 +1469,26 @@ namespace XForms.ASTTree.Valores
                             int c = valor1.CompareTo(valor2);
                             if (c < 0) { return true; }
                             return false;
+                        }
+                    case "83":
+                        {
+                            int valor2 = (int)val2;
+                            return valor2 > 0;
+                        }
+                    case "38":
+                        {
+                            int valor1 = (int)val1;
+                            return valor1 < 0;
+                        }
+                    case "84":
+                        {
+                            double valor2 = (double)val2;
+                            return valor2 > 0.0;
+                        }
+                    case "48":
+                        {
+                            double valor1 = (double)val1;
+                            return valor1 < 0.0;
                         }
                 }
                 TError error = new TError("Semantico", "Error Al Ejecutar Menor en Clase: " + this.clase + " Archivo: " + this.archivoOrigen + ", Tipos Incompatibles: " + tipo1 + " con " + tipo2, this.linea, this.columna, false);

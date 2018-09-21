@@ -11,7 +11,7 @@ namespace XForms.Simbolos
 {
     class Constructor : NodoAST, Instruccion
     {
-        List<NodoParametro> parametros;
+        public List<NodoParametro> parametros;
         List<Instruccion> instrucciones;
 
         public Constructor(List<NodoParametro> parametros, List<Instruccion>instrucciones, int linea, int col, String clase):base(linea, col, clase)

@@ -21,3 +21,8 @@ C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Pr
 C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.GUI.Notas.Nota.resources
 C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.GUI.Ficheros.Fichero.resources
 C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.GUI.Visor.VisualizadorForm.resources
+C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.GUI.Cadenas.Cadenas.resources
+C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.GUI.Numericos.Numerico.resources
+C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.GUI.FechasHoras.FechasHoras.resources
+C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.GUI.Condicion.Condicional.resources
+C:\Users\ricar\Documents\Universidad\Segundo_S_2018\Compiladores 2\Proyecto_1\Proyecto1_Compiladores_2\XForm_Interpreter\XForms\XForms\obj\Debug\XForms.GUI.Select.Seleccionar.resources

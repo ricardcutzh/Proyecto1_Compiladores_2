@@ -648,7 +648,8 @@ namespace XForms.GramaticaIrony
                         | identificador + "(" + L_EXPRE + ")" + "." + ToTerm("fichero") + "(" + EXP + ")" + ";"
                         | identificador + "(" + L_EXPRE + ")" + "." + ToTerm("fichero") + "(" + ")" + ";"
                         | identificador + "(" + L_EXPRE + ")" + "." + ToTerm("respuesta") + "(" + CASTEO_PREGUNTA + ")" + "." + ESTILO_RESP + ";"
-                        | identificador + "(" + L_EXPRE + ")" + "." + ToTerm("respuesta") + "(" + CASTEO_PREGUNTA + ")" + "." + ToTerm("Apariencia") + "(" + ")" + "." + ESTILO_RESP + ";";
+                        | identificador + "(" + L_EXPRE + ")" + "." + ToTerm("respuesta") + "(" + CASTEO_PREGUNTA + ")" + "." + ToTerm("Apariencia") + "(" + L_EXPRE + ")" + "." + ESTILO_RESP + ";"
+                        | identificador + "(" + L_EXPRE + ")" + "." + ToTerm("calcular") + "(" + ")" + ";";
 
             CALL_Q.ErrorRule = SyntaxError + ";";
 
@@ -660,20 +661,20 @@ namespace XForms.GramaticaIrony
                                 | ToTerm("resp.esHora")
                                 | ToTerm("resp.esFechaHora");
 
-            ESTILO_RESP.Rule = EST_CADENA
-                            | EST_ENTERO
+            ESTILO_RESP.Rule = EST_CADENA//YA
+                            | EST_ENTERO//YA
                             | EST_SELECC
-                            | EST_DECIMAL
+                            | EST_DECIMAL//YA
                             | EST_CONDICION
-                            | EST_FECHA
-                            | EST_HORA
-                            | EST_FECHAHORA;
+                            | EST_FECHA//YA
+                            | EST_HORA//YA
+                            | EST_FECHAHORA;//YA
 
             EST_CADENA.Rule = ToTerm("Cadena") + "(" + EXP + "," + EXP + "," + EXP + ")" /// SI VIENE PARAMETROS EN CADENA
                             | ToTerm("Cadena") + "(" + ")"; /// CADENA SIN PARAMETROS
 
             EST_ENTERO.Rule = ToTerm("Entero") + "(" + ")" /// ENTEROS
-                            | ToTerm("Entero") + "(" + EXP + "," + EXP + ")"; /// CUANDO VIENE RANGO INICIAL O FINAL
+                            | ToTerm("Rango") + "(" + EXP + "," + EXP + ")"; /// CUANDO VIENE RANGO INICIAL O FINAL
 
             EST_SELECC.Rule = ToTerm("seleccionar_1") + "(" + EXP + ")" /// SELECCIONAR 1
                             | ToTerm("seleccionar") + "(" + EXP + ")"; /// SELECCIONAR
