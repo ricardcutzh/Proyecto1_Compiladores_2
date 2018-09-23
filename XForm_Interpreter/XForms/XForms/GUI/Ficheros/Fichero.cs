@@ -127,6 +127,7 @@ namespace XForms.GUI.Ficheros
 
         private String getFilters()
         {
+            this.filtros = this.filtros.Replace(",", "");
             this.filtros = this.filtros.Replace(" ", "");
             String[] arr = this.filtros.Split('.');
            

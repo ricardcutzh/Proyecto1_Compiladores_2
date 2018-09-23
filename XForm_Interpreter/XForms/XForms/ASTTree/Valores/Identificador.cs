@@ -78,6 +78,10 @@ namespace XForms.ASTTree.Valores
 
         public object getValor(Ambito ambito)
         {
+            if(this.identificador.ToLower().Equals("nada"))
+            {
+                return -1;
+            }
             if(this.identificador.ToLower().Equals("este"))
             {
                 return new Este();

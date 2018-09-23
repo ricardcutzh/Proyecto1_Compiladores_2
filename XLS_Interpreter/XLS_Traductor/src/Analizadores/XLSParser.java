@@ -1056,7 +1056,7 @@ public class XLSParser implements XLSParserConstants {
         break;
       case pos:
         t = jj_consume_token(pos);
-                            {if (true) return "Apariencia('"+t.image+"')";}
+                            /*return "Apariencia('"+t.image+"')";*/ {if (true) return "Apariencia().Cadena()";}
         break;
       default:
         jj_la1[12] = jj_gen;

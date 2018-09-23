@@ -60,7 +60,8 @@ namespace XForms.ASTTree.Preguntas
                         {
                             cad_max = cad_min + 2;
                         }
-
+                        this.numero = Estatico.numPregunta;
+                        Estatico.numPregunta++;
                         DamePregunta dame = new DamePregunta(identificador, parametros, clase, linea, columna, "Texto/Cadena", "(min, max, fil)", this.numero);
 
                         Pregunta p = dame.getPregunta(ambito);
@@ -102,7 +103,7 @@ namespace XForms.ASTTree.Preguntas
                             }
 
                             PreguntaAlmacenada pr = new PreguntaAlmacenada(this.identificador, p.etiqueta, this.numero);
-                            pr.addAnswer(this.valorResp);
+                            pr.addAnswer(this.valorResp.ToString());
                             Estatico.resps.Add(pr);
 
                             ob.ambito = dame.ambPregu;
@@ -122,6 +123,8 @@ namespace XForms.ASTTree.Preguntas
                 }
                 else
                 {
+                    this.numero = Estatico.numPregunta;
+                    Estatico.numPregunta++;
                     DamePregunta dame = new DamePregunta(identificador, parametros, clase, linea, columna, "Texto/Cadena", "()", this.numero);
 
                     Pregunta p = dame.getPregunta(ambito);
@@ -161,7 +164,7 @@ namespace XForms.ASTTree.Preguntas
                         }
 
                         PreguntaAlmacenada pr = new PreguntaAlmacenada(this.identificador, p.etiqueta, this.numero);
-                        pr.addAnswer(this.valorResp);
+                        pr.addAnswer(this.valorResp.ToString());
                         Estatico.resps.Add(pr);
 
                         ob.ambito = dame.ambPregu;

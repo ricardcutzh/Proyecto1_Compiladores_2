@@ -29,7 +29,7 @@ namespace XForms.Objs
         }
 
         
-        public String toHTML()
+        public String toHTML(int x)
         {
 
             String cad = "<div class='card'> <div class='card-body'> <h5 class='card-title'>"+this.numero+") "+this.etiqueta+"</h5>";

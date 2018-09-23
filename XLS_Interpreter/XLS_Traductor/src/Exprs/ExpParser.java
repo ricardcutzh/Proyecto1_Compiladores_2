@@ -164,14 +164,14 @@ public class ExpParser implements ExpParserConstants {
         jj_consume_token(and);
                         cadena += "&&";
         cadena = T(cadena);
-                         this.tipoCalcular = "Booelano";
+                         this.tipoCalcular = "Booleano";
                         {if (true) return cadena;}
         break;
       case or:
         jj_consume_token(or);
                        cadena += "||";
         cadena = T(cadena);
-                        this.tipoCalcular = "Booelano";
+                        this.tipoCalcular = "Booleano";
                         {if (true) return cadena;}
         break;
       default:
@@ -228,42 +228,42 @@ public class ExpParser implements ExpParserConstants {
         jj_consume_token(igual);
                          cadena += "==";
         cadena = F(cadena);
-                        this.tipoCalcular = "Booelano";
+                        this.tipoCalcular = "Booleano";
                         {if (true) return cadena;}
         break;
       case diferente:
         jj_consume_token(diferente);
                               cadena += "!=";
         cadena = F(cadena);
-                        this.tipoCalcular = "Booelano";
+                        this.tipoCalcular = "Booleano";
                         {if (true) return cadena;}
         break;
       case menor:
         jj_consume_token(menor);
                           cadena += "<";
         cadena = F(cadena);
-                        this.tipoCalcular = "Booelano";
+                        this.tipoCalcular = "Booleano";
                         {if (true) return cadena;}
         break;
       case mayor:
         jj_consume_token(mayor);
                           cadena += ">";
         cadena = F(cadena);
-                        this.tipoCalcular = "Booelano";
+                        this.tipoCalcular = "Booleano";
                         {if (true) return cadena;}
         break;
       case mayorigual:
         jj_consume_token(mayorigual);
                                cadena += ">=";
         cadena = F(cadena);
-                        this.tipoCalcular = "Booelano";
+                        this.tipoCalcular = "Booleano";
                         {if (true) return cadena;}
         break;
       case menorigual:
         jj_consume_token(menorigual);
                                cadena += "<=";
         cadena = F(cadena);
-                        this.tipoCalcular = "Booelano";
+                        this.tipoCalcular = "Booleano";
                         {if (true) return cadena;}
         break;
       default:
@@ -397,6 +397,7 @@ public class ExpParser implements ExpParserConstants {
 //////////////////////////////////////////////G///////////////////////////////////////////////////////////////////////////////////
   final public String G(String cadena) throws ParseException {
         Token t;
+        String auxiliar = "";
     try {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case identificador:
@@ -453,7 +454,7 @@ public class ExpParser implements ExpParserConstants {
                                                 {
                                                         pad +="().";
                                                 }
-                                                cadena += pad+aux+"().Respuesta";
+                                                cadena += pad+aux+".Respuesta";
                                         }
                                 }
                                 else
@@ -504,7 +505,7 @@ public class ExpParser implements ExpParserConstants {
                         cadena += t.image;
                         if(this.tipoCalcular.equals(""))
                         {
-                                this.tipoCalcular = "Booelano";
+                                this.tipoCalcular = "Booleano";
                         }
                         {if (true) return cadena;}
         break;
@@ -514,7 +515,7 @@ public class ExpParser implements ExpParserConstants {
                         cadena += t.image;
                         if(this.tipoCalcular.equals(""))
                         {
-                                this.tipoCalcular = "Booelano";
+                                this.tipoCalcular = "Booleano";
                         }
                         {if (true) return cadena;}
         break;
@@ -538,18 +539,26 @@ public class ExpParser implements ExpParserConstants {
                         }
                         {if (true) return cadena;}
         break;
-      case ahora:
-        t = jj_consume_token(ahora);
-                        cadena += t.image;
+      case f_ahora:
+        jj_consume_token(f_ahora);
+                             cadena += "ahora";
+        jj_consume_token(oPar);
+                                                         cadena += "(";
+        jj_consume_token(cPar);
+                                                                                 cadena += ")";
                         if(this.tipoCalcular.equals(""))
                         {
-                                this.tipoCalcular = "Hora";
+                                this.tipoCalcular = "FechaHora";
                         }
                         {if (true) return cadena;}
         break;
-      case hoy:
-        t = jj_consume_token(hoy);
-                        cadena += t.image;
+      case f_hoy:
+        jj_consume_token(f_hoy);
+                           cadena += "hoy";
+        jj_consume_token(oPar);
+                                                     cadena += "(";
+        jj_consume_token(cPar);
+                                                                             cadena += ")";
                         if(this.tipoCalcular.equals(""))
                         {
                                 this.tipoCalcular = "Fecha";
@@ -595,13 +604,418 @@ public class ExpParser implements ExpParserConstants {
         jj_consume_token(not);
                          cadena += "!";
         cadena = E(cadena);
-                        this.tipoCalcular = "Booelano";
+                        this.tipoCalcular = "Booleano";
+                        {if (true) return cadena;}
+        break;
+      case f_cadena:
+        jj_consume_token(f_cadena);
+                              cadena += "cadena";
+        jj_consume_token(oPar);
+                                                           cadena += "(";
+        auxiliar = E(auxiliar);
+                                                                                                   cadena += auxiliar ;
+        jj_consume_token(cPar);
+                                                                                                                                 cadena += ")";
+                        this.tipoCalcular = "Cadena";
+                        {if (true) return cadena;}
+        break;
+      case f_subcad:
+        jj_consume_token(f_subcad);
+                              cadena += "subcad";
+        jj_consume_token(oPar);
+                                                           cadena += "(";
+        auxiliar = E(auxiliar);
+                                                                                                   cadena += auxiliar ;
+        jj_consume_token(coma);
+                          cadena += ","; auxiliar = "";
+        auxiliar = E(auxiliar);
+                                                                                 cadena += auxiliar;
+        jj_consume_token(coma);
+                          cadena += ","; auxiliar = "";
+        auxiliar = E(auxiliar);
+                                                                                 cadena += auxiliar;
+        jj_consume_token(cPar);
+                          cadena += ")";
+                        this.tipoCalcular = "Cadena";
+                        {if (true) return cadena;}
+        break;
+      case f_poscad:
+        jj_consume_token(f_poscad);
+                              cadena += "poscad";
+        jj_consume_token(oPar);
+                                                           cadena += "(";
+        auxiliar = E(auxiliar);
+                                                                                                   cadena += auxiliar ;
+        jj_consume_token(coma);
+                          cadena += ","; auxiliar = "";
+        auxiliar = E(auxiliar);
+                                                                                 cadena += auxiliar;
+        jj_consume_token(cPar);
+                          cadena += ")";
+                        this.tipoCalcular = "Cadena";
+                        {if (true) return cadena;}
+        break;
+      case f_booleano:
+        jj_consume_token(f_booleano);
+                                cadena += "booleano";
+        jj_consume_token(oPar);
+                                                               cadena += "(";
+        auxiliar = E(auxiliar);
+                                                                                                       cadena += auxiliar;
+        jj_consume_token(cPar);
+                                                                                                                                    cadena += ")";
+                        if(this.tipoCalcular.equals(""))
+                        {
+                                this.tipoCalcular = "Booleano";
+                        }
+                        {if (true) return cadena;}
+        break;
+      case f_entero:
+        jj_consume_token(f_entero);
+                              cadena += "entero";
+        jj_consume_token(oPar);
+                                                           cadena += "(";
+        auxiliar = E(auxiliar);
+                                                                                                   cadena += auxiliar;
+        jj_consume_token(cPar);
+                                                                                                                                cadena += ")";
+                        if(this.tipoCalcular.equals(""))
+                        {
+                                this.tipoCalcular = "Entero";
+                        }
+                        {if (true) return cadena;}
+        break;
+      case f_tam:
+        jj_consume_token(f_tam);
+                           cadena += "tam";
+        jj_consume_token(oPar);
+                                                     cadena += "(";
+        auxiliar = E(auxiliar);
+                                                                                             cadena += auxiliar;
+        jj_consume_token(cPar);
+                                                                                                                          cadena += ")";
+                        if(this.tipoCalcular.equals(""))
+                        {
+                                this.tipoCalcular = "Entero";
+                        }
+                        {if (true) return cadena;}
+        break;
+      case f_pow:
+        jj_consume_token(f_pow);
+                           cadena += "pow";
+        jj_consume_token(oPar);
+                                                     cadena += "(";
+        auxiliar = E(auxiliar);
+                                                                                             cadena += auxiliar;
+        jj_consume_token(coma);
+                          cadena += ","; auxiliar = "";
+        auxiliar = E(auxiliar);
+                                                                                 cadena += auxiliar;
+        jj_consume_token(cPar);
+                                                                                                              cadena += ")";
+                        if(this.tipoCalcular.equals("") || this.tipoCalcular.equals("Entero"))
+                        {
+                                this.tipoCalcular = "Decimal";
+                        }
+                        {if (true) return cadena;}
+        break;
+      case f_log:
+        jj_consume_token(f_log);
+                           cadena += "log";
+        jj_consume_token(oPar);
+                                                     cadena += "(";
+        auxiliar = E(auxiliar);
+                                                                                             cadena += auxiliar;
+        jj_consume_token(cPar);
+                                                                                                                          cadena += ")";
+                        if(this.tipoCalcular.equals("") || this.tipoCalcular.equals("Entero"))
+                        {
+                                this.tipoCalcular = "Decimal";
+                        }
+                        {if (true) return cadena;}
+        break;
+      case f_log10:
+        jj_consume_token(f_log10);
+                             cadena += "log10";
+        jj_consume_token(oPar);
+                                                         cadena += "(";
+        auxiliar = E(auxiliar);
+                                                                                                 cadena += auxiliar;
+        jj_consume_token(cPar);
+                                                                                                                              cadena += ")";
+                        if(this.tipoCalcular.equals("") || this.tipoCalcular.equals("Entero"))
+                        {
+                                this.tipoCalcular = "Decimal";
+                        }
+                        {if (true) return cadena;}
+        break;
+      case f_abs:
+        jj_consume_token(f_abs);
+                           cadena += "abs";
+        jj_consume_token(oPar);
+                                                     cadena += "(";
+        auxiliar = E(auxiliar);
+                                                                                             cadena += auxiliar;
+        jj_consume_token(cPar);
+                                                                                                                          cadena += ")";
+                        if(this.tipoCalcular.equals("") || this.tipoCalcular.equals("Entero"))
+                        {
+                                this.tipoCalcular = "Decimal";
+                        }
+                        {if (true) return cadena;}
+        break;
+      case f_sin:
+        jj_consume_token(f_sin);
+                           cadena += "sin";
+        jj_consume_token(oPar);
+                                                     cadena += "(";
+        auxiliar = E(auxiliar);
+                                                                                             cadena += auxiliar;
+        jj_consume_token(cPar);
+                                                                                                                          cadena += ")";
+                        if(this.tipoCalcular.equals("") || this.tipoCalcular.equals("Entero"))
+                        {
+                                this.tipoCalcular = "Decimal";
+                        }
+                        {if (true) return cadena;}
+        break;
+      case f_cos:
+        jj_consume_token(f_cos);
+                           cadena += "cos";
+        jj_consume_token(oPar);
+                                                     cadena += "(";
+        auxiliar = E(auxiliar);
+                                                                                             cadena += auxiliar;
+        jj_consume_token(cPar);
+                                                                                                                          cadena += ")";
+                        if(this.tipoCalcular.equals("") || this.tipoCalcular.equals("Entero"))
+                        {
+                                this.tipoCalcular = "Decimal";
+                        }
+                        {if (true) return cadena;}
+        break;
+      case f_tan:
+        jj_consume_token(f_tan);
+                           cadena += "tan";
+        jj_consume_token(oPar);
+                                                     cadena += "(";
+        auxiliar = E(auxiliar);
+                                                                                             cadena += auxiliar;
+        jj_consume_token(cPar);
+                                                                                                                          cadena += ")";
+                        if(this.tipoCalcular.equals("") || this.tipoCalcular.equals("Entero"))
+                        {
+                                this.tipoCalcular = "Decimal";
+                        }
+                        {if (true) return cadena;}
+        break;
+      case f_sqrt:
+        jj_consume_token(f_sqrt);
+                            cadena += "sqrt";
+        jj_consume_token(oPar);
+                                                       cadena += "(";
+        auxiliar = E(auxiliar);
+                                                                                               cadena += auxiliar;
+        jj_consume_token(cPar);
+                                                                                                                            cadena += ")";
+                        if(this.tipoCalcular.equals("") || this.tipoCalcular.equals("Entero"))
+                        {
+                                this.tipoCalcular = "Decimal";
+                        }
+                        {if (true) return cadena;}
+        break;
+      case f_pi:
+        jj_consume_token(f_pi);
+                          cadena += "pi";
+        jj_consume_token(oPar);
+                                                   cadena += "(";
+        jj_consume_token(cPar);
+                                                                           cadena += ")";
+                        if(this.tipoCalcular.equals("") || this.tipoCalcular.equals("Entero"))
+                        {
+                                this.tipoCalcular = "Decimal";
+                        }
+                        {if (true) return cadena;}
+        break;
+      case f_fecha:
+        jj_consume_token(f_fecha);
+                             cadena += "fecha";
+        jj_consume_token(oPar);
+                                                         cadena += "(";
+        auxiliar = E(auxiliar);
+                                                                                                 cadena += auxiliar;
+        jj_consume_token(cPar);
+                                                                                                                              cadena += ")";
+                        if(this.tipoCalcular.equals(""))
+                        {
+                                this.tipoCalcular = "Fecha";
+                        }
+                        {if (true) return cadena;}
+        break;
+      case f_hora:
+        jj_consume_token(f_hora);
+                            cadena += "fecha";
+        jj_consume_token(oPar);
+                                                        cadena += "(";
+        auxiliar = E(auxiliar);
+                                                                                                cadena += auxiliar;
+        jj_consume_token(cPar);
+                                                                                                                             cadena += ")";
+                        if(this.tipoCalcular.equals(""))
+                        {
+                                this.tipoCalcular = "Hora";
+                        }
+                        {if (true) return cadena;}
+        break;
+      case f_fechahora:
+        jj_consume_token(f_fechahora);
+                                 cadena += "fechahora";
+        jj_consume_token(oPar);
+                                                                 cadena += "(";
+        auxiliar = E(auxiliar);
+                                                                                                         cadena += auxiliar;
+        jj_consume_token(cPar);
+                                                                                                                                      cadena += ")";
+                        if(this.tipoCalcular.equals(""))
+                        {
+                                this.tipoCalcular = "FechaHora";
+                        }
+                        {if (true) return cadena;}
+        break;
+      case f_random:
+        jj_consume_token(f_random);
+                              cadena += "random";
+        jj_consume_token(oPar);
+                                                           cadena += "(";
+        auxiliar = L_EXPRE(auxiliar);
+                                                                                                         cadena += auxiliar;
+        jj_consume_token(cPar);
+                                                                                                                                      cadena +=")";
+                        if(this.tipoCalcular.equals("") || this.tipoCalcular.equals("Entero"))
+                        {
+                                this.tipoCalcular = "Decimal";
+                        }
+                        {if (true) return cadena;}
+        break;
+      case f_min:
+        jj_consume_token(f_min);
+                           cadena += "min";
+        jj_consume_token(oPar);
+                                                     cadena += "(";
+        auxiliar = L_EXPRE(auxiliar);
+                                                                                                   cadena += auxiliar;
+        jj_consume_token(cPar);
+                                                                                                                                cadena +=")";
+                        if(this.tipoCalcular.equals("") || this.tipoCalcular.equals("Entero"))
+                        {
+                                this.tipoCalcular = "Decimal";
+                        }
+                        {if (true) return cadena;}
+        break;
+      case f_max:
+        jj_consume_token(f_max);
+                           cadena += "max";
+        jj_consume_token(oPar);
+                                                     cadena += "(";
+        auxiliar = L_EXPRE(auxiliar);
+                                                                                                   cadena += auxiliar;
+        jj_consume_token(cPar);
+                                                                                                                                cadena +=")";
+                        if(this.tipoCalcular.equals("") || this.tipoCalcular.equals("Entero"))
+                        {
+                                this.tipoCalcular = "Decimal";
+                        }
                         {if (true) return cadena;}
         break;
       default:
         jj_la1[6] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
+      }
+    } catch (ParseException e) {
+                skip_error_recovery(0, this.archivo, this.columna);
+                {if (true) return"";}
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  final public String L_EXPRE(String cadena) throws ParseException {
+        String auxiliar = "";
+    try {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case not:
+      case punto:
+      case oPar:
+      case f_cadena:
+      case f_subcad:
+      case f_poscad:
+      case f_booleano:
+      case f_entero:
+      case f_tam:
+      case f_pow:
+      case f_log:
+      case f_log10:
+      case f_abs:
+      case f_sin:
+      case f_cos:
+      case f_tan:
+      case f_sqrt:
+      case f_pi:
+      case f_fecha:
+      case f_hora:
+      case f_fechahora:
+      case f_random:
+      case f_min:
+      case f_max:
+      case f_hoy:
+      case f_ahora:
+      case identificador:
+      case entero:
+      case decimal:
+      case str1:
+      case str2:
+      case verdadero:
+      case falso:
+      case fecha:
+      case hora:
+      case fechahora:
+        // L_EXPRE::= E LISTA_E
+                        auxiliar = E(auxiliar);
+                 cadena += auxiliar; auxiliar = "";
+        auxiliar = LISTA_E(auxiliar);
+                        cadena += auxiliar;
+                        {if (true) return cadena;}
+        break;
+      default:
+        jj_la1[7] = jj_gen;
+        EMPTY();
+                        {if (true) return cadena;}
+      }
+    } catch (ParseException e) {
+                skip_error_recovery(0, this.archivo, this.columna);
+                {if (true) return"";}
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public String LISTA_E(String cadena) throws ParseException {
+        String auxiliar = "";
+    try {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case coma:
+        jj_consume_token(coma);
+                        cadena += ",";
+        auxiliar = E(auxiliar);
+                                                                cadena += auxiliar; auxiliar = "";
+        auxiliar = LISTA_E(auxiliar);
+                                                                                                                                  cadena += auxiliar;
+                        {if (true) return cadena;}
+        break;
+      default:
+        jj_la1[8] = jj_gen;
+        EMPTY();
+                        {if (true) return cadena;}
       }
     } catch (ParseException e) {
                 skip_error_recovery(0, this.archivo, this.columna);
@@ -619,7 +1033,7 @@ public class ExpParser implements ExpParserConstants {
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[7];
+  final private int[] jj_la1 = new int[9];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static {
@@ -627,10 +1041,10 @@ public class ExpParser implements ExpParserConstants {
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0xa000,0xa000,0x1f80,0x1f80,0x7e,0x7e,0xf0694000,};
+      jj_la1_0 = new int[] {0xa000,0xa000,0x1f80,0x1f80,0x7e,0x7e,0xffc94000,0xffc94000,0x200000,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x3f,};
+      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0xffc1fff,0xffc1fff,0x0,};
    }
 
   /** Constructor with InputStream. */
@@ -644,7 +1058,7 @@ public class ExpParser implements ExpParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -658,7 +1072,7 @@ public class ExpParser implements ExpParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -668,7 +1082,7 @@ public class ExpParser implements ExpParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -678,7 +1092,7 @@ public class ExpParser implements ExpParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -687,7 +1101,7 @@ public class ExpParser implements ExpParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -696,7 +1110,7 @@ public class ExpParser implements ExpParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -747,12 +1161,12 @@ public class ExpParser implements ExpParserConstants {
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[39];
+    boolean[] la1tokens = new boolean[61];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < 9; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -764,7 +1178,7 @@ public class ExpParser implements ExpParserConstants {
         }
       }
     }
-    for (int i = 0; i < 39; i++) {
+    for (int i = 0; i < 61; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

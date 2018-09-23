@@ -29,11 +29,13 @@ namespace XForms.ASTTree.Preguntas
             this.estilo = estilo;
             this.numero = numero;
         }
-
+        Object valorResp = null;
         public object Ejecutar(Ambito ambito)
         {
             try
             {
+                this.numero = Estatico.numPregunta;
+                Estatico.numPregunta++;
                 DamePregunta dame = new DamePregunta(identificador, parametros, clase, linea, columna, estilo.tipo, "", this.numero);
                 Pregunta p = dame.getPregunta(ambito);
                 if(p!=null)
@@ -61,11 +63,40 @@ namespace XForms.ASTTree.Preguntas
                             }
 
                             /*MUESTRA EL FORM*/
-                            
+                            MuestraForm:
                             Seleccionar s = new Seleccionar(p, tipo, listado, linea, columna, clase, ambito.archivo);
                             s.ShowDialog();
-                            
-                            
+                            String respuesta = s.respuesta;
+                            if (respuesta.Equals(""))
+                            {
+                                this.valorResp = Estatico.respuestaPorDefecto(this.casteo);
+                            }
+                            else
+                            {
+                                this.valorResp = Estatico.casteaRespuestaA(respuesta, valorResp, this.casteo);
+                            }
+                            if (valorResp is null)
+                            {
+                                TError error = new TError("Semantico", "No se logro Castear la respuesta a tipo: " + this.casteo.ToString() + " | Clase: " + clase + " | Archivo: " + ambito.archivo, linea, columna, false);
+                                Estatico.errores.Add(error);
+                                Estatico.ColocaError(error);
+                                goto MuestraForm;
+                            }
+                            if (!llamaARespuesta(auxiliar, valorResp))
+                            {
+                                goto MuestraForm;
+                            }
+                            PreguntaAlmacenada nueva = new PreguntaAlmacenada(this.identificador, p.etiqueta, this.numero);
+                            nueva.addAnswer(this.valorResp.ToString());
+                            Estatico.resps.Add(nueva);
+
+                            ob.ambito = dame.ambPregu;
+
+                            if (s.salir != null)
+                            {
+                                return s.salir;
+                            }
+
                         }
                         else
                         {
@@ -143,5 +174,7 @@ namespace XForms.ASTTree.Preguntas
             }
             return false;
         }
+
+       
     }
 }

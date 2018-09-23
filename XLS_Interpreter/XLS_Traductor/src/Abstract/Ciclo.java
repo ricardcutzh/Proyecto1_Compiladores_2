@@ -91,7 +91,8 @@ public class Ciclo implements ArbolForm{
     @Override
     public Object traducirLocal(TablaSimbolos ts, ArrayList<String> tabs, ArrayList<TError> errores) {
         String cad = "";
-        String cond = "Verdadero";
+        //String cond = "Verdadero";
+        String cond = this.idCiclo+"_iter<3";
         String contenido = evaluaAplicable(ts, tabs, errores);
         try {
             if(this.rep!=null) //AQUI EVALUO LAS REPETICIONES
@@ -99,7 +100,11 @@ public class Ciclo implements ArbolForm{
                 StringReader s = new StringReader(rep.cadena);
                 Exprs.ExpParser par = new ExpParser(s);
                 par.setUp(errores, ts, padre, this.idCiclo, "Repeticion: "+this.idCiclo, "Encuesta", TipoPregunta.TRADUC_2);
-                cond = par.S();                
+                cond = par.S();
+                if(cond.contains(this.idCiclo+"().Respuesta"))
+                {
+                    cond = cond.replace(this.idCiclo+"().Respuesta", this.idCiclo + "_iter");
+                }
             }
             cad += dameTabulaciones() + "Para(Entero "+this.idCiclo+"_iter = 0; "+cond+" ; "+this.idCiclo+"_iter++){\n";
             tabula();
@@ -134,7 +139,7 @@ public class Ciclo implements ArbolForm{
               cadenaif += dameTabulaciones() + cad;
               destabula();
               ////////////////////////////////////////////////////////
-              cadenaif +="}\n";
+              cadenaif +=dameTabulaciones() +"}\n";
               cad = cadenaif;
           } catch (Exception e) {
               errores.add(new TError("Ejecucion", "Error al Traducir el Ciclo: "+this.idCiclo, "Ciclo: "+this.idCiclo, "Encuesta"));

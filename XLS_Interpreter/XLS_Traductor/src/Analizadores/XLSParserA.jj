@@ -1183,7 +1183,7 @@ String APARIENCIA(String col):
 		|<nota> {return "Apariencia().Nota()";}
 		|<fichero> {return "Apariencia().Fichero()";}
 		|<calcular> {return "Apariencia().Calcular()";}
-		|t = <pos> {return "Apariencia('"+t.image+"')"; }
+		|t = <pos> {/*return "Apariencia('"+t.image+"')";*/ return "Apariencia().Cadena()";}
 	}
 	catch(ParseException p)
 	{

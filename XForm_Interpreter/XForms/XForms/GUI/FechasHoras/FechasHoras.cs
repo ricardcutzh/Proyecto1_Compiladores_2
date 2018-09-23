@@ -101,8 +101,12 @@ namespace XForms.GUI.FechasHoras
 
         private void tomaRespuesta()
         {
-            DateTime aux = this.Input.Value;
-            this.respuesta = aux.ToString();
+            this.respuesta = this.Input.Value.ToString();
+            if(respuesta.Length == 18)
+            {
+                this.respuesta = "0" + this.respuesta;
+            }
+            //this.respuesta = aux.ToString();
         }
     }
 }

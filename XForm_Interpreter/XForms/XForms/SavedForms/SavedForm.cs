@@ -71,9 +71,11 @@ namespace XForms.SavedForms
         {
             try
             {
+                int x = 1;
                 foreach(PreguntaAlmacenada p in this.preguntas)
                 {
-                    sw.WriteLine(p.toHTML());
+                    sw.WriteLine(p.toHTML(x));
+                    x++;
                 }
             }
             catch

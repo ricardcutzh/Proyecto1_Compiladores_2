@@ -27,6 +27,8 @@ namespace XForms.Objs
 
         public static int contador = 1;
 
+        public static int numPregunta = 1;
+
         /*RUTA DEL PROYECTO EN CUESTION*/
         public static String PROYECT_PATH = "";
         
@@ -44,6 +46,7 @@ namespace XForms.Objs
             clasesDisponibles = new ListaClases();
             Estatico.contador = 1;
             resps = new List<PreguntaAlmacenada>();
+            numPregunta = 1;
         }
         /*AMBITO ESTATICO PAR ACCEDER A LOS PARAMETROS*/
         public static Ambito temporal;

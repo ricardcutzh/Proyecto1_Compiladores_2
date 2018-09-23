@@ -455,11 +455,15 @@ namespace XForms.GramaticaIrony
                          | ToTerm("buscar") + "(" + EXP + ")" + "[" + EXP + "]"
                          | ToTerm("obtener") + "(" + EXP + ")" + "[" + EXP + "]";
 
+            LLAMADA.ErrorRule = SyntaxError + ";";
+
             L_EXPRE.Rule = MakeStarRule(L_EXPRE, ToTerm(","), EXP);
+            L_EXPRE.ErrorRule = SyntaxError + ";";
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------
             LLAMADAFUNCION.Rule = LLAMADAID_OBJ + ";";
+            LLAMADAFUNCION.ErrorRule = SyntaxError + ";";
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------
@@ -480,12 +484,15 @@ namespace XForms.GramaticaIrony
 
             DECLARACION_ARR.Rule = "nuevo" + TIPO + DIMS;
 
+            DECLARACION_ARR.ErrorRule = SyntaxError + ";";
+
             ACCESOARRAY.Rule = identificador + DIMS;
 
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------
             OPCS_NUEVO.Rule = ToTerm("nuevo") + ToTerm("Opciones") + "(" + ")";
+            OPCS_NUEVO.ErrorRule = SyntaxError + ";";
             //-------------------------------------------------------------------------------------------
             #endregion
 
@@ -551,11 +558,14 @@ namespace XForms.GramaticaIrony
                             | identificador + "=" + EXP + ";" //2
                             | LLAMADAID_OBJ + "." + identificador + DIMS + "=" + EXP + ";" //4
                             | identificador + DIMS + "=" + EXP + ";"; //3
+            ASIGNACION.ErrorRule = SyntaxError + ";";
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------
             RETORNO.Rule = ToTerm("retorno") + EXP + ";"
                         | ToTerm("retorno") + ";";
+
+            RETORNO.ErrorRule = SyntaxError + ";";
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------
@@ -568,6 +578,7 @@ namespace XForms.GramaticaIrony
 
             //-------------------------------------------------------------------------------------------
             IF_SIMPLE.Rule = E + ToTerm("?") + EXP + ToTerm(":") + EXP;
+            IF_SIMPLE.ErrorRule = SyntaxError + ";";
             //-------------------------------------------------------------------------------------------
 
             //-------------------------------------------------------------------------------------------
@@ -637,6 +648,8 @@ namespace XForms.GramaticaIrony
             LLAMADAFORMULARIO.Rule = ToTerm("nuevo") + identificador + "(" + ")" + ";"
                                    | ToTerm("nuevo") + identificador + "(" + ")" + "." +  ESTILOS + ";";
 
+            LLAMADAFORMULARIO.ErrorRule = SyntaxError + ";";
+
             ESTILOS.Rule = ToTerm("Todo")
                          | ToTerm("Cuadricula")
                          | ToTerm("Pagina");
@@ -650,6 +663,7 @@ namespace XForms.GramaticaIrony
                         | identificador + "(" + L_EXPRE + ")" + "." + ToTerm("respuesta") + "(" + CASTEO_PREGUNTA + ")" + "." + ESTILO_RESP + ";"
                         | identificador + "(" + L_EXPRE + ")" + "." + ToTerm("respuesta") + "(" + CASTEO_PREGUNTA + ")" + "." + ToTerm("Apariencia") + "(" + L_EXPRE + ")" + "." + ESTILO_RESP + ";"
                         | identificador + "(" + L_EXPRE + ")" + "." + ToTerm("calcular") + "(" + ")" + ";";
+
 
             CALL_Q.ErrorRule = SyntaxError + ";";
 

@@ -59,47 +59,91 @@ public interface MultimediaParserConstants {
   /** RegularExpression Id. */
   int cPar = 29;
   /** RegularExpression Id. */
-  int hoy = 30;
+  int cad_min = 30;
   /** RegularExpression Id. */
-  int ahora = 31;
+  int cad_fila = 31;
   /** RegularExpression Id. */
-  int cad_min = 32;
+  int cad_max = 32;
   /** RegularExpression Id. */
-  int cad_fila = 33;
+  int finalizar = 33;
   /** RegularExpression Id. */
-  int cad_max = 34;
+  int iniciar = 34;
   /** RegularExpression Id. */
-  int finalizar = 35;
+  int sino = 35;
   /** RegularExpression Id. */
-  int iniciar = 36;
+  int vf = 36;
   /** RegularExpression Id. */
-  int sino = 37;
+  int opcion = 37;
   /** RegularExpression Id. */
-  int vf = 38;
+  int coma = 38;
   /** RegularExpression Id. */
-  int opcion = 39;
+  int f_cadena = 39;
   /** RegularExpression Id. */
-  int identificador = 40;
+  int f_subcad = 40;
   /** RegularExpression Id. */
-  int entero = 41;
+  int f_poscad = 41;
   /** RegularExpression Id. */
-  int decimal = 42;
+  int f_booleano = 42;
   /** RegularExpression Id. */
-  int str1 = 43;
+  int f_entero = 43;
   /** RegularExpression Id. */
-  int str2 = 44;
+  int f_tam = 44;
   /** RegularExpression Id. */
-  int verdadero = 45;
+  int f_pow = 45;
   /** RegularExpression Id. */
-  int falso = 46;
+  int f_log = 46;
   /** RegularExpression Id. */
-  int fecha = 47;
+  int f_log10 = 47;
   /** RegularExpression Id. */
-  int hora = 48;
+  int f_abs = 48;
   /** RegularExpression Id. */
-  int fechahora = 49;
+  int f_sin = 49;
   /** RegularExpression Id. */
-  int err = 50;
+  int f_cos = 50;
+  /** RegularExpression Id. */
+  int f_tan = 51;
+  /** RegularExpression Id. */
+  int f_sqrt = 52;
+  /** RegularExpression Id. */
+  int f_pi = 53;
+  /** RegularExpression Id. */
+  int f_fecha = 54;
+  /** RegularExpression Id. */
+  int f_hora = 55;
+  /** RegularExpression Id. */
+  int f_fechahora = 56;
+  /** RegularExpression Id. */
+  int f_random = 57;
+  /** RegularExpression Id. */
+  int f_min = 58;
+  /** RegularExpression Id. */
+  int f_max = 59;
+  /** RegularExpression Id. */
+  int f_hoy = 60;
+  /** RegularExpression Id. */
+  int f_ahora = 61;
+  /** RegularExpression Id. */
+  int identificador = 62;
+  /** RegularExpression Id. */
+  int entero = 63;
+  /** RegularExpression Id. */
+  int decimal = 64;
+  /** RegularExpression Id. */
+  int str1 = 65;
+  /** RegularExpression Id. */
+  int str2 = 66;
+  /** RegularExpression Id. */
+  int verdadero = 67;
+  /** RegularExpression Id. */
+  int falso = 68;
+  /** RegularExpression Id. */
+  int fecha = 69;
+  /** RegularExpression Id. */
+  int hora = 70;
+  /** RegularExpression Id. */
+  int fechahora = 71;
+  /** RegularExpression Id. */
+  int err = 72;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -136,8 +180,6 @@ public interface MultimediaParserConstants {
     "\"@\"",
     "\"(\"",
     "\")\"",
-    "\"hoy()\"",
-    "\"ahora()\"",
     "\"cad_min\"",
     "\"cad_fila\"",
     "\"cad_max\"",
@@ -146,6 +188,30 @@ public interface MultimediaParserConstants {
     "\"si_no\"",
     "\"v_f\"",
     "\"opcion\"",
+    "\",\"",
+    "\"cadena\"",
+    "\"subcad\"",
+    "\"poscad\"",
+    "\"booleano\"",
+    "\"entero\"",
+    "\"tam\"",
+    "\"pow\"",
+    "\"log\"",
+    "\"log10\"",
+    "\"abs\"",
+    "\"sin\"",
+    "\"cos\"",
+    "\"tan\"",
+    "\"sqrt\"",
+    "\"pi\"",
+    "\"fecha\"",
+    "\"hora\"",
+    "\"fechahora\"",
+    "\"random\"",
+    "\"min\"",
+    "\"max\"",
+    "\"hoy\"",
+    "\"ahora\"",
     "<identificador>",
     "<entero>",
     "<decimal>",

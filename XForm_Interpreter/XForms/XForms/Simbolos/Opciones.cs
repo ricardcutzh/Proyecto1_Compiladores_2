@@ -93,7 +93,7 @@ namespace XForms.Simbolos
                     Object val3 = l.ElementAt(2);
                     if(val1 is String && val2 is String && val3 is String)
                     {
-                        listado.Add(new NodoSelecciona((String)val1, (String)val2, (String)val3));
+                        listado.Add(new NodoSelecciona((String)val2, (String)val1, (String)val3));
                     }
                 }
                 else if(l.Count == 2)
@@ -102,7 +102,7 @@ namespace XForms.Simbolos
                     Object val2 = l.ElementAt(1);
                     if(val1 is String && val2 is String)
                     {
-                        listado.Add(new NodoSelecciona((String)val1, (String)val2, ""));
+                        listado.Add(new NodoSelecciona((String)val2, (String)val1, ""));
                     }
                 }
             }

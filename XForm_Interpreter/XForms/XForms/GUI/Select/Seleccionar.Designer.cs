@@ -36,7 +36,11 @@
             this.button3 = new System.Windows.Forms.Button();
             this.Salida = new System.Windows.Forms.WebBrowser();
             this.Options = new System.Windows.Forms.ListView();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.selecionadas = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -138,9 +142,49 @@
             this.Options.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Options.Location = new System.Drawing.Point(5, 238);
             this.Options.Name = "Options";
-            this.Options.Size = new System.Drawing.Size(562, 335);
+            this.Options.Size = new System.Drawing.Size(562, 261);
             this.Options.TabIndex = 4;
             this.Options.UseCompatibleStateImageBehavior = false;
+            this.Options.SelectedIndexChanged += new System.EventHandler(this.Options_SelectedIndexChanged);
+            // 
+            // panel3
+            // 
+            this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel3.Controls.Add(this.label1);
+            this.panel3.Controls.Add(this.selecionadas);
+            this.panel3.Location = new System.Drawing.Point(5, 505);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(562, 71);
+            this.panel3.TabIndex = 5;
+            // 
+            // selecionadas
+            // 
+            this.selecionadas.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.selecionadas.AutoSize = true;
+            this.selecionadas.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.selecionadas.Location = new System.Drawing.Point(43, 23);
+            this.selecionadas.Name = "selecionadas";
+            this.selecionadas.Size = new System.Drawing.Size(134, 20);
+            this.selecionadas.TabIndex = 0;
+            this.selecionadas.Text = "Sin Seleccionar";
+            this.selecionadas.Click += new System.EventHandler(this.label1_Click);
+            // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(10, 23);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(27, 20);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "R:";
             // 
             // Seleccionar
             // 
@@ -148,14 +192,18 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(571, 773);
+            this.Controls.Add(this.panel3);
             this.Controls.Add(this.Options);
             this.Controls.Add(this.Salida);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Name = "Seleccionar";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Seleccionar";
             this.tableLayoutPanel1.ResumeLayout(false);
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -170,5 +218,8 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.WebBrowser Salida;
         private System.Windows.Forms.ListView Options;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Label selecionadas;
+        private System.Windows.Forms.Label label1;
     }
 }

@@ -28,6 +28,8 @@ namespace XForms.GUI.Select
 
         List<NodoSelecciona> opcs;
 
+        List<String> seleccion;
+
         public Seleccionar(Pregunta p, int tipo, Opciones listado, int linea, int col, String clase, String archivo)
         {
             this.p = p;
@@ -38,6 +40,7 @@ namespace XForms.GUI.Select
             this.col = col;
             this.clase = clase;
             this.archivo = archivo;
+            this.seleccion = new List<string>();
 
             InitializeComponent();
 
@@ -65,13 +68,15 @@ namespace XForms.GUI.Select
             Salida.DocumentText = Estatico.header() + salida + Estatico.footer();
 
             this.Options.View = View.Details;
-            this.Options.Columns.Add("Opciones", 150);
+            this.Options.Columns.Add("Selecciona de Las Opciones", 400);
+
             llenaOpciones();
         }
 
         private void llenaOpciones()
         {
             ImageList imgs = new ImageList();
+            imgs.ImageSize = new Size(75, 75);
             foreach(NodoSelecciona n in this.opcs)
             {
                 try
@@ -96,6 +101,7 @@ namespace XForms.GUI.Select
 
         private String getRealPath(String path)
         {
+            if (path.Equals("")) { return ""; }
             String currentDir = Estatico.PROYECT_PATH + "\\";
             if (System.IO.File.Exists(path))
             {
@@ -115,22 +121,100 @@ namespace XForms.GUI.Select
             return "";
         }
 
+
+
+
         private void button1_Click(object sender, EventArgs e)
         {
             //CONTESTAR
+            String s = getSeleccion();
+            if(!s.Equals("Sin Seleccionar")) { this.respuesta = s; }
+            compruebaRequerido(null);
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             //CONTINUAR
+            compruebaRequerido(null);
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
             //SALIR
-            this.Close();
+            compruebaRequerido(new Romper());
         }
 
-        
+        private void Options_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(this.Options.SelectedItems.Count == 0) { return; }
+            String i = this.Options.SelectedItems[0].SubItems[0].Text;
+            agregarRespuesta(i);
+            this.selecionadas.Text = getSeleccion();
+        }
+
+        private String getSeleccion()
+        {
+
+            if(this.seleccion.Count == 0) { return "Sin Seleccionar"; }
+            String cad = "";
+            foreach(String s in this.seleccion)
+            {
+                cad = cad + "{" + s + "}";
+            }
+
+            return cad;
+        }
+
+        private void compruebaRequerido(Object goOut)
+        {
+            if (this.respuesta.Equals("") && p.requerido)
+            {
+                MessageBox.Show("Campo requerido", "error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                this.salir = goOut;
+                this.Close();
+            }
+        }
+
+
+        private void agregarRespuesta(String val)
+        {
+            if(tipo == 1)
+            {
+                this.seleccion.Clear();
+                this.seleccion.Add(val);
+            }
+            else if(tipo == 0)
+            {
+                Boolean remueve = false;
+                int x = 0;
+                foreach(String s in this.seleccion)
+                {
+                    if(s.Equals(val))
+                    {
+                        remueve = true;
+                        break;
+                    }
+                    x++;
+                }
+
+                if(remueve)
+                {
+                    this.seleccion.RemoveAt(x);
+                }
+                else
+                {
+                    this.seleccion.Add(val);
+                }
+
+            }
+        }
     }
 }

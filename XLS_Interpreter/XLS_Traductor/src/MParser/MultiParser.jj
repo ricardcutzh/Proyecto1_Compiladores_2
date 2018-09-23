@@ -196,8 +196,6 @@ TOKEN:
 	|<arroba: "@">
 	|<oPar: "(">
 	|<cPar: ")">
-	|<hoy: "hoy()">
-	|<ahora: "ahora()">
 	|<cad_min: "cad_min">
 	|<cad_fila: "cad_fila">
 	|<cad_max: "cad_max">
@@ -206,6 +204,34 @@ TOKEN:
 	|<sino: "si_no">
 	|<vf: "v_f">
 	|<opcion: "opcion"> 
+	|<coma: ",">
+}
+//TOKENS PARA LAS FUNCIONES NATIVAS
+TOKEN:
+{
+	 <f_cadena: "cadena">
+	|<f_subcad: "subcad">
+	|<f_poscad: "poscad">
+	|<f_booleano: "booleano">
+	|<f_entero: "entero">
+	|<f_tam: "tam">
+	|<f_pow: "pow">
+	|<f_log: "log">
+	|<f_log10: "log10">
+	|<f_abs: "abs">
+	|<f_sin: "sin">
+	|<f_cos: "cos">
+	|<f_tan: "tan">
+	|<f_sqrt: "sqrt">
+	|<f_pi: "pi">
+	|<f_fecha: "fecha">
+	|<f_hora: "hora">
+	|<f_fechahora: "fechahora">
+	|<f_random: "random">
+	|<f_min: "min">
+	|<f_max: "max">
+	|<f_hoy: "hoy">//22
+	|<f_ahora: "ahora">//23
 }
 TOKEN:
 {
@@ -321,12 +347,12 @@ String EP(String cadena):
 	{
 		 <and> {cadena += "&&";} cadena = T(cadena)
 		 {
-			 this.tipoCalcular = "Booelano";
+			 this.tipoCalcular = "Booleano";
 			return cadena;
 		 }
 		|<or> {cadena += "||";} cadena = T(cadena)
 		{
-			this.tipoCalcular = "Booelano";
+			this.tipoCalcular = "Booleano";
 			return cadena;
 		}
 	}
@@ -391,32 +417,32 @@ String TP(String cadena):
 	{
 		<igual> {cadena += "==";} cadena = F(cadena)
 		{
-			this.tipoCalcular = "Booelano";
+			this.tipoCalcular = "Booleano";
 			return cadena;
 		}
 		|<diferente> {cadena += "!=";} cadena = F(cadena)
 		{
-			this.tipoCalcular = "Booelano";
+			this.tipoCalcular = "Booleano";
 			return cadena;
 		}
 		|<menor> {cadena += "<";} cadena = F(cadena)
 		{
-			this.tipoCalcular = "Booelano";
+			this.tipoCalcular = "Booleano";
 			return cadena;
 		}
 		|<mayor> {cadena += ">";} cadena = F(cadena)
 		{
-			this.tipoCalcular = "Booelano";
+			this.tipoCalcular = "Booleano";
 			return cadena;
 		}
 		|<mayorigual> {cadena += ">=";} cadena = F(cadena)
 		{
-			this.tipoCalcular = "Booelano";
+			this.tipoCalcular = "Booleano";
 			return cadena;
 		}
 		|<menorigual> {cadena += "<=";} cadena = F(cadena)
 		{
-			this.tipoCalcular = "Booelano";
+			this.tipoCalcular = "Booleano";
 			return cadena;
 		}
 	}
@@ -540,6 +566,7 @@ String FP1(String cadena):
 String G(String cadena):
 {
 	Token t;
+	String auxiliar = "";
 }
 {
 	try
@@ -598,7 +625,7 @@ String G(String cadena):
 						{
 							pad +="().";
 						}
-						cadena += pad+aux+"().Respuesta";
+						cadena += pad+aux+".Respuesta";
 					}
 				}
 				else
@@ -649,7 +676,7 @@ String G(String cadena):
 			cadena += t.image;
 			if(this.tipoCalcular.equals(""))
 			{
-				this.tipoCalcular = "Booelano";
+				this.tipoCalcular = "Booleano";
 			}
 			return cadena;
 		}
@@ -659,7 +686,7 @@ String G(String cadena):
 			cadena += t.image;
 			if(this.tipoCalcular.equals(""))
 			{
-				this.tipoCalcular = "Booelano";
+				this.tipoCalcular = "Booleano";
 			}
 			return cadena;
 		}
@@ -683,18 +710,16 @@ String G(String cadena):
 			}
 			return cadena;
 		}
-		| t = <ahora>
+		| <f_ahora> {cadena += "ahora";} <oPar> {cadena += "(";} <cPar> {cadena += ")";}
 		{
-			cadena += t.image;
 			if(this.tipoCalcular.equals(""))
 			{
-				this.tipoCalcular = "Hora";
+				this.tipoCalcular = "FechaHora";
 			}
 			return cadena;
 		}
-		| t = <hoy>
+		| <f_hoy> {cadena += "hoy";} <oPar> {cadena += "(";} <cPar> {cadena += ")";}
 		{
-			cadena += t.image;
 			if(this.tipoCalcular.equals(""))
 			{
 				this.tipoCalcular = "Fecha";
@@ -735,7 +760,215 @@ String G(String cadena):
 		}
 		| <not> {cadena += "!";} cadena = E(cadena)
 		{
-			this.tipoCalcular = "Booelano";
+			this.tipoCalcular = "Booleano";
+			return cadena;
+		}
+		| <f_cadena> {cadena += "cadena";} <oPar> {cadena += "(";} auxiliar = E(auxiliar) {cadena += auxiliar ;} <cPar> {cadena += ")";}
+		{
+			this.tipoCalcular = "Cadena";
+			return cadena;
+		}
+		| <f_subcad> {cadena += "subcad";} <oPar> {cadena += "(";} auxiliar = E(auxiliar) {cadena += auxiliar ;} 
+		  <coma> {cadena += ","; auxiliar = "";} auxiliar = E(auxiliar) {cadena += auxiliar; }
+		  <coma> {cadena += ","; auxiliar = "";} auxiliar = E(auxiliar) {cadena += auxiliar; }
+		  <cPar> {cadena += ")";}
+		{
+			this.tipoCalcular = "Cadena";
+			return cadena;
+		}
+		| <f_poscad> {cadena += "poscad";} <oPar> {cadena += "(";} auxiliar = E(auxiliar) {cadena += auxiliar ;}
+		  <coma> {cadena += ","; auxiliar = "";} auxiliar = E(auxiliar) {cadena += auxiliar;}
+		  <cPar> {cadena += ")";}
+		{
+			this.tipoCalcular = "Cadena";
+			return cadena;
+		}
+		| <f_booleano> {cadena += "booleano";} <oPar> {cadena += "(";} auxiliar = E(auxiliar) {cadena += auxiliar;} <cPar> {cadena += ")";}
+		{
+			if(this.tipoCalcular.equals(""))
+			{
+				this.tipoCalcular = "Booleano";
+			}
+			return cadena;
+		}
+		| <f_entero> {cadena += "entero";} <oPar> {cadena += "(";} auxiliar = E(auxiliar) {cadena += auxiliar;} <cPar> {cadena += ")";}
+		{
+			if(this.tipoCalcular.equals(""))
+			{
+				this.tipoCalcular = "Entero";
+			}
+			return cadena;
+		}
+		| <f_pow> {cadena += "pow";} <oPar> {cadena += "(";} auxiliar = E(auxiliar) {cadena += auxiliar;}
+		  <coma> {cadena += ","; auxiliar = "";} auxiliar = E(auxiliar) {cadena += auxiliar;} <cPar> {cadena += ")";}
+		{
+			if(this.tipoCalcular.equals("") || this.tipoCalcular.equals("Entero"))
+			{
+				this.tipoCalcular = "Decimal";
+			}
+			return cadena;
+		}
+		| <f_log> {cadena += "log";} <oPar> {cadena += "(";} auxiliar = E(auxiliar) {cadena += auxiliar;} <cPar> {cadena += ")";}
+		{
+			if(this.tipoCalcular.equals("") || this.tipoCalcular.equals("Entero"))
+			{
+				this.tipoCalcular = "Decimal";
+			}
+			return cadena;
+		}
+		| <f_log10> {cadena += "log10";} <oPar> {cadena += "(";} auxiliar = E(auxiliar) {cadena += auxiliar;} <cPar> {cadena += ")";}
+		{
+			if(this.tipoCalcular.equals("") || this.tipoCalcular.equals("Entero"))
+			{
+				this.tipoCalcular = "Decimal";
+			}
+			return cadena;
+		}
+		| <f_abs> {cadena += "abs";} <oPar> {cadena += "(";} auxiliar = E(auxiliar) {cadena += auxiliar;} <cPar> {cadena += ")";}
+		{
+			if(this.tipoCalcular.equals("") || this.tipoCalcular.equals("Entero"))
+			{
+				this.tipoCalcular = "Decimal";
+			}
+			return cadena;
+		}
+		| <f_sin> {cadena += "sin";} <oPar> {cadena += "(";} auxiliar = E(auxiliar) {cadena += auxiliar;} <cPar> {cadena += ")";}
+		{
+			if(this.tipoCalcular.equals("") || this.tipoCalcular.equals("Entero"))
+			{
+				this.tipoCalcular = "Decimal";
+			}
+			return cadena;
+		}
+		| <f_cos> {cadena += "cos";} <oPar> {cadena += "(";} auxiliar = E(auxiliar) {cadena += auxiliar;} <cPar> {cadena += ")";}
+		{
+			if(this.tipoCalcular.equals("") || this.tipoCalcular.equals("Entero"))
+			{
+				this.tipoCalcular = "Decimal";
+			}
+			return cadena;
+		}
+		| <f_tan> {cadena += "tan";} <oPar> {cadena += "(";} auxiliar = E(auxiliar) {cadena += auxiliar;} <cPar> {cadena += ")";}
+		{
+			if(this.tipoCalcular.equals("") || this.tipoCalcular.equals("Entero"))
+			{
+				this.tipoCalcular = "Decimal";
+			}
+			return cadena;
+		}
+		| <f_sqrt> {cadena += "sqrt";} <oPar> {cadena += "(";} auxiliar = E(auxiliar) {cadena += auxiliar;} <cPar> {cadena += ")";}
+		{
+			if(this.tipoCalcular.equals("") || this.tipoCalcular.equals("Entero"))
+			{
+				this.tipoCalcular = "Decimal";
+			}
+			return cadena;
+		}
+		| <f_pi> {cadena += "pi";} <oPar> {cadena += "(";} <cPar> {cadena += ")";}
+		{
+			if(this.tipoCalcular.equals("") || this.tipoCalcular.equals("Entero"))
+			{
+				this.tipoCalcular = "Decimal";
+			}
+			return cadena;
+		}
+		| <f_fecha> {cadena += "fecha";} <oPar> {cadena += "(";} auxiliar = E(auxiliar) {cadena += auxiliar;} <cPar> {cadena += ")";}
+		{
+			if(this.tipoCalcular.equals(""))
+			{
+				this.tipoCalcular = "Fecha";
+			}
+			return cadena;
+		}
+		| <f_hora> {cadena += "fecha";} <oPar> {cadena += "(";} auxiliar = E(auxiliar) {cadena += auxiliar;} <cPar> {cadena += ")";}
+		{
+			if(this.tipoCalcular.equals(""))
+			{
+				this.tipoCalcular = "Hora";
+			}
+			return cadena;
+		}
+		| <f_fechahora> {cadena += "fechahora";} <oPar> {cadena += "(";} auxiliar = E(auxiliar) {cadena += auxiliar;} <cPar> {cadena += ")";}
+		{
+			if(this.tipoCalcular.equals(""))
+			{
+				this.tipoCalcular = "FechaHora";
+			}
+			return cadena;
+		}
+		| <f_random> {cadena += "random";} <oPar> {cadena += "(";} auxiliar = L_EXPRE(auxiliar) {cadena += auxiliar;} <cPar> {cadena +=")";}
+		{
+			if(this.tipoCalcular.equals("") || this.tipoCalcular.equals("Entero"))
+			{
+				this.tipoCalcular = "Decimal";
+			}
+			return cadena;
+		}
+		| <f_min> {cadena += "min";} <oPar> {cadena += "(";} auxiliar = L_EXPRE(auxiliar) {cadena += auxiliar;} <cPar> {cadena +=")";}
+		{
+			if(this.tipoCalcular.equals("") || this.tipoCalcular.equals("Entero"))
+			{
+				this.tipoCalcular = "Decimal";
+			}
+			return cadena;
+		}
+		| <f_max> {cadena += "max";} <oPar> {cadena += "(";} auxiliar = L_EXPRE(auxiliar) {cadena += auxiliar;} <cPar> {cadena +=")";}
+		{
+			if(this.tipoCalcular.equals("") || this.tipoCalcular.equals("Entero"))
+			{
+				this.tipoCalcular = "Decimal";
+			}
+			return cadena;
+		}
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(0, this.archivo, this.columna);
+		return"";
+	}
+}
+
+String L_EXPRE(String cadena):
+{
+	String auxiliar = "";
+}
+{
+	try
+	{
+		// L_EXPRE::= E LISTA_E
+		auxiliar = E(auxiliar)
+		{cadena += auxiliar; auxiliar = "";}
+		auxiliar = LISTA_E(auxiliar)
+		{
+			cadena += auxiliar;
+			return cadena;
+		}
+		// L_EXPRE::= EMPTY
+		| EMPTY()
+		{
+			return cadena;
+		}
+	}
+	catch(ParseException e)
+	{
+		skip_error_recovery(0, this.archivo, this.columna);
+		return"";
+	}
+}
+
+String LISTA_E(String cadena):
+{
+	String auxiliar = "";
+}
+{
+	try
+	{
+		<coma> {cadena += ",";} auxiliar = E(auxiliar) {cadena += auxiliar; auxiliar = "";} auxiliar = LISTA_E(auxiliar) {cadena += auxiliar;}
+		{
+			return cadena;
+		}
+		| EMPTY()
+		{
 			return cadena;
 		}
 	}

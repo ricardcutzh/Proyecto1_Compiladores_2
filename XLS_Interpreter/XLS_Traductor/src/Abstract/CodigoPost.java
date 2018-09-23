@@ -50,7 +50,7 @@ public class CodigoPost extends Atributo implements ArbolForm{
             {
                 if(c == '@')
                 {
-                    cadena += this.padre+this.idPregunta+"().Respuesta";
+                    cadena += this.padre+this.idPregunta+".Respuesta";
                 }
                 else if(c != '\n')
                 {

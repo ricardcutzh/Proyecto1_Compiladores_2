@@ -399,6 +399,7 @@ namespace XForms
             editor.Font = new Font("Consolas", 9);
             editor.WordWrap = false;
             editor.TextChanged += new EventHandler<TextChangedEventArgs>(fastColoredTextBox1_TextChanged);
+            editor.AutoIndent = true;
             editor.Text = contenido;
 
             pan.Controls.Add(editor);
@@ -433,7 +434,7 @@ namespace XForms
             e.ChangedRange.SetStyle(BlueStyle, @"\b(publico|privado|protegido|clase|padre|principal|imprimir|nuevo|este|retorno|romper|nulo|importar|sino|si|verdadero|falso)\b", RegexOptions.IgnoreCase);
             e.ChangedRange.SetStyle(BlueStyle, @"\b(Publico|Privado|Protegido|Clase|Padre|Principal|Imprimir|Nuevo|Este|Retorno|Romper|Nulo|Importar|SiNo|Si|Verdadero|Falso)\b", RegexOptions.IgnoreCase);
 
-            e.ChangedRange.SetStyle(BlueStyle, @"\b(super|Mientras|continuar|hacer|Repetir|Hasta|para|caso|defecto|pregunta|formulario|grupo|mensajes|)\b", RegexOptions.IgnoreCase);
+            e.ChangedRange.SetStyle(BlueStyle, @"\b(super|nada|Mientras|continuar|hacer|Repetir|Hasta|para|caso|defecto|pregunta|formulario|grupo|mensajes|)\b", RegexOptions.IgnoreCase);
 
             e.ChangedRange.SetStyle(functionStyle, @"\b(imagen|video|audio|subcad|poscad|tam|random|max|min|pow|Log|Log10|abs|sin|cos|tan|sqrt|pi|hoy|ahora|buscar|insertar|obtener)\b", RegexOptions.IgnoreCase);
 

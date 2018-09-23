@@ -19,7 +19,7 @@ public class Conf {
     ArrayList<String> tabs;
     
     String titulo = "";
-    String idform = "";
+    public String idform = "";
     String estilo = "";
     String importa = "";
     String principal = "";
@@ -222,6 +222,12 @@ public class Conf {
         //aux = aux.replace(" ","");
         aux = aux.replace("\n", "");
         String arr[] = aux.split(";");
+        if(arr.length == 1){
+            if(arr[0].equals(" "))
+            {
+                return "";
+            }
+        }
         aux = "";
         for(int x = 0; x < arr.length; x++)
         {

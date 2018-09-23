@@ -86,6 +86,8 @@ namespace XForms.ASTTree.Preguntas
                                         Object ext = this.extensiones.getValor(ambito);
                                         if(ext is String)
                                         {
+                                            this.numero = Estatico.numPregunta;
+                                            Estatico.numPregunta++;
                                             Fichero f = new Fichero(p, (String)ext, linea, columna, clase,ambito.archivo);
                                             f.ShowDialog();
                                             String resp = f.rutaArchivo;
@@ -115,6 +117,9 @@ namespace XForms.ASTTree.Preguntas
                                     else
                                     {
                                         /*AQUI CUANDO ADMITEN CUALQUIER EXTENSION*/
+                                        this.numero = Estatico.numPregunta;
+                                        Estatico.numPregunta++;
+
                                         Fichero f = new Fichero(p, "", linea, columna, clase, ambito.archivo);
                                         f.ShowDialog();
                                         String resp = f.rutaArchivo;

@@ -51,31 +51,75 @@ public interface ExpParserConstants {
   /** RegularExpression Id. */
   int cPar = 20;
   /** RegularExpression Id. */
-  int hoy = 21;
+  int coma = 21;
   /** RegularExpression Id. */
-  int ahora = 22;
+  int f_cadena = 22;
   /** RegularExpression Id. */
-  int identificador = 28;
+  int f_subcad = 23;
   /** RegularExpression Id. */
-  int entero = 29;
+  int f_poscad = 24;
   /** RegularExpression Id. */
-  int decimal = 30;
+  int f_booleano = 25;
   /** RegularExpression Id. */
-  int str1 = 31;
+  int f_entero = 26;
   /** RegularExpression Id. */
-  int str2 = 32;
+  int f_tam = 27;
   /** RegularExpression Id. */
-  int verdadero = 33;
+  int f_pow = 28;
   /** RegularExpression Id. */
-  int falso = 34;
+  int f_log = 29;
   /** RegularExpression Id. */
-  int fecha = 35;
+  int f_log10 = 30;
   /** RegularExpression Id. */
-  int hora = 36;
+  int f_abs = 31;
   /** RegularExpression Id. */
-  int fechahora = 37;
+  int f_sin = 32;
   /** RegularExpression Id. */
-  int err = 38;
+  int f_cos = 33;
+  /** RegularExpression Id. */
+  int f_tan = 34;
+  /** RegularExpression Id. */
+  int f_sqrt = 35;
+  /** RegularExpression Id. */
+  int f_pi = 36;
+  /** RegularExpression Id. */
+  int f_fecha = 37;
+  /** RegularExpression Id. */
+  int f_hora = 38;
+  /** RegularExpression Id. */
+  int f_fechahora = 39;
+  /** RegularExpression Id. */
+  int f_random = 40;
+  /** RegularExpression Id. */
+  int f_min = 41;
+  /** RegularExpression Id. */
+  int f_max = 42;
+  /** RegularExpression Id. */
+  int f_hoy = 43;
+  /** RegularExpression Id. */
+  int f_ahora = 44;
+  /** RegularExpression Id. */
+  int identificador = 50;
+  /** RegularExpression Id. */
+  int entero = 51;
+  /** RegularExpression Id. */
+  int decimal = 52;
+  /** RegularExpression Id. */
+  int str1 = 53;
+  /** RegularExpression Id. */
+  int str2 = 54;
+  /** RegularExpression Id. */
+  int verdadero = 55;
+  /** RegularExpression Id. */
+  int falso = 56;
+  /** RegularExpression Id. */
+  int fecha = 57;
+  /** RegularExpression Id. */
+  int hora = 58;
+  /** RegularExpression Id. */
+  int fechahora = 59;
+  /** RegularExpression Id. */
+  int err = 60;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -103,8 +147,30 @@ public interface ExpParserConstants {
     "\"@\"",
     "\"(\"",
     "\")\"",
-    "\"hoy()\"",
-    "\"ahora()\"",
+    "\",\"",
+    "\"cadena\"",
+    "\"subcad\"",
+    "\"poscad\"",
+    "\"booleano\"",
+    "\"entero\"",
+    "\"tam\"",
+    "\"pow\"",
+    "\"log\"",
+    "\"log10\"",
+    "\"abs\"",
+    "\"sin\"",
+    "\"cos\"",
+    "\"tan\"",
+    "\"sqrt\"",
+    "\"pi\"",
+    "\"fecha\"",
+    "\"hora\"",
+    "\"fechahora\"",
+    "\"random\"",
+    "\"min\"",
+    "\"max\"",
+    "\"hoy\"",
+    "\"ahora\"",
     "\" \"",
     "\"\\n\"",
     "\"\\r\"",

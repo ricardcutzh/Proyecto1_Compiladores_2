@@ -36,6 +36,8 @@ namespace XForms.ASTTree.Preguntas
         {
             try
             {
+                this.numero = Estatico.numPregunta;
+                Estatico.numPregunta++;
                 DamePregunta pr = new DamePregunta(this.identificador, parametros, clase, linea, columna, "Entero, Rango, Decimal", "", this.numero);
                 Pregunta p = pr.getPregunta(ambito);
                 if(p!=null)

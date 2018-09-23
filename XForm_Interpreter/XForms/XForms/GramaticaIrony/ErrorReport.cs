@@ -102,6 +102,7 @@ namespace XForms.GramaticaIrony
                         sw.WriteLine("<td>" + e.Linea + "</td>");
                         sw.WriteLine("<td>" + e.Columna + "</td>");
                         sw.WriteLine("</tr>");
+                        x++;
                     }
                 }
                 sw.WriteLine("</tbody>");
